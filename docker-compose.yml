@@ -55,10 +55,8 @@ services:
       - ./frontend:/var/www/frontend:delegated
       # this will mount the node_modules folder for faster performance
       - nodemodules:/var/www/frontend/node_modules
-    environment:
-      CHOKIDAR_USEPOLLING: "true"
     ports:
-      - "3000:3000"
+      - "5173:5173"
 
 networks:
   tutorial:
