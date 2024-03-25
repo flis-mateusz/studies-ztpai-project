@@ -1,4 +1,5 @@
 version: "3.8"
+
 services:
   # Mysql database container
   db:
@@ -10,9 +11,9 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     networks:
-      - tutorial
+      - ztpai-project
 
-  # phpmyadmin container
+  # Phpmyadmin container
   phpmyadmin:
     image: phpmyadmin
     container_name: ztpai_phpmyadmin
@@ -24,7 +25,7 @@ services:
     environment:
       PMA_HOST: db
     networks:
-      - tutorial
+      - ztpai-project
 
   # Symfony apache api container
   api:
@@ -37,30 +38,30 @@ services:
       - ./:/var/www
     restart: always
     networks:
-      - tutorial
+      - ztpai-project
 
+  # React frontend
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    container_name: ztpai_react
     restart: on-failure
-    # below line starts the project
-    # command: "npm start"
     depends_on:
       - api
     networks:
-      - tutorial
+      - ztpai-project
     volumes:
       # this will mount the ui folder which contains the code to the docker container
-      - ./frontend:/var/www/frontend:delegated
+      - ./frontend:/var/www/frontend
       # this will mount the node_modules folder for faster performance
-      - nodemodules:/var/www/frontend/node_modules
+      - node-modules:/var/www/frontend/node_modules
     ports:
-      - "5173:5173"
+      - "8081:8081"
 
 networks:
-  tutorial:
+  ztpai-project:
 
 volumes:
   db-data:
-  nodemodules: { }
+  node-modules: { }
