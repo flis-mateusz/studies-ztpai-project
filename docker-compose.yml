@@ -39,8 +39,28 @@ services:
     networks:
       - tutorial
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: on-failure
+    # below line starts the project
+    # command: "npm start"
+    depends_on:
+      - api
+    networks:
+      - tutorial
+    volumes:
+      # this will mount the ui folder which contains the code to the docker container
+      - ./frontend:/var/www/frontend:delegated
+      # this will mount the node_modules folder for faster performance
+      - nodemodules:/var/www/frontend/node_modules
+    ports:
+      - "5173:5173"
+
 networks:
   tutorial:
 
 volumes:
   db-data:
+  nodemodules: { }
