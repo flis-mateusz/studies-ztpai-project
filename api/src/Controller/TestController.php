@@ -16,7 +16,19 @@ class TestController extends AbstractController
         $data = [];
 
         $data[] = [
-            'count' => 2,
+            'name' => 'Mateusz',
+        ];
+
+        return $this->json($data[0]);
+    }
+
+    #[Route('/signIn', name: 'testapi', methods: ['get', 'post'])]
+    public function sign(ManagerRegistry $doctrine): JsonResponse
+    {
+        $data = [];
+
+        $data[] = [
+            'namee' => 'MateuszZZZZ',
         ];
 
         return $this->json($data[0]);

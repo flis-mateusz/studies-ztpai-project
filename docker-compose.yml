@@ -29,13 +29,16 @@ services:
 
   # Symfony apache api container
   api:
-    build: docker/php
+    build:
+      context: ./api
+      dockerfile: ../docker/php/Dockerfile
     container_name: ztpai_symfony
     ports:
       - "8741:80"
     volumes:
       - ./docker/php/vhosts:/etc/apache2/sites-enabled
-      - ./:/var/www
+      - ./api:/var/www/api:delegated
+      - /var/www/api/vendor
     restart: always
     networks:
       - ztpai-project
