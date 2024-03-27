@@ -40,7 +40,7 @@ export const useFetch = <T, >() => {
     return {fetcher, isPending}
 }
 
-interface FetchResponse<T> {
+export interface FetchResponse<T> {
     success: boolean
     data?: T
     message?: string

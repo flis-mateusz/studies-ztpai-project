@@ -2,7 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {BrowserRouter, createBrowserRouter, RouterProvider} from "react-router-dom"
 
-import App from "@/App.tsx";
+import App from "@/App.tsx"
+
+import 'material-icons/iconfont/material-icons.css'
 
 // const router = createBrowserRouter([
 //     {

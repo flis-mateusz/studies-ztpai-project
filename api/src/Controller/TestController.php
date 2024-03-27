@@ -33,4 +33,16 @@ class TestController extends AbstractController
 
         return $this->json($data[0]);
     }
+
+    #[Route('/signOut', name: 'testapi2', methods: ['get'])]
+    public function signo(ManagerRegistry $doctrine): JsonResponse
+    {
+        $data = [];
+
+        $data[] = [
+            'namee' => 'MateuszZZZZ',
+        ];
+
+        return $this->json($data[0]);
+    }
 }

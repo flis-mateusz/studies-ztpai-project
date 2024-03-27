@@ -1,7 +1,8 @@
 import {NavLink, useLocation} from "react-router-dom";
-import '@/styles/header.css'
+import '@styles/header.css'
 import {useEffect, useRef} from "react";
 import {useAuth} from "@/hooks/useAuth.tsx";
+import {DropDownMenu} from "@components/Header/DropDownMenu.tsx";
 
 export const Header = () => {
     const auth = useAuth()
@@ -17,14 +18,8 @@ export const Header = () => {
             <nav>
                 <div className='submenu'>
                     <div>
-                        <div>{auth.token}</div>
-                        <NavLink to={`announcements`}>
-                            Ogłoszenia
-                        </NavLink>
-                        <NavLink to={`contact`}>
-                            Kontakt
-                        </NavLink>
-
+                        <NavLink to={`announcements`}>Ogłoszenia</NavLink>
+                        <NavLink to={`contact`}>Kontakt</NavLink>
                     </div>
                 </div>
                 <div className='menu-dropdown'>
@@ -34,14 +29,9 @@ export const Header = () => {
                         auth.user ?
                             <>
                                 <div className="avatar"></div>
-                                <div className="menu-dropdown-content">
-                                    <div>
-
-                                    </div>
-                                </div>
+                                <DropDownMenu/>
                             </>
                             :
-
                             pathname == '/login' ?
                                 <NavLink to={`/`}>
                                     Strona główna

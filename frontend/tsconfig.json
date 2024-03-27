@@ -26,6 +26,8 @@
       "@components/*": ["./components/*"],
       "@assets/*": ["./assets/*"],
       "@styles/*": ["./styles/*"],
+      "@pages/*": ["./pages/*"],
+      "@hooks/*": ["./hooks/*"],
       "@typeDefs/*": ["./types/*"]
     }
   },

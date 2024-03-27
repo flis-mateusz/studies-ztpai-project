@@ -1,10 +1,11 @@
-FROM node:lts
+FROM node:alpine
 
 WORKDIR /var/www/frontend
 
 COPY package.json .
+COPY package-lock.json .
 
-RUN npm install
+RUN npm i
 
 COPY . .
 

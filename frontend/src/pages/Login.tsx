@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import {useAuth} from "@/hooks/useAuth.tsx";
+import {useAuth} from "@hooks/useAuth.tsx";
+import {Helmet} from "react-helmet";
 
 export const Login = () => {
     const auth = useAuth()
@@ -23,6 +24,10 @@ export const Login = () => {
 
     return (
         <>
+            <Helmet>
+                <title>Logowanie</title>
+            </Helmet>
+
             <Link to={'/'}>HOME</Link>
             <button
                 onClick={handleSubmit}
