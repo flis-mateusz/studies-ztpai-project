@@ -1,8 +1,9 @@
-import {createContext, ReactNode, useContext, useEffect, useState} from "react";
-import {useLocalStorage} from "@/hooks/useLocalStorage.tsx"; // Make sure to import useLocalStorage correctly
-import {User} from "@typeDefs/User.ts";
-import {FetchResponse, useFetch} from "@/hooks/useFetch.tsx";
-import {useLocation, useNavigate} from "react-router-dom";
+import {createContext, ReactNode, useContext, useEffect, useState} from "react"
+import {useLocalStorage} from "@/hooks/useLocalStorage.tsx"
+import {User} from "@typeDefs/User.ts"
+import {FetchResponse, useFetch} from "@/hooks/useFetch.tsx"
+import {useLocation, useNavigate} from "react-router-dom"
+import axios from 'axios'
 
 interface AuthContextType {
     user: User | null

@@ -4,6 +4,7 @@ import {useEffect, useRef} from "react";
 import {useAuth} from "@/hooks/useAuth.tsx";
 import {DropDownMenu} from "@components/Header/DropDownMenu.tsx";
 
+
 export const Header = () => {
     const auth = useAuth()
     const {pathname} = useLocation()

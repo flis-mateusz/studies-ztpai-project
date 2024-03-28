@@ -1,11 +1,9 @@
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
-export const Announcements = () => {
+export const AnnouncementsPage = () => {
     return <>
         <Helmet>
             <title>Ogłoszenia</title>
         </Helmet>
-
-
     </>
 }

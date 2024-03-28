@@ -1,9 +1,9 @@
-import {useEffect, useState} from 'react'
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {useAuth} from "@hooks/useAuth.tsx";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
-export const Login = () => {
+
+export const LoginPage = () => {
     const auth = useAuth()
     const navigate = useNavigate();
     const location = useLocation();
@@ -14,10 +14,10 @@ export const Login = () => {
         event.preventDefault();
 
         auth.signIn('dd', 'aa')
-            .then(()=>{
+            .then(() => {
                 navigate(from, {replace: true});
             })
-            .catch((e)=>{
+            .catch((e) => {
 
             })
     }
@@ -35,7 +35,7 @@ export const Login = () => {
             >LOGIN
             </button>
             <button
-                onClick={()=>{
+                onClick={() => {
                     auth.signOut()
                 }}
 

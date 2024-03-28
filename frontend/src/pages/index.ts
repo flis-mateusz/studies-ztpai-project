@@ -1,2 +1,2 @@
-export * from "./Root.tsx"
-export * from "./Login.tsx"
+export * from "./RootPage.tsx"
+export * from "./LoginPage.tsx"

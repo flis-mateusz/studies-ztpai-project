@@ -1,27 +1,25 @@
 import {Route, Routes} from "react-router-dom";
 import {AuthProvider} from '@hooks/useAuth';
-import {Login, Root} from "@/pages";
-import {AddAnnouncement} from "@pages/AddAnnouncement.tsx";
+import {LoginPage, RootPage} from "@/pages";
+import {AddAnnouncementPage} from "@pages/AddAnnouncementPage.tsx";
 import {RequireAuth} from "@components/RequireAuth.tsx";
-import {Announcements} from "@pages/Announcements.tsx";
-
-async function delay() {
-    await new Promise(resolve => setTimeout(resolve, 5000));
-}
+import {AnnouncementsPage} from "@pages/AnnouncementsPage.tsx";
+import {ContactPage} from "@pages/ContactPage.tsx";
 
 
 const App = () => {
     return (
         <AuthProvider>
             <Routes>
-                <Route path='/' element={<Root/>}>
-                    <Route path="/login" element={<Login/>}/>
+                <Route path='/' element={<RootPage/>}>
+                    <Route path="/login" element={<LoginPage/>}/>
                     <Route path='/add' element={
                         <RequireAuth>
-                            <AddAnnouncement/>
+                            <AddAnnouncementPage/>
                         </RequireAuth>
                     }/>
-                    <Route path={'/announcements'} element={<Announcements/>}/>
+                    <Route path={'/announcements'} element={<AnnouncementsPage/>}/>
+                    <Route path={'/contact'} element={<ContactPage/>}/>
 
                     {/*<Route*/}
                     {/*    path="/protected"*/}

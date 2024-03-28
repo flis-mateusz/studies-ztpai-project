@@ -2,9 +2,9 @@ import {Outlet} from "react-router-dom";
 import {Header} from "@components/Header/Header.tsx";
 import {AuthStatus} from "@components/AuthStatus.tsx";
 import '@/styles/root.css'
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 
-export const Root = () => {
+export const RootPage = () => {
     return (
         <>
             <Helmet>
