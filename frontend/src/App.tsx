@@ -1,10 +1,16 @@
 import {Route, Routes} from "react-router-dom";
 import {AuthProvider} from '@hooks/useAuth';
-import {LoginPage, RootPage} from "@/pages";
-import {AddAnnouncementPage} from "@pages/AddAnnouncementPage.tsx";
+import {
+    AddAnnouncementPage,
+    AnnouncementsPage,
+    ContactPage,
+    HelpPage,
+    LoginPage, ProfileAnnouncementsPage,
+    ProfileEditPage,
+    ProfilePage,
+    RootPage
+} from "@/pages";
 import {RequireAuth} from "@components/RequireAuth.tsx";
-import {AnnouncementsPage} from "@pages/AnnouncementsPage.tsx";
-import {ContactPage} from "@pages/ContactPage.tsx";
 
 
 const App = () => {
@@ -12,14 +18,25 @@ const App = () => {
         <AuthProvider>
             <Routes>
                 <Route path='/' element={<RootPage/>}>
-                    <Route path="/login" element={<LoginPage/>}/>
-                    <Route path='/add' element={
+                    <Route path="login" element={<LoginPage/>}/>
+                    <Route path='add' element={
                         <RequireAuth>
                             <AddAnnouncementPage/>
                         </RequireAuth>
                     }/>
-                    <Route path={'/announcements'} element={<AnnouncementsPage/>}/>
-                    <Route path={'/contact'} element={<ContactPage/>}/>
+                    <Route path={'announcements'} element={<AnnouncementsPage/>}/>
+                    <Route path={'profile'} element={
+                        <RequireAuth>
+                            <ProfilePage/>
+                        </RequireAuth>
+                    }>
+                        <Route path={''} element={<ProfileEditPage/>}/>
+                        <Route path={'announcements'} element={<ProfileAnnouncementsPage/>}/>
+                        {/*<Route path={'support'} element={<ProfileAnnouncementsPage/>}/>*/}
+                        {/*<Route path={'admin'} element={<ProfileAnnouncementsPage/>}/>*/}
+                    </Route>
+                    <Route path={'contact'} element={<ContactPage/>}/>
+                    <Route path={'help'} element={<HelpPage/>}/>
 
                     {/*<Route*/}
                     {/*    path="/protected"*/}

@@ -1,4 +1,4 @@
-import {NavLink, useLocation} from "react-router-dom";
+import {Link, NavLink, useLocation} from "react-router-dom";
 import '@styles/header.css'
 import {useEffect, useRef} from "react";
 import {useAuth} from "@/hooks/useAuth.tsx";
@@ -18,6 +18,7 @@ export const Header = () => {
         <header>
             <nav>
                 <div className='submenu'>
+                    <div><Link to={'/'} className='logo'>ZwierzakSzukaDomu</Link> </div>
                     <div>
                         <NavLink to={`announcements`}>Ogłoszenia</NavLink>
                         <NavLink to={`contact`}>Kontakt</NavLink>

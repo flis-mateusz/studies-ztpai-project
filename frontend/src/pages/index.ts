@@ -1,2 +1,10 @@
 export * from "./RootPage.tsx"
 export * from "./LoginPage.tsx"
+export * from "./ProfilePage.tsx"
+export * from "./AddAnnouncementPage.tsx"
+export * from "./ContactPage.tsx"
+export * from "./AnnouncementsPage.tsx"
+export * from "./HelpPage.tsx"
+
+export * from "./Profile/ProfileEditPage.tsx"
+export * from "./Profile/ProfileAnnouncementsPage.tsx"
