@@ -10,7 +10,7 @@ export const useFetch = <T, >() => {
         url: string,
         options: RequestInit = {},
         token?: string | null
-    ): Promise<FetchResponse<T>> => {
+    ): Promise<IFetchResponse<T>> => {
 
         const headers = new Headers(options.headers || {})
         if (token) {
@@ -40,7 +40,7 @@ export const useFetch = <T, >() => {
     return {fetcher, isPending}
 }
 
-export interface FetchResponse<T> {
+export interface IFetchResponse<T> {
     success: boolean
     data?: T
     message?: string

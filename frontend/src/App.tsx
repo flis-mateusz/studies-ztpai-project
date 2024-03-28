@@ -1,13 +1,21 @@
 import {Route, Routes} from "react-router-dom";
 import {AuthProvider} from '@hooks/useAuth';
 import {
-    AddAnnouncementPage,
+    AnnouncementEditPage,
+    AdminApprovalPage,
+    AdminPage,
+    AdminPetFeatures,
+    AdminPetTypesPage,
+    AdminReportsPage,
+    AdminUsersPage,
     AnnouncementsPage,
     ContactPage,
     HelpPage,
-    LoginPage, ProfileAnnouncementsPage,
+    LoginPage,
+    ProfileAnnouncementsPage,
     ProfileEditPage,
     ProfilePage,
+    ProfileSupportPage,
     RootPage
 } from "@/pages";
 import {RequireAuth} from "@components/RequireAuth.tsx";
@@ -21,7 +29,7 @@ const App = () => {
                     <Route path="login" element={<LoginPage/>}/>
                     <Route path='add' element={
                         <RequireAuth>
-                            <AddAnnouncementPage/>
+                            <AnnouncementEditPage/>
                         </RequireAuth>
                     }/>
                     <Route path={'announcements'} element={<AnnouncementsPage/>}/>
@@ -32,20 +40,18 @@ const App = () => {
                     }>
                         <Route path={''} element={<ProfileEditPage/>}/>
                         <Route path={'announcements'} element={<ProfileAnnouncementsPage/>}/>
-                        {/*<Route path={'support'} element={<ProfileAnnouncementsPage/>}/>*/}
-                        {/*<Route path={'admin'} element={<ProfileAnnouncementsPage/>}/>*/}
+                        <Route path={'support'} element={<ProfileSupportPage/>}/>
+
+                        <Route path={'admin'} element={<AdminPage/>}>
+                            <Route path={'approval'} element={<AdminApprovalPage/>}/>
+                            <Route path={'reports'} element={<AdminReportsPage/>}/>
+                            <Route path={'users'} element={<AdminUsersPage/>}/>
+                            <Route path={'petTypes'} element={<AdminPetTypesPage/>}/>
+                            <Route path={'petFeatures'} element={<AdminPetFeatures/>}/>
+                        </Route>
                     </Route>
                     <Route path={'contact'} element={<ContactPage/>}/>
                     <Route path={'help'} element={<HelpPage/>}/>
-
-                    {/*<Route*/}
-                    {/*    path="/protected"*/}
-                    {/*    element={*/}
-                    {/*        <RequireAuth>*/}
-                    {/*            <ProtectedPage />*/}
-                    {/*        </RequireAuth>*/}
-                    {/*    }*/}
-                    {/*/>*/}
                 </Route>
             </Routes>
         </AuthProvider>

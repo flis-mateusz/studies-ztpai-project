@@ -1,31 +1,30 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react"
 import {useLocalStorage} from "@/hooks/useLocalStorage.tsx"
-import {User} from "@typeDefs/User.ts"
-import {FetchResponse, useFetch} from "@/hooks/useFetch.tsx"
+import {IUser} from "@/types/IUser.ts"
+import {IFetchResponse, useFetch} from "@/hooks/useFetch.tsx"
 import {useLocation, useNavigate} from "react-router-dom"
-import axios from 'axios'
 
-interface AuthContextType {
-    user: User | null
+interface IAuthContextType {
+    user: IUser | null
     token: string | null
     isAuthPending: boolean
-    signIn: (email: string, password: string) => Promise<FetchResponse<SignInResponse>>
+    signIn: (email: string, password: string) => Promise<IFetchResponse<ISignInResponse>>
     signOut: () => Promise<void>
 }
 
-interface SignInResponse {
-    user: User
+interface ISignInResponse {
+    user: IUser
     token: string
 }
 
-const AuthContext = createContext<AuthContextType>(null!);
+const AuthContext = createContext<IAuthContextType>(null!);
 
 export const AuthProvider = ({children}: { children: ReactNode }) => {
     const navigate = useNavigate()
     const location = useLocation();
-    const {fetcher, isPending: isAuthPending} = useFetch<SignInResponse>()
+    const {fetcher, isPending: isAuthPending} = useFetch<ISignInResponse>()
 
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<IUser | null>(null);
     const [token, setToken] = useLocalStorage<string | null>("authToken", null);
 
     useEffect(() => {

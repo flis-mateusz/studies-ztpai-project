@@ -326,6 +326,10 @@ header .menu-button:checked~.menu-icon .navicon:after {
         width: 100% !important;
         justify-content: flex-start !important;
     }
+
+    header nav .submenu a.active {
+        background-color: transparent !important;
+    }
 }
 
 @media screen and (max-width: 400px) {

@@ -24,9 +24,7 @@ export const LoginPage = () => {
 
     return (
         <>
-            <Helmet>
-                <title>Logowanie</title>
-            </Helmet>
+            <Helmet><title>Logowanie</title></Helmet>
 
             <Link to={'/'}>HOME</Link>
             <button

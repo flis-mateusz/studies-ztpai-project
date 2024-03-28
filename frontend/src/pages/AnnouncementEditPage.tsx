@@ -1,11 +1,10 @@
 import { Helmet } from "react-helmet-async"
 
 
-export const AddAnnouncementPage = () => {
+export const AnnouncementEditPage = () => {
     return <>
-        <Helmet>
-            <title>My Title</title>
-        </Helmet>
+        <Helmet><title>Formularz ogłoszenia</title></Helmet>
+
         <div>
             PROTECTED
         </div>

@@ -166,7 +166,7 @@ a.main-button {
     width: 58px;
     height: 58px;
     border-radius: 58px;
-    background: url('/public/images/default_avatar.png'), lightgray 50% / cover no-repeat;
+    background: url('/default_avatar.png'), lightgray 50% / cover no-repeat;
     background-size: cover;
     background-position: center;
 }
