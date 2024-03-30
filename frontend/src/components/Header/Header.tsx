@@ -3,6 +3,7 @@ import '@styles/header.css'
 import {useEffect, useRef} from "react";
 import {useAuth} from "@/hooks/useAuth.tsx";
 import {DropDownMenu} from "@components/Header/DropDownMenu.tsx";
+import {CustomContentLoader} from "@components/Loaders.tsx";
 
 
 export const Header = () => {
@@ -18,7 +19,7 @@ export const Header = () => {
         <header>
             <nav>
                 <div className='submenu'>
-                    <div><Link to={'/'} className='logo'>ZwierzakSzukaDomu</Link> </div>
+                    <div><Link to={'/'} className='logo'>ZwierzakSzukaDomu</Link></div>
                     <div>
                         <NavLink to={`announcements`}>Ogłoszenia</NavLink>
                         <NavLink to={`contact`}>Kontakt</NavLink>
@@ -28,29 +29,21 @@ export const Header = () => {
                     <input className="menu-button" type="checkbox" id="menu-button" ref={dropDownIcon}/>
                     <label className="menu-icon" htmlFor="menu-button"><span className="navicon"></span></label>
                     {
-                        auth.user ?
+                        auth.token ?
                             <>
-                                <div className="avatar"></div>
+                                {
+                                    auth.isAuthPending ?
+                                        <CustomContentLoader width={58} height={58} radius={90}/>
+                                        :
+                                        <div className="avatar"></div>
+                                }
                                 <DropDownMenu/>
                             </>
                             :
                             pathname == '/login' ?
-                                <NavLink to={`/`}>
-                                    Strona główna
-                                </NavLink>
+                                <NavLink to={`/`}>Strona główna</NavLink>
                                 :
-                                <NavLink to={`login`}>
-                                    {
-                                        auth.token ?
-                                            'Pending user'
-                                            :
-                                            'Zaloguj się'
-                                    }
-                                </NavLink>
-
-                    }
-                    {
-
+                                <NavLink to={`login`}>Zaloguj się</NavLink>
                     }
                 </div>
             </nav>

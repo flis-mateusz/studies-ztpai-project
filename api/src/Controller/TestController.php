@@ -10,9 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TestController extends AbstractController
 {
-    #[Route('/get', name: 'project_index', methods: ['get'])]
+    #[Route('/checkIn', name: 'project_index', methods: ['get'])]
     public function index(ManagerRegistry $doctrine): JsonResponse
     {
+        sleep(2);
         $data = [];
 
         $data[] = [

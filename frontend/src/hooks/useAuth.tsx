@@ -10,6 +10,7 @@ interface IAuthContextType {
     isAuthPending: boolean
     signIn: (email: string, password: string) => Promise<IFetchResponse<ISignInResponse>>
     signOut: () => Promise<void>
+    abort: () => void
 }
 
 interface ISignInResponse {
@@ -21,13 +22,17 @@ const AuthContext = createContext<IAuthContextType>(null!);
 
 export const AuthProvider = ({children}: { children: ReactNode }) => {
     const navigate = useNavigate()
-    const location = useLocation();
-    const {fetcher, isPending: isAuthPending} = useFetch<ISignInResponse>()
+    const location = useLocation()
+    const {fetcher, isPending: isAuthPending, abort} = useFetch<ISignInResponse>()
 
-    const [user, setUser] = useState<IUser | null>(null);
-    const [token, setToken] = useLocalStorage<string | null>("authToken", null);
+    const [user, setUser] = useState<IUser | null>(null)
+    const [token, setToken] = useLocalStorage<string | null>("authToken", null)
 
     useEffect(() => {
+        window.onbeforeunload = () => {
+            abort()
+        };
+
         if (!user && token) {
             fetcher('/api/checkIn', {}, token)
                 .then((response) => {
@@ -35,11 +40,19 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
                 })
                 .catch((error) => {
                     console.log(error)
-                    setToken(null)
-                    navigate('/login', {state: {from: location, error: error}})
+                    if (!error.aborted) {
+                        console.log('clear token')
+                        setToken(null)
+                        navigate('/login', {state: {from: location, error: error}})
+                    }
                 })
         }
-    }, [token, fetcher, user, setToken, navigate, location]);
+
+        return () => {
+            abort()
+            window.onbeforeunload = null
+        };
+    }, [token, fetcher, user, setToken, navigate, location, abort])
 
     const signIn = (user: string, password: string) => {
         return fetcher('/api/signIn', {method: 'POST', body: JSON.stringify({user, password})})
@@ -61,9 +74,9 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
                     setUser(null)
                 }
             )
-    };
+    }
 
-    const value = {user, token, isAuthPending, signIn, signOut};
+    const value = {user, token, isAuthPending, abort, signIn, signOut};
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

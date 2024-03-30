@@ -1,16 +1,21 @@
-import {useCallback, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
 
 export const useFetch = <T, >() => {
     const navigate = useNavigate()
     const location = useLocation();
-    const [isPending, setIsPending] = useState(false)
+    const [activeRequests, setActiveRequests] = useState<number>(0)
+    const abortControllerRef = useRef<AbortController | null>(null)
 
     const fetcher = useCallback(async (
         url: string,
         options: RequestInit = {},
         token?: string | null
     ): Promise<IFetchResponse<T>> => {
+        setActiveRequests((prev) => prev + 1)
+
+        abortControllerRef.current = new AbortController()
+        const {signal} = abortControllerRef.current
 
         const headers = new Headers(options.headers || {})
         if (token) {
@@ -19,29 +24,40 @@ export const useFetch = <T, >() => {
         headers.append('Content-Type', 'application/json')
 
         try {
-            setIsPending(true)
-            const response = await fetch(url, { ...options, headers })
+            const response = await fetch(url, {...options, headers, signal})
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    navigate('/login', { state: { from: location }, replace: true })
+                    navigate('/login', {state: {from: location}, replace: true})
                 }
                 return await response.json()
             }
-
             return await response.json()
         } catch (error) {
-            throw { success: false, message: error }
+            if (signal.aborted) {
+                throw {success: false, aborted: true}
+            }
+            throw {success: false, message: error}
         } finally {
-            setIsPending(false)
+            setActiveRequests((prev) => prev - 1)
         }
     }, [location, navigate])
 
-    return {fetcher, isPending}
+    const abort = useCallback(() => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort()
+            abortControllerRef.current = null
+        }
+    }, []);
+
+    const isPending = activeRequests > 0
+
+    return {fetcher, isPending, abort}
 }
 
 export interface IFetchResponse<T> {
     success: boolean
     data?: T
     message?: string
+    aborted?: boolean
 }
