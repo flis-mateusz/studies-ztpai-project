@@ -4,7 +4,7 @@ import {Helmet} from "react-helmet-async";
 
 import '@styles/root.css'
 
-export const RootPage = () => {
+export const Layout = () => {
     return (
         <>
             <Helmet><title>Zwierzak Szuka Domu</title></Helmet>

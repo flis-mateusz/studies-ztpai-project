@@ -440,7 +440,7 @@ i.material-icons {
         font-size: 0.9em;
     }
 
-    span,
+    span:not(a *),
     .normal-text, header a {
         font-size: 0.9em;
     }

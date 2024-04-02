@@ -28,17 +28,17 @@ services:
       - ztpai-project
 
   # Symfony apache api container
-  api:
+  backend:
     build:
-      context: ./api
-      dockerfile: ../docker/php/Dockerfile
+      context: ./backend
+      dockerfile: ../.docker/php/Dockerfile
     container_name: ztpai_symfony
     ports:
       - "8741:80"
     volumes:
-      - ./docker/php/vhosts:/etc/apache2/sites-enabled
-      - ./api:/var/www/api:delegated
-      - /var/www/api/vendor
+      - ./.docker/php/vhosts:/etc/apache2/sites-enabled
+      - ./backend:/var/www/backend:delegated
+      - /var/www/backend/vendor
     restart: always
     networks:
       - ztpai-project
@@ -51,7 +51,7 @@ services:
     container_name: ztpai_react
     restart: on-failure
     depends_on:
-      - api
+      - backend
     networks:
       - ztpai-project
     volumes:

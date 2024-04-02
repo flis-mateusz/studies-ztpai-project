@@ -25,7 +25,7 @@ export const Header = () => {
                         <NavLink to={`contact`}>Kontakt</NavLink>
                     </div>
                 </div>
-                <div className='menu-dropdown'>
+                <div className={`menu-dropdown ${auth.token && 'logged-user'}`}>
                     <input className="menu-button" type="checkbox" id="menu-button" ref={dropDownIcon}/>
                     <label className="menu-icon" htmlFor="menu-button"><span className="navicon"></span></label>
                     {

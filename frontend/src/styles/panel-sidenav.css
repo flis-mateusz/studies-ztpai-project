@@ -125,7 +125,7 @@ main:has(.sidenav) {
 }
 
 @media screen and (max-width: 850px) {
-    main {
+    main:has(.sidenav) {
         background: none !important;
     }
 
@@ -204,7 +204,7 @@ main:has(.sidenav) {
 }
 
 @media screen and (max-width: 1100px) {
-    main {
+    main:has(.sidenav) {
         padding: 15px 20px !important;
     }
 }

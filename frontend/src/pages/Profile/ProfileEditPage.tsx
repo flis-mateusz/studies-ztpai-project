@@ -1,3 +1,3 @@
 export const ProfileEditPage = () => {
-    return <div>Edycja profilu</div>
+    return <span>Edycja profilu</span>
 }

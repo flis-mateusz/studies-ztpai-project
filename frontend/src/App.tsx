@@ -16,16 +16,23 @@ import {
     ProfileEditPage,
     ProfilePage,
     ProfileSupportPage,
-    RootPage
+    Layout
 } from "@/pages";
 import {RequireAuth} from "@components/RequireAuth.tsx";
+import {IndexPage} from "@pages/IndexPage.tsx";
+import {Suspense} from "react";
 
 
 const App = () => {
     return (
         <AuthProvider>
             <Routes>
-                <Route path='/' element={<RootPage/>}>
+                <Route path='/' element={<Layout/>}>
+                    <Route path='' element={
+                        <Suspense fallback={'loading'}>
+                            <IndexPage/>
+                        </Suspense>
+                    }/>
                     <Route path="login" element={<LoginPage/>}/>
                     <Route path='add' element={
                         <RequireAuth>

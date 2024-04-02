@@ -61,11 +61,6 @@ export const LoginPage = () => {
                 </section>
                 <CustomContentLoader visible={auth.isAuthPending}/>
             </section>
-
-
-            {/*<div>{*/}
-            {/*    location.state?.error ? JSON.stringify(location.state.error) + location.state.error.message : ''*/}
-            {/*}</div>*/}
         </>
     )
 }

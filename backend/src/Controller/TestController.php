@@ -13,6 +13,18 @@ class TestController extends AbstractController
     #[Route('/checkIn', name: 'project_index', methods: ['get'])]
     public function index(ManagerRegistry $doctrine): JsonResponse
     {
+        $data = [];
+
+        $data[] = [
+            'name' => 'Mateusz',
+        ];
+
+        return $this->json($data[0]);
+    }
+
+    #[Route('/wait', name: 'project_w', methods: ['get'])]
+    public function w(ManagerRegistry $doctrine): JsonResponse
+    {
         sleep(2);
         $data = [];
 
