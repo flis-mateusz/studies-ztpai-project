@@ -1,6 +1,6 @@
 import {Link, NavLink, useLocation} from "react-router-dom";
 import '@styles/header.css'
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useAuth} from "@/hooks/useAuth.tsx";
 import {DropDownMenu} from "@components/Header/DropDownMenu.tsx";
 import {CustomContentLoader} from "@components/Loaders.tsx";
@@ -10,10 +10,16 @@ export const Header = () => {
     const auth = useAuth()
     const {pathname} = useLocation()
     const dropDownIcon = useRef<HTMLInputElement>(null)
+    const [hover, setHover] = useState(false)
 
     useEffect(() => {
         dropDownIcon.current ? dropDownIcon.current.checked = false : null
+        setHover(false)
     }, [pathname])
+
+    const handleMenuHover = (t:boolean) => {
+        setHover(t)
+    }
 
     return (
         <header>
@@ -35,9 +41,12 @@ export const Header = () => {
                                     auth.isAuthPending ?
                                         <CustomContentLoader width={58} height={58} radius={90}/>
                                         :
-                                        <div className="avatar"></div>
+                                        <div className="avatar"
+                                             onMouseEnter={() => setHover(true)}
+                                             onMouseLeave={() => setHover(false)}
+                                        ></div>
                                 }
-                                <DropDownMenu/>
+                                <DropDownMenu hover={hover} handleMenuHover={handleMenuHover}/>
                             </>
                             :
                             pathname == '/login' ?

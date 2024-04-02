@@ -10,14 +10,14 @@ header {
     /* #8fa1ff */
 }
 
-header>nav {
+header > nav {
     width: 100%;
     display: flex;
     justify-content: space-between;
     gap: 25px;
 }
 
-header>nav>div.submenu {
+header > nav > div.submenu {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -26,18 +26,18 @@ header>nav>div.submenu {
     overflow: hidden;
 }
 
-header>nav>div.submenu i {
+header > nav > div.submenu i {
     font-size: 3em;
 }
 
-header>nav>div.submenu>div {
+header > nav > div.submenu > div {
     display: flex;
     justify-content: right;
     align-items: center;
     gap: 25px;
 }
 
-header>nav>div.submenu:has(>div:only-child) {
+header > nav > div.submenu:has(>div:only-child) {
     justify-content: flex-end;
 }
 
@@ -45,7 +45,7 @@ header:not(:has(>div, >button, >span, >a)) {
     justify-content: right;
 }
 
-header>nav>div.submenu>div>a:has(.link-text)>.link-text {
+header > nav > div.submenu > div > a:has(.link-text) > .link-text {
     display: none;
 }
 
@@ -59,7 +59,7 @@ header a,
     display: flex;
 }
 
-header a>span {
+header a > span {
     color: inherit;
 }
 
@@ -68,7 +68,7 @@ header a.active {
     border-radius: 10px;
 }
 
-header>nav>div:last-child {
+header > nav > div:last-child {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -76,11 +76,11 @@ header>nav>div:last-child {
     min-width: max-content;
 }
 
-header>nav>div:last-child a.icon {
+header > nav > div:last-child a.icon {
     display: none;
 }
 
-header>nav a.icon>svg {
+header > nav a.icon > svg {
     width: 20px;
     height: 20px;
 }
@@ -129,20 +129,20 @@ header .menu-dropdown:not(:has(.avatar, a)) {
     display: none;
 }
 
-header .menu-button:checked~.menu-icon .navicon:before {
+header .menu-button:checked ~ .menu-icon .navicon:before {
     transform: rotate(-45deg);
 }
 
-header .menu-button:checked~.menu-icon .navicon {
+header .menu-button:checked ~ .menu-icon .navicon {
     background: transparent;
 }
 
-header .menu-button:checked~.menu-icon .navicon:after {
+header .menu-button:checked ~ .menu-icon .navicon:after {
     transform: rotate(45deg);
 }
 
-header .menu-button:checked~.menu-icon .navicon:before,
-header .menu-button:checked~.menu-icon .navicon:after {
+header .menu-button:checked ~ .menu-icon .navicon:before,
+header .menu-button:checked ~ .menu-icon .navicon:after {
     top: 0;
 }
 
@@ -155,35 +155,50 @@ header .menu-button:checked~.menu-icon .navicon:after {
 }
 
 .menu-dropdown-content {
-    padding-top: 1rem;
+    max-height: 0;
+    overflow: hidden;
+    transition-duration: 200ms;
+}
+
+.menu-dropdown-container.visible .menu-dropdown-content {
+    visibility: visible;
+    /*opacity: 1;*/
+    /*display: flex;*/
+    max-height: 350px;
+}
+
+.menu-dropdown-container {
+    padding-top: 0rem;
+    transition-delay: 200ms;
     position: absolute;
     right: 15px;
     top: 3rem;
-    opacity: 0;
-    display: none;
+    /*opacity: 0;*/
+    /*display: none;*/
     z-index: 98;
 }
 
-.menu-dropdown-content>div {
+.menu-dropdown-shadow {
+    box-shadow: 0px 30px 40px 0px rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+}
+
+.menu-dropdown-container.visible {
+    padding-top: 1rem;
+    transition-delay: 0ms;
+}
+
+.menu-dropdown-content > div {
     z-index: 99;
     display: flex;
     flex-direction: column;
     background-color: white;
     align-items: center;
-    transition: all 0.5s ease;
+    /*transition: all 0.5s ease;*/
     width: 20rem;
-    border-radius: 0.325rem;
     padding: 20px 15px;
     gap: 10px;
     border-radius: 20px;
-    box-shadow: 0px 30px 40px 0px rgba(0, 0, 0, 0.15);
-}
-
-.menu-dropdown .avatar:hover~.menu-dropdown-content,
-.menu-dropdown-content:hover {
-    visibility: visible;
-    opacity: 1;
-    display: flex;
 }
 
 .menu-dropdown-content a {
@@ -238,7 +253,7 @@ header .menu-button:checked~.menu-icon .navicon:after {
         display: block;
     }
 
-    header>nav>div.submenu {
+    header > nav > div.submenu {
         max-height: 0;
     }
 
@@ -246,7 +261,7 @@ header .menu-button:checked~.menu-icon .navicon:after {
         padding: 0px !important;
     }
 
-    .menu-dropdown-content {
+    .menu-dropdown-container {
         right: 0px;
     }
 
@@ -262,7 +277,7 @@ header .menu-button:checked~.menu-icon .navicon:after {
         display: flex !important;
     }
 
-    header>nav>div.submenu {
+    header > nav > div.submenu {
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -272,7 +287,7 @@ header .menu-button:checked~.menu-icon .navicon:after {
         gap: 15px !important;
     }
 
-    header>nav>div.submenu>div {
+    header > nav > div.submenu > div {
         width: 100%;
         flex-direction: column;
         gap: 15px !important;
@@ -280,28 +295,28 @@ header .menu-button:checked~.menu-icon .navicon:after {
 
     /*This selector targets any .link-text element that is a direct child of a link (a) within div.submenu,
     but only if the link contains an element with the .link-text class.*/
-    header>nav>div.submenu>div>a:has(.link-text)>.link-text {
+    header > nav > div.submenu > div > a:has(.link-text) > .link-text {
         display: flex;
     }
 
     /*This rule applies to links that are the first child within a div in div.submenu, but only if the div is not the only child in submenu.
     It hides links that do not contain an element with the .link-text class.*/
-    header>nav>div.submenu>div:first-child:not(:only-child)>a:not(:has(.link-text)) {
+    header > nav > div.submenu > div:first-child:not(:only-child) > a:not(:has(.link-text)) {
         display: none;
     }
 
     /*This selector targets the first child div within div.submenu,
     but only if it's not the only child and does not contain an element with the .link-text class, hiding it.*/
-    header>nav>div.submenu>div:first-child:not(:only-child):not(:has(.link-text)) {
+    header > nav > div.submenu > div:first-child:not(:only-child):not(:has(.link-text)) {
         display: none;
     }
 
     /*This rule hides all children elements of a link within div.submenu that contains a .link-text element, except for the .link-text element itself.*/
-    header>nav>div.submenu>div>a:has(.link-text)>*:not(.link-text) {
+    header > nav > div.submenu > div > a:has(.link-text) > *:not(.link-text) {
         display: none;
     }
 
-    header>nav>div:last-child {
+    header > nav > div:last-child {
         width: 100%;
         order: -1;
     }
@@ -312,7 +327,7 @@ header .menu-button:checked~.menu-icon .navicon:after {
         padding-bottom: 10px;
     }
 
-    header nav>.menu-dropdown>a:last-child {
+    header nav > .menu-dropdown > a:last-child {
         text-align: right !important;
         width: max-content !important;
     }
@@ -337,21 +352,25 @@ header .menu-button:checked~.menu-icon .navicon:after {
         padding: 8px 20px !important;
     }
 
+    .menu-dropdown-container {
+        width: 100%;
+    }
+
     .menu-dropdown-content {
         width: 100%;
     }
 
-    .menu-dropdown-content>div {
+    .menu-dropdown-content > div {
         width: 100%;
     }
 }
 
 @media screen and (max-width: 300px) {
-    header a>span {
+    header a > span {
         word-break: break-all;
     }
 
-    .menu-dropdown-content>div {
+    .menu-dropdown-content > div {
         padding: 20px 5px;
     }
 }
