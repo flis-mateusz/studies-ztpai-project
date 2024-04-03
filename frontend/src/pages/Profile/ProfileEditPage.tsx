@@ -1,8 +1,8 @@
 import '@styles/components/profile/profile-edit.css'
 import {InputWithLoader} from "@components/InputWithLoader.tsx";
 import {useAuth} from "@hooks/useAuth.tsx";
-import {ChangeEvent, useEffect, useRef, useState} from "react";
-import {ResponsiveAvatarWithLoader} from "@components/ResponsiveAvatarWithLoader.tsx";
+import {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
+import {AvatarWithLoader} from "@components/AvatarWithLoader.tsx";
 
 interface FormValues {
     name: string
@@ -10,11 +10,13 @@ interface FormValues {
     phone: string
     password: string
     repassword: string
+    avatar: File | null
 }
 
 export const ProfileEditPage = () => {
     const auth = useAuth()
     const [sectionWidth, setSectionWidth] = useState<number>(0)
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const sectionRef = useRef<HTMLDivElement>(null)
 
     const [formValues, setFormValues] = useState<FormValues>({
@@ -23,7 +25,19 @@ export const ProfileEditPage = () => {
         phone: '',
         password: '',
         repassword: '',
+        avatar: null
     })
+
+    useEffect(() => {
+        if (auth.user) {
+            setFormValues(prevState => ({
+                ...prevState,
+                name: auth.user?.name || prevState.name,
+                email: auth.user?.email || prevState.email,
+                phone: auth.user?.phone || prevState.phone,
+            }))
+        }
+    }, [auth.user])
 
     useEffect(() => {
         const updateWidth = () => {
@@ -39,14 +53,39 @@ export const ProfileEditPage = () => {
     }, []);
 
     const handleChange = (field: keyof FormValues) => (e: ChangeEvent<HTMLInputElement>) => {
-        setFormValues(prevState => ({
-            ...prevState,
-            [field]: e.target.value
-        }));
-    };
+        if (field === 'avatar' && e.target.files) {
+            const file = e.target.files[0]
+            if (file) {
+                const reader = new FileReader()
+                reader.onloadend = () => {
+                    setAvatarPreview(reader.result as string)
+                }
+                reader.readAsDataURL(file)
+            }
+            setFormValues(prevState => ({
+                ...prevState,
+                [field]: file ?? null
+            }))
+        } else {
+            setFormValues(prevState => ({
+                ...prevState,
+                [field]: e.target.value
+            }))
+        }
+    }
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        auth.updateUser({
+            avatar: avatarPreview as string
+        })
+        setAvatarPreview(null)
+        console.log(auth.user?.avatar)
+    }
 
     return <>
-        <form id="profile-edit-form" className="with-absolute-loader" autoComplete="off">
+        <form className="with-absolute-loader" autoComplete="off" onSubmit={handleSubmit}>
             <div>
                 <section ref={sectionRef}>
                     <InputWithLoader
@@ -100,9 +139,13 @@ export const ProfileEditPage = () => {
                         <div className={`avatar-container ${auth.user ? 'loaded' : ''}`}>
                             <input className="mobile-avatar-checkbox" type="checkbox" id="mobile-avatar-checkbox"/>
                             <label className="mobile-avatar-checkbox-overlay" htmlFor="mobile-avatar-checkbox"> </label>
-                            <ResponsiveAvatarWithLoader isLoading={auth.isAuthPending} url={auth.user?.avatar}>
-                                <input type="file" className="main-input" id="edit-avatar" name="edit-avatar"/>
-                            </ResponsiveAvatarWithLoader>
+                            <AvatarWithLoader isLoading={auth.isAuthPending}
+                                              url={avatarPreview || auth.user?.avatar}
+                                              responsive={true}>
+                                <input type="file" className="main-input" id="edit-avatar" name="edit-avatar"
+                                       onChange={handleChange('avatar')}
+                                />
+                            </AvatarWithLoader>
                             {
                                 auth.user && <>
                                     <label htmlFor="edit-avatar" className="avatar-action upload">

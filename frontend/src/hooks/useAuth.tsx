@@ -10,6 +10,7 @@ interface IAuthContextType {
     isAuthPending: boolean
     signIn: (email: string, password: string) => Promise<IFetchResponse<ISignInResponse>>
     signOut: () => Promise<void>
+    updateUser: (updatedUserData: Partial<IUser>) => void
     abort: () => void
 }
 
@@ -76,7 +77,11 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
             )
     }
 
-    const value = {user, token, isAuthPending, abort, signIn, signOut};
+    const updateUser = (updatedUserData: Partial<IUser>) => {
+        setUser(currentUserData => ({ ...currentUserData, ...updatedUserData } as IUser))
+    }
+
+    const value = {user, token, isAuthPending, abort, signIn, signOut, updateUser};
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

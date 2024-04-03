@@ -3,7 +3,7 @@ import '@styles/header.css'
 import {useEffect, useRef, useState} from "react";
 import {useAuth} from "@/hooks/useAuth.tsx";
 import {DropDownMenu} from "@components/Header/DropDownMenu.tsx";
-import {CustomContentLoader} from "@components/Loaders.tsx";
+import {AvatarWithLoader} from "@components/AvatarWithLoader.tsx";
 
 
 export const Header = () => {
@@ -17,7 +17,7 @@ export const Header = () => {
         setHover(false)
     }, [pathname])
 
-    const handleMenuHover = (t:boolean) => {
+    const handleMenuHover = (t: boolean) => {
         setHover(t)
     }
 
@@ -37,15 +37,11 @@ export const Header = () => {
                     {
                         auth.token ?
                             <>
-                                {
-                                    auth.isAuthPending ?
-                                        <CustomContentLoader width={58} height={58} radius={90}/>
-                                        :
-                                        <div className="avatar"
-                                             onMouseEnter={() => setHover(true)}
-                                             onMouseLeave={() => setHover(false)}
-                                        ></div>
-                                }
+                                <AvatarWithLoader isLoading={auth.isAuthPending} width={58} height={58}
+                                                  url={auth.user?.avatar}
+                                                  onMouseEnter={() => setHover(true)}
+                                                  onMouseLeave={() => setHover(false)}
+                                />
                                 <DropDownMenu hover={hover} handleMenuHover={handleMenuHover}/>
                             </>
                             :

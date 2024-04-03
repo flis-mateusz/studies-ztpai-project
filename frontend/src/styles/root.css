@@ -223,6 +223,7 @@ a.main-button {
     font-size: 0.9em;
     max-width: 100%;
     flex: 1;
+    letter-spacing: 2px;
 }
 
 .main-input.loader {
