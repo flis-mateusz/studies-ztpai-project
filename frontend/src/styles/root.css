@@ -190,6 +190,11 @@ a.main-button {
     box-shadow: 0px 3.5px 40px 0px rgb(0 0 0 / 30%);
 }
 
+.avatar.resp.loader {
+    padding: 0px;
+    box-shadow: none;
+}
+
 .avatar.resp::before {
     content: '';
     float: left;
@@ -218,6 +223,10 @@ a.main-button {
     font-size: 0.9em;
     max-width: 100%;
     flex: 1;
+}
+
+.main-input.loader {
+    padding: 0px;
 }
 
 .main-input:focus,

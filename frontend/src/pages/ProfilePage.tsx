@@ -29,7 +29,6 @@ export const ProfilePage = () => {
             <div>
                 <NavLinkIcon icon={'folder_open'} to={'announcements'} text={'Moje ogłoszenia'}/>
                 <NavLinkIcon icon={'mode_edit'} to={''} text={'Edycja profilu'}/>
-                <NavLinkIcon icon={'help_outline'} to={'support'} text={'Wsparcie'}/>
 
                 <span>Panel administratora</span>
                 <NavLinkIcon icon={'streetview'} to={'admin/approval'} text={'Ogłoszenia do akceptacji'}/>

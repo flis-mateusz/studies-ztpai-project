@@ -12,7 +12,7 @@ export const IndexPage = () => {
     const {fetcher, abort, isPending} = useFetch()
     const [search, setSearch] = useState<string>('')
     const announcementsContainer = useRef<HTMLElement | null>(null)
-    const loader = useGridLoaders(announcementsContainer)
+    const loader = useGridLoaders({ref: announcementsContainer})
 
     const handleSearch = (e: FormEvent) => {
         e.preventDefault()

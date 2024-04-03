@@ -1,7 +1,21 @@
 import {MutableRefObject, ReactNode, useEffect, useState} from 'react';
 import {CustomContentLoader} from "@components/Loaders.tsx";
 
-const useGridLoaders = (ref: MutableRefObject<HTMLElement | null>, loaderCount = 5, defaultWidth = 150, loaderHeight = 260) => {
+interface UseGridLoadersParams {
+    ref: MutableRefObject<HTMLElement | null>
+    loaderCount?: number
+    defaultWidth?: number
+    loaderHeight?: number
+    useColumnNumberAsCount?: boolean
+}
+
+const useGridLoaders = ({
+                            ref,
+                            loaderCount = 5,
+                            defaultWidth = 150,
+                            loaderHeight = 260,
+                            useColumnNumberAsCount=false
+                        }: UseGridLoadersParams) => {
     const [loaders, setLoaders] = useState<ReactNode>([])
 
     useEffect(() => {
@@ -9,19 +23,20 @@ const useGridLoaders = (ref: MutableRefObject<HTMLElement | null>, loaderCount =
             if (ref.current) {
                 const gridStyle = window.getComputedStyle(ref.current)
                 const gridTemplateColumns = gridStyle.getPropertyValue('grid-template-columns').split(' ')
+                const gridColumnsNumber = gridTemplateColumns.length
                 let itemWidth = defaultWidth
 
-                if (gridTemplateColumns.length > 0) {
+                if (gridColumnsNumber > 0) {
                     const columnWidth = parseInt(gridTemplateColumns[0], 10)
-                    itemWidth = gridTemplateColumns.length > 1 ? columnWidth : columnWidth
+                    itemWidth = gridColumnsNumber > 1 ? columnWidth : columnWidth
                 }
 
-                const newLoaders = Array.from({length: loaderCount}, (_, index) => (
+                const newLoaders = Array.from({length: useColumnNumberAsCount ? gridColumnsNumber : loaderCount}, (_, index) => (
                     <CustomContentLoader
                         key={index}
                         width={itemWidth}
                         height={loaderHeight}
-                        className="announcement"
+                        className="announcement loader"
                     />
                 ))
 

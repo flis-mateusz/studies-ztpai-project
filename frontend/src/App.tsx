@@ -1,22 +1,20 @@
 import {Route, Routes} from "react-router-dom";
 import {AuthProvider} from '@hooks/useAuth';
 import {
-    AnnouncementEditPage,
     AdminApprovalPage,
     AdminPage,
     AdminPetFeatures,
     AdminPetTypesPage,
     AdminReportsPage,
     AdminUsersPage,
+    AnnouncementEditPage,
     AnnouncementsPage,
     ContactPage,
-    HelpPage,
+    Layout,
     LoginPage,
     ProfileAnnouncementsPage,
     ProfileEditPage,
-    ProfilePage,
-    ProfileSupportPage,
-    Layout
+    ProfilePage
 } from "@/pages";
 import {RequireAuth} from "@components/RequireAuth.tsx";
 import {IndexPage} from "@pages/IndexPage.tsx";
@@ -47,7 +45,6 @@ const App = () => {
                     }>
                         <Route path={''} element={<ProfileEditPage/>}/>
                         <Route path={'announcements'} element={<ProfileAnnouncementsPage/>}/>
-                        <Route path={'support'} element={<ProfileSupportPage/>}/>
 
                         <Route path={'admin'} element={<AdminPage/>}>
                             <Route path={'approval'} element={<AdminApprovalPage/>}/>
@@ -58,7 +55,6 @@ const App = () => {
                         </Route>
                     </Route>
                     <Route path={'contact'} element={<ContactPage/>}/>
-                    <Route path={'help'} element={<HelpPage/>}/>
                 </Route>
             </Routes>
         </AuthProvider>

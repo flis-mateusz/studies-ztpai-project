@@ -12,6 +12,10 @@
     cursor: pointer;
 }
 
+.announcement.loader {
+    cursor: default;
+}
+
 a.announcement,
 a.announcement div,
 a.announcement span {

@@ -34,7 +34,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         };
 
         if (!user && token) {
-            fetcher('/api/checkIn', {}, token)
+            fetcher('/api/wait', {}, token)
                 .then((response) => {
                     setUser({email: 'ddd@ddd'})
                 })
