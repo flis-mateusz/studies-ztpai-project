@@ -1,0 +1,358 @@
+main:has(.announcement-view) {
+    gap: 3px;
+    position: relative;
+}
+
+main>section {
+    background: none;
+    box-shadow: none;
+    width: 100%;
+}
+
+.announcement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 10px;
+    align-self: stretch;
+    margin-bottom: 5px;
+}
+
+.announcement-header>div {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 5px;
+}
+
+.announcement-header>div:first-child>span:first-child {
+    font-size: 2em;
+    font-weight: 700;
+    line-height: 100%;
+}
+
+.announcement-header>div:first-child>span:last-child {
+    color: #999393;
+    font-size: 0.8em;
+    padding-top: 15px;
+}
+
+.announcement-report {
+    width: max-content;
+    color: #F27E7E;
+}
+
+.announcement-report.action-report {
+    cursor: pointer;
+}
+
+.announcement-report:not(.hidden)~.announcement-report {
+    display: none;
+}
+
+.announcement-report span {
+    font-weight: 400;
+}
+
+.announcement-view {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    text-decoration: none;
+}
+
+.about-user {
+    width: 30%;
+    align-items: center;
+    gap: 17px;
+    padding: 20px;
+    height: max-content;
+    position: sticky;
+    top: 5px;
+    max-width: 370px;
+    min-width: 220px;
+}
+
+.about-user>div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.about-user>div.inline {
+    justify-content: space-between;
+}
+
+.about-user>div.inline>span:nth-child(2) {
+    color: black
+}
+
+.about-user .name {
+    font-size: 1.5em;
+}
+
+.about-user .user-basic {
+    flex-direction: column;
+}
+
+.about-user .user-basic div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.about-user .user-basic div div {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-pet {
+    width: 70%;
+    position: relative;
+    flex: 1;
+}
+
+.about-user,
+.about-pet {
+    border-radius: 12px;
+    background: #FFF;
+    border-radius: 20px;
+    box-shadow: 0px 3.75px 40.21px 0px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    transition-duration: 300ms;
+}
+
+.about-pet .like {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.about-pet .like i {
+    font-size: 2em;
+}
+
+.about-pet .like i::before {
+    padding-top: 5px;
+    content: 'favorite_border';
+}
+
+.about-pet .like i.liked::before {
+    content: 'favorite';
+    color: #ff6666;
+}
+
+.about-pet .photo {
+    width: 100%;
+    height: 50vh;
+    border-radius: 20px;
+    background: url('/image-placeholder.svg');
+    background-position: center;
+    background-size: cover;
+    cursor: pointer;
+}
+
+.about-pet .info {
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.about-pet .info hr {
+    width: 1px;
+    height: 100%;
+    border: none;
+    border-left: 1px solid lightgrey;
+}
+
+.about-pet .info>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    padding: 5px;
+}
+
+.about-pet .info>div:first-child>div {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.about-pet .info>div:first-child>div>span:last-child {
+    color: #5438A6;
+    text-align: right;
+}
+
+.about-pet div.badges {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.about-pet div.badges>div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9em;
+}
+
+.about-pet div.badges>div span {
+    text-align: left;
+}
+
+.about-pet div.badges i {
+    color: #6361E8;
+}
+
+.about-pet div.badges>div.not-ok i {
+    color: #ca3b3b;
+}
+
+.about-pet .description {
+    padding: 0px 20px 20px 20px;
+    font-size: 0.9em;
+    word-wrap: break-word;
+    text-align: justify;
+}
+
+.announcement .resp-only {
+    display: none;
+}
+
+main section.prompt {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    background-color: antiquewhite;
+}
+
+.api-output {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+}
+
+.api-output span {
+    width: 100%;
+    text-align: right;
+}
+
+
+@media screen and (max-width: 1650px) {
+    .about-pet div.badges {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .announcement {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .announcement .resp-only {
+        display: flex;
+    }
+
+    .announcement>div {
+        width: 100%;
+    }
+
+    .about-user {
+        position: unset;
+        top: 80px;
+        padding: 15px;
+        max-width: unset;
+        gap: 10px;
+    }
+
+    .announcement-header {
+        justify-content: flex-end;
+    }
+
+    .announcement-header>div:first-child {
+        display: none;
+    }
+
+    .about-user .user-basic {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .about-user .avatar {
+        max-width: 100px;
+    }
+
+    .about-user .user-basic div div {
+        justify-content: flex-end;
+    }
+
+    .about-user .name {
+        font-size: 1.4em;
+    }
+
+    .about-user>div.inline {
+        flex-direction: row !important;
+        font-size: 0.9em !important;
+    }
+
+    .about-pet .info {
+        flex-direction: column;
+    }
+
+    .about-pet .info>div {
+        padding: 0;
+    }
+
+    .about-pet .info hr {
+        width: 100%;
+        height: 0px;
+        border: none;
+        border-top: 1px solid lightgrey;
+    }
+
+    .about-pet div.badges {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .announcement-header .main-button {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .about-user>div.inline {
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .about-user .name {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .about-pet div.badges {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 1240px) {
+    header {
+        padding: 8px 20px !important;
+    }
+
+    main {
+        padding: 8px 20px !important;
+    }
+}
