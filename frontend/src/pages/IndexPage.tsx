@@ -1,15 +1,15 @@
+import {ChangeEvent, FormEvent, useRef, useState} from "react"
+import {Link, useNavigate} from "react-router-dom"
+import useGridLoaders from "@hooks/useGridLoaders.tsx"
+import {useAxiosQuery} from "@hooks/useAxiosQuery.tsx"
+
 import '@styles/index.css'
 import '@styles/panel-elements.css'
 import '@styles/announcements/announcement-element.css'
-
-import {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {useFetch} from "@hooks/useFetch.tsx";
-import useGridLoaders from "@hooks/useGridLoaders.tsx";
+import {ExampleAnnouncementElement} from "@components/ExampleAnnouncementElement.tsx";
 
 export const IndexPage = () => {
     const navigate = useNavigate()
-    const {fetcher, abort, isPending} = useFetch()
     const [search, setSearch] = useState<string>('')
     const announcementsContainer = useRef<HTMLElement | null>(null)
     const loader = useGridLoaders({ref: announcementsContainer})
@@ -19,11 +19,12 @@ export const IndexPage = () => {
         navigate('/announcements?search=' + search)
     }
 
-    useEffect(() => {
-        fetcher('/api/signIn')
-
-        return abort
-    }, [abort, fetcher]);
+    const query = useAxiosQuery<any>('api/test',
+        {
+            queryOptions: {
+                queryKey: ['GET_LAST_ANNOUNCEMENTS']
+            }
+        })
 
     return <>
         <section className="welcome">
@@ -99,10 +100,10 @@ export const IndexPage = () => {
                 <span>Ostatnie dodane ogłoszenia</span>
                 <section className="panel-elements cut" ref={announcementsContainer}>
                     {
-                        isPending ?
+                        query.isPending ?
                             loader
                             :
-                            'announcements'
+                            <ExampleAnnouncementElement />
                     }
                 </section>
             </section>

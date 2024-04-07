@@ -3,7 +3,7 @@ main:has(.announcement-view) {
     position: relative;
 }
 
-main>section {
+main:has(.announcement-view)>section {
     background: none;
     box-shadow: none;
     width: 100%;
@@ -224,7 +224,7 @@ main>section {
     text-align: justify;
 }
 
-.announcement .resp-only {
+.announcement-view .resp-only {
     display: none;
 }
 
@@ -253,17 +253,17 @@ main section.prompt {
     }
 }
 
-@media screen and (max-width: 640px) {
-    .announcement {
+@media screen and (max-width: 750px) {
+    .announcement-view {
         flex-direction: column-reverse;
         gap: 10px;
     }
 
-    .announcement .resp-only {
+    .announcement-view .resp-only {
         display: flex;
     }
 
-    .announcement>div {
+    .announcement-view>div {
         width: 100%;
     }
 
@@ -348,11 +348,11 @@ main section.prompt {
 }
 
 @media screen and (max-width: 1240px) {
-    header {
+    body:has(.announcement-header) header {
         padding: 8px 20px !important;
     }
 
-    main {
+    main:has(>.announcement-header) {
         padding: 8px 20px !important;
     }
 }

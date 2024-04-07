@@ -44,7 +44,7 @@ form.with-loader.submitting {
 
 form textarea.main-input {
     flex: unset;
-    max-width: 100%;
+    max-width: 100% !important;
     resize: vertical;
     min-height: 50px;
 }
@@ -78,10 +78,10 @@ form .input-with-select {
 }
 
 form .input-with-select input {
-    box-shadow: none;
-    padding: 0;
-    border-radius: 0;
-    min-width: 50px;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    min-width: 50px !important;
 }
 
 form .input-with-select select {
