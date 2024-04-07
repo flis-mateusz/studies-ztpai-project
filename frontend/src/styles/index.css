@@ -124,12 +124,10 @@ main section.welcome>div:first-child {
     display: none;
 }
 
-main,
 section.welcome,
 .welcome .image {
     transition-duration: 200ms;
 }
-
 
 @media screen and (max-width: 1020px) {
     .add-announcement {

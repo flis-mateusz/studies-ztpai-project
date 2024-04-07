@@ -26,7 +26,7 @@ export const AnnouncementPage = () => {
                     <i className="material-icons icon-button action-like"></i>
                 </div>
 
-                <div className="photo"></div>
+                <div className="photo" style={{backgroundImage: 'url(/example.jpg)'}}></div>
                 <div className="info">
                     <div>
                         <div>

@@ -115,7 +115,6 @@ main {
     gap: 50px;
     flex: 1 0 0;
     align-self: stretch;
-    transition-duration: 300ms;
 }
 
 main > section {
@@ -446,10 +445,6 @@ i.material-icons {
 }
 
 @media screen and (max-width: 1100px) {
-    nav {
-        font-size: 0.9em;
-    }
-
     span:not(a *),
     .normal-text, header a {
         font-size: 0.9em;

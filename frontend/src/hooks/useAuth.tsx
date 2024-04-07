@@ -1,17 +1,20 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react"
 import {useLocalStorage} from "@/hooks/useLocalStorage.tsx"
 import {IUser} from "@/types/IUser.ts"
-import {IFetchResponse, useFetch} from "@/hooks/useFetch.tsx"
-import {useLocation, useNavigate} from "react-router-dom"
+import {useAxiosQuery} from "@hooks/useAxiosQuery.tsx"
+import {useAxiosMutation} from "@hooks/useAxiosMutation.tsx"
+import {IMutationMethodCallbacks} from "@/types/IMutation.tsx"
 
 interface IAuthContextType {
     user: IUser | null
     token: string | null
     isAuthPending: boolean
-    signIn: (email: string, password: string) => Promise<IFetchResponse<ISignInResponse>>
-    signOut: () => Promise<void>
+    signIn: (params: ISignInMethodParams<ISignInResponse>) => void
+    signOut: () => void
     updateUser: (updatedUserData: Partial<IUser>) => void
-    abort: () => void
+}
+
+interface ISignInMethodParams<T> extends IMutationMethodCallbacks<T>, ISignInData {
 }
 
 interface ISignInResponse {
@@ -19,70 +22,78 @@ interface ISignInResponse {
     token: string
 }
 
+interface ISignInData {
+    email: string
+    password: string
+}
+
 const AuthContext = createContext<IAuthContextType>(null!);
 
 export const AuthProvider = ({children}: { children: ReactNode }) => {
-    const navigate = useNavigate()
-    const location = useLocation()
-    const {fetcher, isPending: isAuthPending, abort} = useFetch<ISignInResponse>()
-
     const [user, setUser] = useState<IUser | null>(null)
     const [token, setToken] = useLocalStorage<string | null>("authToken", null)
 
+    const checkIn = useAxiosQuery<Omit<ISignInResponse, 'token'>>('/api/wait', {
+        queryOptions: {
+            queryKey: ['CHECKIN'],
+            enabled: !!token && !user
+        },
+        token: token!
+    })
+
+    const signInMutation = useAxiosMutation<ISignInResponse, ISignInData>('/api/signIn', {
+        mutationOptions: {
+            mutationKey: ['SIGN_IN']
+        },
+    })
+
+    const signOutMutation = useAxiosMutation<null, null>('/api/signIn', {
+        mutationOptions: {
+            mutationKey: ['SIGN_OUT']
+        },
+    })
+
     useEffect(() => {
-        window.onbeforeunload = () => {
-            abort()
-        };
-
-        if (!user && token) {
-            fetcher('/api/wait', {}, token)
-                .then((response) => {
-                    setUser({email: 'ddd@ddd'})
-                })
-                .catch((error) => {
-                    console.log(error)
-                    if (!error.aborted) {
-                        console.log('clear token')
-                        setToken(null)
-                        navigate('/login', {state: {from: location, error: error}})
-                    }
-                })
+        if (checkIn.data) {
+            setUser(checkIn.data.user)
         }
+    }, [checkIn.data])
 
-        return () => {
-            abort()
-            window.onbeforeunload = null
-        };
-    }, [token, fetcher, user, setToken, navigate, location, abort])
-
-    const signIn = (user: string, password: string) => {
-        return fetcher('/api/signIn', {method: 'POST', body: JSON.stringify({user, password})})
-            .then((response) => {
-                    // if (response.data) {
-                    //     setToken(response.data.token)
-                    // }
-                    setToken('998998')
-                    setUser({email: 'pwp@wp.pl'})
-                    return response
-                }
-            )
+    const signIn = (params: ISignInMethodParams<ISignInResponse>) => {
+        signInMutation.mutate({email: params.email, password: params.password}, {
+            onSuccess: (data) => {
+                setToken('TEST')
+                setUser({email: 'test'})
+                params.onSuccess(data)
+                // TODO Change this
+            },
+            onError: params.onError
+        })
     }
 
     const signOut = () => {
-        return fetcher('/api/signOut', {}, token)
-            .then(() => {
-                    setToken(null)
-                    setUser(null)
-                }
-            )
+        signOutMutation.mutate(null, {
+            onSuccess: () => {
+                setUser(null)
+                setToken(null)
+            }
+        })
     }
 
     const updateUser = (updatedUserData: Partial<IUser>) => {
-        setUser(currentUserData => ({ ...currentUserData, ...updatedUserData } as IUser))
+        setUser(currentUserData => ({...currentUserData, ...updatedUserData} as IUser))
     }
 
-    const value = {user, token, isAuthPending, abort, signIn, signOut, updateUser};
+    const isAuthPending = (checkIn.isPending && checkIn.fetchStatus !== 'idle') || signInMutation.isPending
 
+    const value = {
+        user,
+        token,
+        isAuthPending: isAuthPending,
+        signIn,
+        signOut,
+        updateUser
+    }
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

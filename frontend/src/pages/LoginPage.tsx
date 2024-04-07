@@ -20,7 +20,7 @@ export const LoginPage = () => {
 
     const from = location.state?.from?.pathname || "/"
 
-    useEffect(()=> {
+    useEffect(() => {
         if (location.state?.error) {
             Swal.fire({
                 toast: true,
@@ -32,20 +32,22 @@ export const LoginPage = () => {
                 timerProgressBar: true,
             })
         }
-    }, [])
+    }, [location.state?.error])
 
     const handleFormChange = (newFormName: string) => {
         setCurrentFormClass(newFormName)
     }
 
     const handleLogin = (email: string, password: string) => {
-        auth.signIn(email, password)
-            .then(() => {
-                navigate(from, {replace: true});
-            })
-            .catch((e) => {
-
-            })
+        auth.signIn({
+            email: email, password: password,
+            onSuccess: () => {
+                navigate(from, {replace: true})
+            },
+            onError: (error) => {
+                console.log(error)
+            }
+        })
     }
 
     return (

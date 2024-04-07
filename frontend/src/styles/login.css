@@ -165,8 +165,8 @@ section.welcome-image {
     overflow: hidden;
 }
 
-form input,
-form div {
+form.with-loader input,
+form.with-loader div {
     width: 100% !important;
     transition-duration: 250ms;
 }

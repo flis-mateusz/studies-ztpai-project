@@ -44,18 +44,18 @@ const useGridLoaders = ({
             }
         }
 
+        window.addEventListener('resize', updateLoaders)
+
         updateLoaders()
 
-        const handleResize = () => {
+        setTimeout(()=> {
             updateLoaders()
-        };
-
-        window.addEventListener('resize', handleResize)
+        }, 100)
 
         return () => {
-            window.removeEventListener('resize', handleResize)
+            window.removeEventListener('resize', updateLoaders)
         }
-    }, [ref, loaderCount, defaultWidth, loaderHeight])
+    }, [ref, loaderCount, defaultWidth, loaderHeight, useColumnNumberAsCount])
 
     return loaders
 };

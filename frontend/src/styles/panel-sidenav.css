@@ -11,7 +11,7 @@ main:has(.sidenav) {
     position: relative;
 }
 
-.panel>form {
+.panel > form {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -19,20 +19,20 @@ main:has(.sidenav) {
     justify-content: space-between;
 }
 
-.panel>form>div {
+.panel > form > div {
     display: flex;
     justify-content: space-between;
     gap: 25px;
 }
 
-.panel>form section {
+.panel > form section {
     display: flex;
     flex-direction: column;
     gap: 10px;
     flex: 1;
 }
 
-.panel>form section>div {
+.panel > form section > div {
     display: flex;
     flex-direction: column;
     gap: 3px;
@@ -40,7 +40,7 @@ main:has(.sidenav) {
 }
 
 .sidenav,
-.sidenav>div {
+.sidenav > div {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -57,11 +57,11 @@ main:has(.sidenav) {
     z-index: 1;
 }
 
-.sidenav>div {
+.sidenav > div {
     width: 100%;
 }
 
-.sidenav>div>a:not(.main-button) {
+.sidenav > div > a:not(.main-button) {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -72,22 +72,22 @@ main:has(.sidenav) {
     cursor: pointer;
 }
 
-.sidenav>div>a:not(.main-button)>span {
+.sidenav > div > a:not(.main-button) > span {
     text-align: left;
     font-size: 1em;
 }
 
-.sidenav>div>a:not(.main-button).active {
+.sidenav > div > a:not(.main-button).active {
     background: #F6F3FF;
 }
 
-.sidenav>div>span {
+.sidenav > div > span {
     width: 100%;
     text-align: center;
     font-weight: bold;
 }
 
-.sidenav>div>.main-button {
+.sidenav > div > .main-button {
     width: 100%;
 }
 
@@ -143,17 +143,17 @@ main:has(.sidenav) {
         flex-direction: column;
     }
 
-    .panel form>div {
+    .panel form > div {
         width: 100%;
         flex-direction: column-reverse;
     }
 
-    .panel form>div>section {
+    .panel form > div > section {
         width: 100%;
         align-items: center;
     }
 
-    .panel form>div>section>div {
+    .panel form > div > section > div {
         width: 100%;
     }
 
@@ -194,7 +194,7 @@ main:has(.sidenav) {
         transform: rotate(180deg);
     }
 
-    main:has(#sidenav-button:checked)>.panel {
+    main:has(#sidenav-button:checked) > .panel {
         display: none;
     }
 
@@ -204,7 +204,7 @@ main:has(.sidenav) {
 }
 
 @media screen and (max-width: 1100px) {
-    main:has(.sidenav) {
+    main:has(.sidenav), body:has(.sidenav) header {
         padding: 15px 20px !important;
     }
 }

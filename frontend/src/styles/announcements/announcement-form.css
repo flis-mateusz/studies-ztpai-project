@@ -1,0 +1,92 @@
+main {
+    position: relative;
+}
+
+#announcement-add-form .main-input {
+    border-radius: 15px;
+    padding: 12px 20px;
+    box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.08);
+}
+
+#announcement-add-form {
+    max-width: 850px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+form fieldset {
+    background: #FFF;
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    border: none;
+    min-inline-size: auto;
+}
+
+#announcement-add-form .main-input,
+#announcement-add-form .input-related {
+    max-width: 300px;
+}
+
+#announcement-add-form > div {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+fieldset > div {
+    display: flex;
+    align-self: stretch;
+}
+
+fieldset > div.field,
+fieldset > div.field > div {
+    display: flex;
+    flex-direction: column;
+}
+
+fieldset > div.field > div.row {
+    flex-direction: row;
+}
+
+fieldset > div.field > div:first-child {
+    font-size: 1.1em;
+}
+
+fieldset > div.field > .info {
+    font-size: 0.8em;
+}
+
+fieldset div.tip {
+    margin-top: 5px;
+}
+
+fieldset div.info {
+    margin-bottom: 5px;
+}
+
+span.input-error {
+    text-align: left !important;
+}
+
+@media screen and (max-width: 400px) {
+    #announcement-add-form > div {
+        justify-content: center;
+        width: 100%;
+    }
+
+    fieldset > div.field > .info {
+        text-align: justify;
+    }
+
+    fieldset > div.field > div:first-child {
+        font-size: 1em;
+    }
+}

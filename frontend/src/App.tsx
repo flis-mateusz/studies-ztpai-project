@@ -21,7 +21,20 @@ import {IndexPage} from "@pages/IndexPage.tsx";
 import {AnnouncementPage} from "@pages/AnnouncementPage.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: false,
+            staleTime: 0,
+            retry: 0
+        },
+        mutations: {
+
+        }
+    }
+})
 
 const App = () => {
     return (
