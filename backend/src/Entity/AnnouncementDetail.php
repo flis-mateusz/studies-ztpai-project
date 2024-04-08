@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AnnouncementDetailRepository::class)]
 class AnnouncementDetail
@@ -16,36 +17,46 @@ class AnnouncementDetail
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(length: 255)]
     private ?string $locality = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(nullable: true)]
     private ?int $price = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(nullable: true)]
     private ?int $age = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(length: 255)]
     private ?string $gender = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(length: 255)]
     private ?string $avatarUrl = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $kind = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(length: 255)]
     private ?string $ageType = null;
 
     /**
      * @var Collection<int, AnnouncementAnimalFeature>
      */
+    #[Groups(['announcement:list'])]
     #[ORM\OneToMany(targetEntity: AnnouncementAnimalFeature::class, mappedBy: 'announcement')]
     private Collection $announcementAnimalFeatures;
 

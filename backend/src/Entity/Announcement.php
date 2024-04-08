@@ -6,10 +6,12 @@ use App\Repository\AnnouncementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AnnouncementRepository::class)]
 class Announcement
 {
+    #[Groups(['announcement:list'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -18,17 +20,21 @@ class Announcement
     #[ORM\Column]
     private ?bool $isAccepted = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\ManyToOne(inversedBy: 'announcements')]
     #[ORM\JoinColumn(nullable: false)]
     private ?AnimalType $animalType = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\ManyToOne(inversedBy: 'announcements')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?AnnouncementDetail $announcementDetail = null;

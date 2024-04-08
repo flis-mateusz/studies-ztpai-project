@@ -2,17 +2,23 @@
 
 namespace App\Controller;
 
+use App\Entity\Announcement;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class AnnouncementController extends AbstractController
 {
     #[Route('/announcements', name: 'app_announcements')]
-    public function announcements(): JsonResponse
+    public function announcements(EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
-        return $this->json([]);
+        $announcements = $entityManager->getRepository(Announcement::class)->findAll();
+
+        return $this->json($announcements, 200, [], [AbstractNormalizer::GROUPS => ['announcement:list']]);
     }
 
     #[Route('/announcement/{$announcementId}', name: 'app_announcement')]

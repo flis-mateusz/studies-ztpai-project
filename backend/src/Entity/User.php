@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -18,6 +19,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
@@ -33,15 +35,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(length: 15)]
     private ?string $phone = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(length: 255)]
     private ?string $surname = null;
 
+    #[Groups(['announcement:list'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarUrl = null;
 
