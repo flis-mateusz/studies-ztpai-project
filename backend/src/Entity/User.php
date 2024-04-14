@@ -35,19 +35,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['user:info', 'announcement:list'])]
     #[ORM\Column(length: 15)]
     private ?string $phone = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['user:info', 'announcement:list'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['user:info', 'announcement:list'])]
     #[ORM\Column(length: 255)]
     private ?string $surname = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['user:info', 'announcement:list'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarUrl = null;
 
@@ -100,13 +100,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
+     * @return list<string>
      * @see UserInterface
      *
-     * @return list<string>
      */
     public function getRoles(): array
     {

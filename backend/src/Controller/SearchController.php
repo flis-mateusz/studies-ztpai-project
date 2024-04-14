@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class SearchController extends AbstractController
 {
-    #[Route('/announcements/search', name: 'app_query_announcements', methods: ['GET'])]
+    #[Route('/public/announcements/search', name: 'app_query_announcements', methods: ['GET'])]
     public function queryAnnouncements(Request $request): JsonResponse
     {
         $search = $request->query->get('features', '');
@@ -23,7 +23,7 @@ class SearchController extends AbstractController
         ]);
     }
 
-    #[Route('/animal_types/search', name: 'app_query_animal_types', methods: ['GET'])]
+    #[Route('/public/animal_types/search', name: 'app_query_animal_types', methods: ['GET'])]
     public function queryAnimalTypes(Request $request): JsonResponse
     {
         $search = $request->query->get('q', '');

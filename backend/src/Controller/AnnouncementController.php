@@ -9,19 +9,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class AnnouncementController extends AbstractController
 {
-    #[Route('/announcements', name: 'app_announcements')]
-    public function announcements(EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    #[Route('/public/announcements', name: 'app_announcements')]
+    public function announcements(EntityManagerInterface $entityManager): JsonResponse
     {
-        $announcements = $entityManager->getRepository(Announcement::class)->findAll();
+        $announcements = $entityManager->getRepository(Announcement::class)->findBy(['deletionDetail' => null]);
 
         return $this->json($announcements, 200, [], [AbstractNormalizer::GROUPS => ['announcement:list']]);
     }
 
-    #[Route('/announcement/{$announcementId}', name: 'app_announcement')]
+    #[Route('/public/announcement/{announcementId}', name: 'app_announcement')]
     public function announcement(int $announcementId): JsonResponse
     {
         return $this->json([
