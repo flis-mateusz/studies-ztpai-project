@@ -6,4 +6,4 @@ controllers:
     prefix: '/api'
 
 api_login:
-    path: /api/public/login
+    path: /api/login

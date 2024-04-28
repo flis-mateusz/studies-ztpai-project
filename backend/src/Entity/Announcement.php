@@ -2,13 +2,37 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\AnnouncementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ORM\Entity(repositoryClass: AnnouncementRepository::class)]
+#[ApiResource(
+    operations: [
+        // collection
+        new GetCollection(
+            paginationClientItemsPerPage: true,
+        ),
+        new Post(
+            security: "is_granted('ROLE_USER')",
+            validationContext: ['groups' => ['announcement:create']]
+        ),
+        // item
+        new Get(),
+        new Delete(
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+    ],
+    normalizationContext: ['groups' => ['announcement:list']],
+    denormalizationContext: ['groups' => ['announcement:create', 'announcement:update']],
+)]
 class Announcement
 {
     #[Groups(['announcement:list'])]
@@ -34,7 +58,7 @@ class Announcement
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['announcement:list', 'announcement:create'])]
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?AnnouncementDetail $announcementDetail = null;

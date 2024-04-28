@@ -36,7 +36,7 @@ services:
       dockerfile: ../.docker/php/Dockerfile
     container_name: ztpai_symfony
     ports:
-      - "8741:80"
+      - "8082:80"
     volumes:
       - ./.docker/php/vhosts:/etc/apache2/sites-enabled
       - ./backend:/var/www/backend:delegated

@@ -81,6 +81,17 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/var-exporter" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/api-platform/core" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/nelmio/cors-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/psr/link" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/asset" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/expression-language" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/twig-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/twig-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/validator" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/symfony/web-link" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/twig/twig" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/willdurand/negotiation" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

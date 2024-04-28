@@ -1,3 +1,7 @@
+.panel > form section:first-child {
+    flex: unset;
+}
+
 .submit-container {
     align-items: flex-end;
 }

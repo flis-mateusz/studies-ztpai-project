@@ -2,6 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +18,36 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            uriTemplate: '/admin/users{._format}',
+            paginationClientItemsPerPage: true,
+            security: 'is_granted("ROLE_ADMIN")',
+        ),
+        new Put(
+            security: "is_granted('ROLE_ADMIN') || object === user",
+            validationContext: ['groups' => ['user:update']]
+        ),
+        new Get(
+            uriTemplate: '/users/loggedUser',
+            security: "object === user"
+        ),
+        new Get(
+            security: "object === user"
+        ),
+        new Get(
+            uriTemplate: '/admin/users/{id}{._format}',
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Delete(
+            uriTemplate: '/admin/users/{id}{._format}',
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+    ],
+    normalizationContext: ['groups' => ['user:info']],
+    denormalizationContext: ['groups' => ['user:create', 'user:update']],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -19,13 +55,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['user:info', 'announcement:list'])]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
+    #[Groups(['user:info'])]
     #[ORM\Column]
     private array $roles = [];
 
@@ -35,19 +72,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[Groups(['user:info', 'announcement:list'])]
+    #[Groups(['user:info', 'announcement:list', 'user:update'])]
     #[ORM\Column(length: 15)]
     private ?string $phone = null;
 
-    #[Groups(['user:info', 'announcement:list'])]
+    #[Groups(['user:info', 'announcement:list', 'user:update'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Groups(['user:info', 'announcement:list'])]
+    #[Groups(['user:info', 'announcement:list', 'user:update'])]
     #[ORM\Column(length: 255)]
     private ?string $surname = null;
 
-    #[Groups(['user:info', 'announcement:list'])]
+    #[Groups(['user:info', 'announcement:list', 'user:update'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarUrl = null;
 
