@@ -6,9 +6,10 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
+use App\State\UserPasswordHasher;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,13 +26,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
             paginationClientItemsPerPage: true,
             security: 'is_granted("ROLE_ADMIN")',
         ),
-        new Put(
+        new Patch(
             security: "is_granted('ROLE_ADMIN') || object === user",
-            validationContext: ['groups' => ['user:update']]
+            validationContext: ['groups' => ['user:update']],
+            processor: UserPasswordHasher::class
         ),
-        new Get(
-            uriTemplate: '/users/loggedUser',
-            security: "object === user"
+        new Post(
+            normalizationContext: ['groups' => ['user:info', 'user:registration']],
+            processor: UserPasswordHasher::class
         ),
         new Get(
             security: "object === user"
@@ -48,6 +50,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['user:info']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
 )]
+# TODO assertions
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -55,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['user:info', 'announcement:list'])]
+    #[Groups(['user:info', 'announcement:list', 'user:update'])]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
@@ -71,6 +74,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+//    #[Assert\NotBlank(groups: ['user:create'])]
+    #[Groups(['user:update'])]
+    private ?string $plainPassword = null;
+
+    #[Groups(['user:registration'])]
+    private ?string $registrationToken = null;
 
     #[Groups(['user:info', 'announcement:list', 'user:update'])]
     #[ORM\Column(length: 15)]
@@ -179,13 +189,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    public function getRegistrationToken(): ?string
+    {
+        return $this->registrationToken;
+    }
+
+    public function setRegistrationToken(?string $registrationToken): self
+    {
+        $this->registrationToken = $registrationToken;
+
+        return $this;
+    }
+
     /**
      * @see UserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     public function getPhone(): ?string

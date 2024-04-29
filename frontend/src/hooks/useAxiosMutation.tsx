@@ -1,13 +1,14 @@
-import axios, {AxiosRequestConfig} from 'axios'
+import axios, {AxiosRequestConfig, Method} from 'axios'
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {useNavigate, useLocation} from 'react-router-dom'
 
 interface AxiosMutationOptions<T, TVariables> extends Omit<AxiosRequestConfig, 'url' | 'method'> {
     token?: string
     mutationOptions: UseMutationOptions<T, unknown, TVariables>
+    method: Exclude<Method, "GET" | "get">
 }
 
-export const useAxiosMutation = <T, TVariables = unknown>(
+export const useAxiosMutation = <TVariables, T = unknown>(
     url: string,
     options: AxiosMutationOptions<T, TVariables>
 ) => {
@@ -17,13 +18,16 @@ export const useAxiosMutation = <T, TVariables = unknown>(
     const mutationFn = async (variables: TVariables): Promise<T> => {
         const config: AxiosRequestConfig = {
             ...options,
+            url: url,
+            method: options.method,
+            data: variables,
             headers: {
                 ...options.headers,
                 Authorization: options.token ? `Bearer ${options.token}` : undefined,
             },
         }
 
-        return axios.post<T>(url, variables, config)
+        return axios.request<T>(config)
             .then((res) => res.data)
             .catch((err) => {
                 if (err.response && err.response.status === 401) {

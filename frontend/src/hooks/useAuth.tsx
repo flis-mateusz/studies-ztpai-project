@@ -41,17 +41,18 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         token: token!
     })
 
-    const signInMutation = useAxiosMutation<ISignInResponse, ISignInData>('/api/signIn', {
+    const signInMutation = useAxiosMutation<ISignInData, ISignInResponse>('/api/signIn', {
+        method: 'POST',
         mutationOptions: {
             mutationKey: ['SIGN_IN']
         },
     })
 
-    const signOutMutation = useAxiosMutation<null, null>('/api/signIn', {
-        mutationOptions: {
-            mutationKey: ['SIGN_OUT']
-        },
-    })
+    // const signOutMutation = useAxiosMutation<null, null>('/api/signIn', {
+    //     mutationOptions: {
+    //         mutationKey: ['SIGN_OUT']
+    //     },
+    // })
 
     useEffect(() => {
         if (checkIn.data) {
@@ -72,12 +73,8 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     }
 
     const signOut = () => {
-        signOutMutation.mutate(null, {
-            onSuccess: () => {
-                setUser(null)
-                setToken(null)
-            }
-        })
+        setUser(null)
+        setToken(null)
     }
 
     const updateUser = (updatedUserData: Partial<IUser>) => {

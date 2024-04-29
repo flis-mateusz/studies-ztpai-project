@@ -16,7 +16,6 @@ use ApiPlatform\Metadata\ApiResource;
 #[ORM\Entity(repositoryClass: AnnouncementRepository::class)]
 #[ApiResource(
     operations: [
-        // collection
         new GetCollection(
             paginationClientItemsPerPage: true,
         ),
