@@ -17,21 +17,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\UniqueConstraint(fields: ['name'])]
 #[ApiResource(
     operations: [
-        new Post(
-            uriTemplate: '/admin/animal_features{._format}',
-            security: "is_granted('ROLE_ADMIN')",
-        ),
-        new Delete(
-            uriTemplate: '/admin/animal_features/{id}{._format}',
-            security: "is_granted('ROLE_ADMIN')",
-        ),
+        new Post(),
+        new Delete(),
+    ],
+    routePrefix: '/admin',
+    denormalizationContext: ['groups' => ['admin:animal_feature:write']],
+    security: "is_granted('ROLE_ADMIN')",
+)]
+#[ApiResource(
+    operations: [
         new GetCollection(
             paginationClientItemsPerPage: false,
         ),
         new Get(),
     ],
     normalizationContext: ['groups' => ['animal_feature:read']],
-    denormalizationContext: ['groups' => ['animal_feature:write']],
 )]
 class AnimalFeature
 {
@@ -41,7 +41,7 @@ class AnimalFeature
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['animal_feature:read', 'animal_feature:write', 'announcement:read'])]
+    #[Groups(['animal_feature:read', 'admin:animal_feature:write', 'announcement:read'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

@@ -20,21 +20,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\UniqueConstraint(fields: ['name'])]
 #[ApiResource(
     operations: [
-        new Post(
-            uriTemplate: '/admin/animal_types{._format}',
-            security: "is_granted('ROLE_ADMIN')",
-        ),
-        new Delete(
-            uriTemplate: '/admin/animal_types/{id}{._format}',
-            security: "is_granted('ROLE_ADMIN')",
-        ),
+        new Post(),
+        new Delete(),
+    ],
+    routePrefix: '/admin',
+    denormalizationContext: ['groups' => ['admin:animal_type:write']],
+    security: "is_granted('ROLE_ADMIN')",
+)]
+#[ApiResource(
+    operations: [
         new GetCollection(
             paginationClientItemsPerPage: false,
         ),
         new Get(),
     ],
     normalizationContext: ['groups' => ['animal_type:read']],
-    denormalizationContext: ['groups' => ['animal_type:write']],
 )]
 class AnimalType
 {
@@ -44,7 +44,7 @@ class AnimalType
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['animal_type:read', 'animal_type:write', 'announcement:read'])]
+    #[Groups(['animal_type:read', 'admin:animal_type:write', 'announcement:read'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

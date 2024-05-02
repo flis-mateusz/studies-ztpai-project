@@ -17,21 +17,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\UniqueConstraint(fields: ['user', 'announcement'])]
 #[ApiResource(
     operations: [
-        new Get(
-            uriTemplate: '/admin/announcement_likes/{id}{._format}',
-            normalizationContext: ['groups' => ['like:read', 'like:list', 'announcement:read']],
-            security: "is_granted('ROLE_ADMIN')",
-        ),
-        new Delete(
-            uriTemplate: '/admin/announcement_likes/{id}{._format}',
-            security: "is_granted('ROLE_ADMIN')"
-        ),
-        new GetCollection(
-            uriTemplate: '/admin/announcement_likes{._format}',
-            paginationClientItemsPerPage: false,
-            normalizationContext: ['groups' => ['like:read', 'like:list', 'announcement:read']],
-            security: "is_granted('ROLE_ADMIN')"
-        ),
+        new GetCollection(),
+        new Get(),
+        new Delete(),
+    ],
+    routePrefix: '/admin',
+    normalizationContext: ['groups' => ['like:read', 'like:list', 'announcement:read']],
+    security: "is_granted('ROLE_ADMIN')",
+)]
+#[ApiResource(
+    operations: [
         new Delete(
             security: "object.getUser() === user"
         ),

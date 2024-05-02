@@ -18,8 +18,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\UniqueConstraint(fields: ['user', 'announcement'])]
 #[ApiResource(
     operations: [
+        new GetCollection(),
         new Get(
-            uriTemplate: '/admin/announcement_reports/{id}{._format}',
             normalizationContext: ['groups' => [
                 'report:read',
                 'admin:report:read',
@@ -27,23 +27,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'announcement:read',
                 'user:read'
             ]],
-            security: "is_granted('ROLE_ADMIN')",
         ),
-        new Delete(
-            uriTemplate: '/admin/announcement_reports/{id}{._format}',
-            security: "is_granted('ROLE_ADMIN')"
-        ),
-        new GetCollection(
-            uriTemplate: '/admin/announcement_reports{._format}',
-            paginationClientItemsPerPage: false,
-            security: "is_granted('ROLE_ADMIN')"
-        ),
+        new Delete(),
+    ],
+    routePrefix: '/admin',
+    normalizationContext: ['groups' => ['report:read']],
+    security: "is_granted('ROLE_ADMIN')",
+)]
+#[ApiResource(
+    operations: [
         new Delete(
             security: "object.getUser() === user"
         ),
     ],
-    normalizationContext: ['groups' => ['report:read']],
-    denormalizationContext: ['groups' => ['report:write']],
 )]
 #[ApiResource(
     uriTemplate: '/announcements/{announcement_id}/reports{._format}',

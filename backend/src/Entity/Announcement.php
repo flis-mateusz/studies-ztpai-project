@@ -29,26 +29,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(
-            uriTemplate: '/admin/announcements/reports/unaccepted{._format}',
+            uriTemplate: '/announcements/reports/unaccepted{._format}',
             paginationClientItemsPerPage: true,
             normalizationContext: ['groups' => ['announcement:read', 'admin:report:list', 'user_context:report:read', 'user:read']],
-            security: "is_granted('ROLE_ADMIN')",
             provider: AnnouncementsUnacceptedReportsProvider::class
         ),
         new GetCollection(
-            uriTemplate: '/admin/announcements/unaccepted{._format}',
+            uriTemplate: '/announcements/unaccepted{._format}',
             paginationClientItemsPerPage: true,
             normalizationContext: ['groups' => ['announcement:read', 'user:read']],
-            security: "is_granted('ROLE_ADMIN')",
             provider: AnnouncementsUnacceptedProvider::class
         ),
-        new Delete(
-            uriTemplate: '/admin/announcements/{id}{._format}',
-            security: "is_granted('ROLE_ADMIN')",
-            processor: AnnouncementDeletionProcessor::class
-        ),
         new Get(
-            uriTemplate: '/admin/announcements/{id}{._format}',
             normalizationContext: ['groups' => [
                 'announcement:read',
                 'deletion:read',
@@ -59,9 +51,17 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'admin:report:list',
                 'user:read'
             ]],
-            security: "is_granted('ROLE_ADMIN')",
             provider: AnnouncementProvider::class
         ),
+        new Delete(
+            processor: AnnouncementDeletionProcessor::class
+        ),
+    ],
+    routePrefix: '/admin',
+    security: "is_granted('ROLE_ADMIN')",
+)]
+#[ApiResource(
+    operations: [
         new GetCollection(
             paginationClientItemsPerPage: true,
             provider: AnnouncementsProvider::class
