@@ -24,7 +24,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(
             uriTemplate: '/admin/users{._format}',
             paginationClientItemsPerPage: true,
+            normalizationContext: ['groups' => ['user:read', 'admin:user:read']],
             security: 'is_granted("ROLE_ADMIN")',
+        ),
+        new Get(
+            uriTemplate: '/admin/users/{id}{._format}',
+            normalizationContext: ['groups' => ['user:read', 'admin:user:read']],
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Delete(
+            uriTemplate: '/admin/users/{id}{._format}',
+            security: "is_granted('ROLE_ADMIN')"
         ),
         new Patch(
             security: "is_granted('ROLE_ADMIN') || object === user",
@@ -38,17 +48,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Get(
             security: "object === user"
         ),
-        new Get(
-            uriTemplate: '/admin/users/{id}{._format}',
-            security: "is_granted('ROLE_ADMIN')"
-        ),
-        new Delete(
-            uriTemplate: '/admin/users/{id}{._format}',
-            security: "is_granted('ROLE_ADMIN')"
-        ),
     ],
     normalizationContext: ['groups' => ['user:info']],
-    denormalizationContext: ['groups' => ['user:create', 'user:update']],
+    denormalizationContext: ['groups' => ['user:write']],
 )]
 # TODO assertions
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -58,14 +60,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['user:info', 'announcement:list', 'user:update'])]
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
-    #[Groups(['user:info'])]
+    #[Groups(['admin:user:read'])]
     #[ORM\Column]
     private array $roles = [];
 
@@ -76,25 +78,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
 //    #[Assert\NotBlank(groups: ['user:create'])]
-    #[Groups(['user:update'])]
+    #[Groups(['user:write'])]
     private ?string $plainPassword = null;
 
     #[Groups(['user:registration'])]
     private ?string $registrationToken = null;
 
-    #[Groups(['user:info', 'announcement:list', 'user:update'])]
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(length: 15)]
     private ?string $phone = null;
 
-    #[Groups(['user:info', 'announcement:list', 'user:update'])]
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Groups(['user:info', 'announcement:list', 'user:update'])]
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(length: 255)]
     private ?string $surname = null;
 
-    #[Groups(['user:info', 'announcement:list', 'user:update'])]
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarUrl = null;
 

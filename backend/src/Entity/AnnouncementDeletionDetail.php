@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AnnouncementDeletionDetailRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AnnouncementDeletionDetailRepository::class)]
 class AnnouncementDeletionDetail
@@ -13,13 +14,16 @@ class AnnouncementDeletionDetail
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['deletion:read'])]
     #[ORM\Column(length: 255)]
     private ?string $reason = null;
 
+    #[Groups(['admin:deletion:read'])]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $deletedBy = null;
 
+    #[Groups(['deletion:read'])]
     #[ORM\Column]
     private ?\DateTimeImmutable $deletedAt = null;
 

@@ -17,46 +17,46 @@ class AnnouncementDetail
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\Column(length: 255)]
     private ?string $locality = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\Column(nullable: true)]
     private ?int $price = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\Column(nullable: true)]
     private ?int $age = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\Column(length: 255)]
     private ?string $gender = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\Column(length: 255)]
     private ?string $avatarUrl = null;
 
-    #[Groups(['announcement:list'])]
-    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['announcement:read', 'announcement:write'])]
+    #[ORM\Column(length: 255, nullable: true, options: ['default' => null])]
     private ?string $kind = null;
 
-    #[Groups(['announcement:list'])]
+    #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\Column(length: 255)]
     private ?string $ageType = null;
 
     /**
      * @var Collection<int, AnnouncementAnimalFeature>
      */
-    #[Groups(['announcement:list'])]
+    #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\OneToMany(targetEntity: AnnouncementAnimalFeature::class, mappedBy: 'announcement')]
     private Collection $announcementAnimalFeatures;
 

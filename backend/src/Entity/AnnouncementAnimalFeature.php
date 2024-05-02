@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AnnouncementAnimalFeatureRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AnnouncementAnimalFeatureRepository::class)]
 class AnnouncementAnimalFeature
@@ -13,9 +14,11 @@ class AnnouncementAnimalFeature
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\Column(nullable: true)]
     private ?bool $isPositive = null;
 
+    #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?AnimalFeature $feature = null;
@@ -29,12 +32,12 @@ class AnnouncementAnimalFeature
         return $this->id;
     }
 
-    public function isPositive(): ?bool
+    public function getIsPositive(): ?bool
     {
         return $this->isPositive;
     }
 
-    public function setPositive(?bool $isPositive): static
+    public function setIsPositive(?bool $isPositive): static
     {
         $this->isPositive = $isPositive;
 

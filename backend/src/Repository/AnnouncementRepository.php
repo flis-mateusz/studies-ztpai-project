@@ -45,4 +45,18 @@ class AnnouncementRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findAnnouncementsWithUnacceptedReports()
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('a')
+            ->leftJoin('a.announcementReports', 'ar')
+            ->where('ar.isAccepted = :isAccepted OR ar.isAccepted IS NULL')
+            ->setParameter('isAccepted', false)
+            ->groupBy('a.id')
+            ->having('COUNT(ar.id) > 0');
+
+        return $qb->getQuery()->getResult();
+    }
+
 }

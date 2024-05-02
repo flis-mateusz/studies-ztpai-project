@@ -16,7 +16,7 @@ class TestController extends AbstractController
         $data = [];
 
         $data[] = [
-            'name' => 'Mateusz',
+            'name' => date_default_timezone_get(),
         ];
 
         return $this->json($data[0]);

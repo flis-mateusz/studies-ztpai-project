@@ -20,6 +20,7 @@ import {RequireAuth} from "@components/RequireAuth.tsx";
 import {IndexPage} from "@pages/IndexPage.tsx";
 import {AnnouncementPage} from "@pages/AnnouncementPage.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import axios from "axios";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -35,6 +36,8 @@ const queryClient = new QueryClient({
         }
     }
 })
+
+axios.defaults.baseURL = 'http://localhost:8082';
 
 const App = () => {
     return (

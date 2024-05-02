@@ -17,7 +17,7 @@ class AnnouncementController extends AbstractController
     {
         $announcements = $entityManager->getRepository(Announcement::class)->findBy(['deletionDetail' => null]);
 
-        return $this->json($announcements, 200, [], [AbstractNormalizer::GROUPS => ['announcement:list']]);
+        return $this->json($announcements, 200, [], [AbstractNormalizer::GROUPS => ['announcement:read']]);
     }
 
     #[Route('/public/announcement/{announcementId}', name: 'app_announcement')]
