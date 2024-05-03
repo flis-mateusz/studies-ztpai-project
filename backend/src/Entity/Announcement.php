@@ -91,7 +91,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ],
     normalizationContext: ['groups' => ['announcement:read', 'user:read']],
-    denormalizationContext: ['groups' => ['announcement:write']],
+    denormalizationContext: ['groups' => ['announcement:write', 'media_object:create']],
 )]
 #[ApiResource(
     operations: [
@@ -136,6 +136,11 @@ class Announcement
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?AnnouncementDetail $announcementDetail = null;
+
+    #[Groups(['announcement:write'])]
+    #[ORM\OneToOne(targetEntity: MediaObject::class, cascade: ['remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    public ?MediaObject $image = null;
 
     #[Groups(['announcement:read:user_context'])]
     private ?AnnouncementReport $userReport = null;

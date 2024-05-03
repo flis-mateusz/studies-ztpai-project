@@ -94,6 +94,10 @@
       <path value="$PROJECT_DIR$/backend/vendor/symfony/expression-language" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/web-link" />
       <path value="$PROJECT_DIR$/backend/vendor/symfony/asset" />
+      <path value="$PROJECT_DIR$/backend/vendor/vich/uploader-bundle" />
+      <path value="$PROJECT_DIR$/backend/vendor/jms/metadata" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/backend/vendor/symfony/polyfill-intl-idn" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">
