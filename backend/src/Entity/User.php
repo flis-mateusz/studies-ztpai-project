@@ -22,39 +22,39 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new GetCollection(
-            uriTemplate: '/admin/users{._format}',
-            paginationClientItemsPerPage: true,
-            normalizationContext: ['groups' => ['user:read', 'admin:user:read']],
-            security: 'is_granted("ROLE_ADMIN")',
+            paginationClientEnabled: true
         ),
-        new Get(
-            uriTemplate: '/admin/users/{id}{._format}',
-            normalizationContext: ['groups' => ['user:read', 'admin:user:read']],
-            security: "is_granted('ROLE_ADMIN')"
-        ),
-        new Delete(
-            uriTemplate: '/admin/users/{id}{._format}',
-            security: "is_granted('ROLE_ADMIN')"
-        ),
+        new Get(),
+        new Delete(),
+        new Patch()
+    ],
+    routePrefix: '/admin',
+    normalizationContext: ['groups' => ['user:read', 'admin:user:read']],
+    denormalizationContext: ['groups' => ['admin:user:write']],
+    security: "is_granted('ROLE_ADMIN')",
+)]
+#[ApiResource(
+    operations: [
         new Patch(
-            security: "is_granted('ROLE_ADMIN') || object === user",
+            security: "object === user",
             validationContext: ['groups' => ['user:update']],
             processor: UserPasswordHasher::class
         ),
         new Post(
-            normalizationContext: ['groups' => ['user:info', 'user:registration']],
+            normalizationContext: ['groups' => ['user:read', 'user:roles', 'user:registration']],
             processor: UserPasswordHasher::class
         ),
         new Get(
             security: "object === user"
         ),
     ],
-    normalizationContext: ['groups' => ['user:info']],
+    normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']],
 )]
 # TODO assertions
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    #[Groups(['user:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -67,7 +67,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var list<string> The user roles
      */
-    #[Groups(['admin:user:read'])]
+    #[Groups(['admin:user:read', 'admin:user:write', 'user:roles'])]
     #[ORM\Column]
     private array $roles = [];
 

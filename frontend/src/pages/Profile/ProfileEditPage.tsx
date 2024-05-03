@@ -78,10 +78,10 @@ export const ProfileEditPage = () => {
         e.preventDefault()
 
         auth.updateUser({
-            avatar: avatarPreview as string
+            avatarUrl: avatarPreview as string
         })
         setAvatarPreview(null)
-        console.log(auth.user?.avatar)
+        console.log(auth.user?.avatarUrl)
     }
 
     return <>
@@ -140,7 +140,7 @@ export const ProfileEditPage = () => {
                             <input className="mobile-avatar-checkbox" type="checkbox" id="mobile-avatar-checkbox"/>
                             <label className="mobile-avatar-checkbox-overlay" htmlFor="mobile-avatar-checkbox"> </label>
                             <AvatarWithLoader isLoading={auth.isAuthPending}
-                                              url={avatarPreview || auth.user?.avatar}
+                                              url={avatarPreview || auth.user?.avatarUrl}
                                               responsive={true}>
                                 <input type="file" className="main-input" id="edit-avatar" name="edit-avatar"
                                        onChange={handleChange('avatar')}
@@ -152,7 +152,7 @@ export const ProfileEditPage = () => {
                                         <i className="material-icons">file_upload</i>
                                     </label>
                                     <label
-                                        className="avatar-action remove <?php echo $user->getAvatarUrl() ? '' : 'hidden' ?>">
+                                        className={`avatar-action remove ${!auth.user.avatarUrl ? 'hidden' : null}`}>
                                         <i className="material-icons">delete_forever</i>
                                     </label>
                                 </>

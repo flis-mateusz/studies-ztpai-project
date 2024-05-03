@@ -1,14 +1,19 @@
 import {FormEvent} from "react";
+import {ISignInData} from "@hooks/useAuth.tsx";
 
-interface ILoginActions {
+export interface ILoginFormProps<T> {
     handleFormChange: (newFormName: string) => void
-    handleLogin: (email: string, password: string) => void
+    handleAction: (params: T) => void
+    isLoading: boolean
 }
 
-export const LoginSection = ({handleFormChange, handleLogin}: ILoginActions) => {
+export const LoginSection = ({handleFormChange, handleAction, isLoading}: ILoginFormProps<ISignInData>) => {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        handleLogin('pwp@wp.pl', '123')
+        handleAction({
+            email: 'wp@wp.pl',
+            password: 'string',
+        })
     }
 
     return <section className="login-section">
@@ -16,7 +21,7 @@ export const LoginSection = ({handleFormChange, handleLogin}: ILoginActions) => 
             <span className="login-successful">Witaj ponownie</span>
             <span className="login-successful-name">Zaloguj się lub utwórz konto za darmo</span>
             <hr/>
-            <form id="login-form" className="with-loader" onSubmit={handleSubmit}>
+            <form id="login-form" className={`with-loader ${isLoading ? 'submitting' : null}`} onSubmit={handleSubmit}>
                 <div className="inputs">
                     <div>
                         <label htmlFor="login-email"><span>Wprowadź adres e-mail</span></label>

@@ -1,4 +1,4 @@
-import {createContext, ReactNode, useContext, useEffect, useState} from "react"
+import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from "react"
 import {useLocalStorage} from "@/hooks/useLocalStorage.tsx"
 import {IUser} from "@/types/IUser.ts"
 import {useAxiosQuery} from "@hooks/useAxiosQuery.tsx"
@@ -10,6 +10,7 @@ interface IAuthContextType {
     token: string | null
     isAuthPending: boolean
     signIn: (params: ISignInMethodParams<ISignInResponse>) => void
+    signUp: (params: ISignUpMethodParams<ISignUpResponse>) => void
     signOut: () => void
     updateUser: (updatedUserData: Partial<IUser>) => void
 }
@@ -17,14 +18,27 @@ interface IAuthContextType {
 interface ISignInMethodParams<T> extends IMutationMethodCallbacks<T>, ISignInData {
 }
 
+interface ISignUpMethodParams<T> extends IMutationMethodCallbacks<T>, ISignUpData {
+}
+
+// LOGIN
 interface ISignInResponse {
     user: IUser
     token: string
 }
 
-interface ISignInData {
+export interface ISignInData {
     email: string
     password: string
+}
+
+// REGISTER
+export interface ISignUpData extends Omit<IUser, 'roles' | 'id'> {
+    plainPassword: string
+}
+
+interface ISignUpResponse extends IUser {
+    registrationToken: string
 }
 
 const AuthContext = createContext<IAuthContextType>(null!);
@@ -33,7 +47,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     const [user, setUser] = useState<IUser | null>(null)
     const [token, setToken] = useLocalStorage<string | null>("authToken", null)
 
-    const checkIn = useAxiosQuery<Omit<ISignInResponse, 'token'>>('/api/wait', {
+    const checkIn = useAxiosQuery<IUser>('/api/check_in', {
         queryOptions: {
             queryKey: ['CHECKIN'],
             enabled: !!token && !user
@@ -41,10 +55,17 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         token: token!
     })
 
-    const signInMutation = useAxiosMutation<ISignInData, ISignInResponse>('/api/signIn', {
+    const signInMutation = useAxiosMutation<ISignInData, ISignInResponse>('/api/login', {
         method: 'POST',
         mutationOptions: {
             mutationKey: ['SIGN_IN']
+        },
+    })
+
+    const signUpMutation = useAxiosMutation<ISignUpData, ISignUpResponse>('/api/users', {
+        method: 'POST',
+        mutationOptions: {
+            mutationKey: ['SIGN_UP']
         },
     })
 
@@ -56,17 +77,27 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
 
     useEffect(() => {
         if (checkIn.data) {
-            setUser(checkIn.data.user)
+            setUser(checkIn.data)
         }
     }, [checkIn.data])
 
     const signIn = (params: ISignInMethodParams<ISignInResponse>) => {
-        signInMutation.mutate({email: params.email, password: params.password}, {
+        signInMutation.mutate({...params}, {
             onSuccess: (data) => {
-                setToken('TEST')
-                setUser({email: 'test'})
+                setUser(data.user)
+                setToken(data.token)
                 params.onSuccess(data)
-                // TODO Change this
+            },
+            onError: params.onError
+        })
+    }
+
+    const signUp = (params: ISignUpMethodParams<ISignUpResponse>) => {
+        signUpMutation.mutate({...params}, {
+            onSuccess: (data) => {
+                setUser(data)
+                setToken(data.registrationToken)
+                params.onSuccess(data)
             },
             onError: params.onError
         })
@@ -81,13 +112,16 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         setUser(currentUserData => ({...currentUserData, ...updatedUserData} as IUser))
     }
 
-    const isAuthPending = (checkIn.isPending && checkIn.fetchStatus !== 'idle') || signInMutation.isPending
+    const isAuthPending = useMemo(() => (
+        (checkIn.isPending && checkIn.fetchStatus !== 'idle') || checkIn.isFetching || signInMutation.isPending || signUpMutation.isPending
+    ), [checkIn.isPending, checkIn.fetchStatus, checkIn.isFetching, signInMutation.isPending, signUpMutation.isPending]);
 
     const value = {
         user,
         token,
         isAuthPending: isAuthPending,
         signIn,
+        signUp,
         signOut,
         updateUser
     }

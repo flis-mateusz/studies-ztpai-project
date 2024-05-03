@@ -24,6 +24,7 @@ export const useAxiosMutation = <TVariables, T = unknown>(
             headers: {
                 ...options.headers,
                 Authorization: options.token ? `Bearer ${options.token}` : undefined,
+                "Content-Type": 'application/ld+json'
             },
         }
 

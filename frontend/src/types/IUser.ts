@@ -3,6 +3,9 @@ export interface IUser {
     email: string
     name: string
     surname: string
-    avatar: string
+    avatarUrl?: string
     phone: string
+    roles?: string[]
 }
+
+export type IUserRegistration = Omit<IUser, 'id'>
