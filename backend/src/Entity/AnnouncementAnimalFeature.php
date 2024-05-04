@@ -25,7 +25,7 @@ class AnnouncementAnimalFeature
 
     #[ORM\ManyToOne(inversedBy: 'announcementAnimalFeatures')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?AnnouncementDetail $announcement = null;
+    private ?AnnouncementDetail $announcementDetail = null;
 
     public function getId(): ?int
     {
@@ -56,14 +56,14 @@ class AnnouncementAnimalFeature
         return $this;
     }
 
-    public function getAnnouncement(): ?AnnouncementDetail
+    public function getAnnouncementDetail(): ?AnnouncementDetail
     {
-        return $this->announcement;
+        return $this->announcementDetail;
     }
 
-    public function setAnnouncement(?AnnouncementDetail $announcement): static
+    public function setAnnouncementDetail(?AnnouncementDetail $announcementDetail): static
     {
-        $this->announcement = $announcement;
+        $this->announcementDetail = $announcementDetail;
 
         return $this;
     }

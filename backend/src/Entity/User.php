@@ -6,9 +6,14 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model;
+use App\Controller\CreateMediaObjectAction;
 use App\Repository\UserRepository;
+use App\State\Processor\UserAvatarDeletionProcessor;
+use App\State\Processor\UserAvatarProcessor;
 use App\State\UserPasswordHasher;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,6 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -51,6 +57,50 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']],
 )]
+#[ApiResource(
+    uriTemplate: '/api/users/{id}{._format}',
+    operations: [
+        new Post(
+            uriTemplate: '/users/{id}/avatar{._format}',
+            inputFormats: ['multipart' => ['multipart/form-data']],
+            controller: CreateMediaObjectAction::class,
+            openapi: new Model\Operation(
+                summary: 'Creates or updates user\'s avatar',
+                description: 'Creates or updates user\'s avatar',
+                requestBody: new Model\RequestBody(
+                    content: new \ArrayObject([
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'file' => [
+                                        'type' => 'string',
+                                        'format' => 'binary'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ])
+                )
+            ),
+            normalizationContext: ['groups' => ['user:read']],
+            processor: UserAvatarProcessor::class,
+        ),
+        new Delete(
+            uriTemplate: '/users/{id}/avatar{._format}',
+            openapi: new Model\Operation(
+                summary: 'Removes user\'s avatar',
+                description: 'Removes user\'s avatar',
+            ),
+            processor: UserAvatarDeletionProcessor::class,
+        )
+    ],
+    uriVariables: [
+        'id' => new Link(fromClass: User::class),
+    ],
+    normalizationContext: ['groups' => ['user:read']],
+    security: "object === user",
+)]
 # TODO assertions
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -61,6 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[Groups(['user:read', 'user:write'])]
+    #[Assert\Email()]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
@@ -96,10 +147,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $surname = null;
 
-    #[Groups(['user:read', 'user:write'])]
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $avatarUrl = null;
-
     /**
      * @var Collection<int, Announcement>
      */
@@ -117,6 +164,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: AnnouncementReport::class, mappedBy: 'user')]
     private Collection $announcementReports;
+
+    #[Groups(['user:read'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?MediaObject $avatar = null;
 
     public function __construct()
     {
@@ -259,18 +310,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAvatarUrl(): ?string
-    {
-        return $this->avatarUrl;
-    }
-
-    public function setAvatarUrl(?string $avatarUrl): static
-    {
-        $this->avatarUrl = $avatarUrl;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Announcement>
      */
@@ -357,6 +396,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $announcementReport->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvatar(): ?MediaObject
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?MediaObject $avatar): static
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }

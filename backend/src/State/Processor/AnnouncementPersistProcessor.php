@@ -7,24 +7,18 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Announcement;
-use App\Entity\AnnouncementLike;
-use App\Entity\AnnouncementReport;
-use App\Repository\AnnouncementRepository;
 use Psr\Clock\ClockInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class AnnouncementPersistProcessor implements ProcessorInterface
+readonly class AnnouncementPersistProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
-        private ProcessorInterface     $persistProcessor,
-        private ClockInterface         $clock,
-        private Security               $security,
-        private LoggerInterface        $logger
+        private ProcessorInterface $persistProcessor,
+        private ClockInterface     $clock,
+        private Security           $security,
     )
     {
     }

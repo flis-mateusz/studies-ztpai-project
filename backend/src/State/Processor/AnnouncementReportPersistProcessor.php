@@ -11,14 +11,14 @@ use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-class AnnouncementReportPersistProcessor implements ProcessorInterface
+readonly class AnnouncementReportPersistProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
-        private ProcessorInterface $persistProcessor,
+        private ProcessorInterface     $persistProcessor,
         private AnnouncementRepository $announcementRepository,
-        private ClockInterface $clock,
-        private Security $security,
+        private ClockInterface         $clock,
+        private Security               $security,
     ) {
     }
 

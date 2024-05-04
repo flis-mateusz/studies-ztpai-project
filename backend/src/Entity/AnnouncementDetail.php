@@ -53,11 +53,8 @@ class AnnouncementDetail
     #[ORM\Column(length: 255)]
     private ?string $ageType = null;
 
-    /**
-     * @var Collection<int, AnnouncementAnimalFeature>
-     */
     #[Groups(['announcement:read', 'announcement:write'])]
-    #[ORM\OneToMany(targetEntity: AnnouncementAnimalFeature::class, mappedBy: 'announcement', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: AnnouncementAnimalFeature::class, mappedBy: 'announcementDetail', cascade: ['persist'], orphanRemoval: true)]
     private Collection $announcementAnimalFeatures;
 
     public function __construct()
@@ -190,9 +187,7 @@ class AnnouncementDetail
     {
         if (!$this->announcementAnimalFeatures->contains($announcementAnimalFeature)) {
             $this->announcementAnimalFeatures->add($announcementAnimalFeature);
-            if ($announcementAnimalFeature->getAnnouncement() !== $this) {
-                $announcementAnimalFeature->setAnnouncement($this);
-            }
+            $announcementAnimalFeature->setAnnouncementDetail($this);
         }
 
         return $this;
@@ -202,8 +197,8 @@ class AnnouncementDetail
     {
         if ($this->announcementAnimalFeatures->removeElement($announcementAnimalFeature)) {
             // set the owning side to null (unless already changed)
-            if ($announcementAnimalFeature->getAnnouncement() === $this) {
-                $announcementAnimalFeature->setAnnouncement(null);
+            if ($announcementAnimalFeature->getAnnouncementDetail() === $this) {
+                $announcementAnimalFeature->setAnnouncementDetail(null);
             }
         }
 

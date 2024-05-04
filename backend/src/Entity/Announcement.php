@@ -65,7 +65,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             provider: AnnouncementsProvider::class
         ),
         new Post(
-            inputFormats: ['multipart' => ['multipart/form-data']],
             security: "is_granted('ROLE_USER')",
             processor: AnnouncementPersistProcessor::class,
         ),
@@ -85,19 +84,18 @@ use Symfony\Component\Validator\Constraints as Assert;
             processor: AnnouncementDeletionProcessor::class
         ),
         new Patch(
-            normalizationContext: ['groups' => ['announcement:read', 'media_object:read']],
             security: "object.getUser() === user",
+            processor: AnnouncementPersistProcessor::class,
         ),
     ],
     normalizationContext: ['groups' => ['announcement:read', 'user:read', 'media_object:read']],
-    denormalizationContext: ['groups' => ['announcement:write', 'media_object:create']],
+    denormalizationContext: ['groups' => ['announcement:write']],
 )]
 #[ApiResource(
     operations: [
         new GetCollection(
             uriTemplate: '/my/announcements{._format}',
             paginationClientItemsPerPage: true,
-            description: "Get a collection of announcements for the currently logged-in user",
             normalizationContext: ['groups' => ['announcement:read']],
             security: "is_granted('ROLE_USER')",
             provider: UserAnnouncementsProvider::class

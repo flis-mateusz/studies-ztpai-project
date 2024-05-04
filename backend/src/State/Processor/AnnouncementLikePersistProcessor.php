@@ -6,7 +6,6 @@ use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\AnnouncementLike;
-use App\Entity\AnnouncementReport;
 use App\Repository\AnnouncementRepository;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -16,10 +15,10 @@ class AnnouncementLikePersistProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
-        private ProcessorInterface $persistProcessor,
-        private AnnouncementRepository $announcementRepository,
-        private ClockInterface $clock,
-        private Security $security,
+        private readonly ProcessorInterface     $persistProcessor,
+        private readonly AnnouncementRepository $announcementRepository,
+        private readonly ClockInterface         $clock,
+        private readonly Security               $security,
     ) {
     }
 

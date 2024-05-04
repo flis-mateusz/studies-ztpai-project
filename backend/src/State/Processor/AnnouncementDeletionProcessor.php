@@ -7,23 +7,19 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Announcement;
 use App\Entity\AnnouncementDeletionDetail;
-use App\Entity\AnnouncementLike;
-use App\Entity\AnnouncementReport;
-use App\Repository\AnnouncementRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-class AnnouncementDeletionProcessor implements ProcessorInterface
+readonly class AnnouncementDeletionProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
-        private readonly ProcessorInterface     $persistProcessor,
-        private readonly ClockInterface         $clock,
-        private readonly Security               $security,
-        private readonly EntityManagerInterface $entityManager
+        private ProcessorInterface     $persistProcessor,
+        private ClockInterface         $clock,
+        private Security               $security,
+        private EntityManagerInterface $entityManager
     )
     {
     }

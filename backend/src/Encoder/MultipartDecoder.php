@@ -2,7 +2,6 @@
 
 namespace App\Encoder;
 
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
@@ -10,7 +9,7 @@ final class MultipartDecoder implements DecoderInterface
 {
     public const FORMAT = 'multipart';
 
-    public function __construct(private RequestStack $requestStack, private LoggerInterface $logger)
+    public function __construct(private RequestStack $requestStack)
     {
     }
 
@@ -24,7 +23,6 @@ final class MultipartDecoder implements DecoderInterface
 
         return array_map(static function (string $element) {
                 // Multipart form values will be encoded in JSON.
-                //$this->logger->info('element: ' . json_encode($element));
                 $decoded = json_decode($element, true);
 
                 return \is_array($decoded) ? $decoded : $element;

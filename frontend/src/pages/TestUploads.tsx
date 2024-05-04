@@ -47,8 +47,8 @@ function AnnouncementForm() {
         }
 
         try {
-            const response = await fetch('http://localhost:8082/api/announcements/12', {
-                method: 'PATCH',
+            const response = await fetch('http://localhost:8082/api/announcements/12?_method=PATCH', {
+                method: 'POST',
                 body: formData,
                 headers: {
                     'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MTQ3NzY1MTgsImV4cCI6MTcxNTM4MTMxOCwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJlbWFpbCI6Im9Aby5vIn0.EUbOBfLW-SCmZt1t1gCSfzkGJrHUkuLVM1RQHZqoKm95FviJb2MAkkXUpoI5zoM6TY79Et3VRm3iMMe5K5GJJZARhrgPtNSOz_j8VlujaiXanIs41ABKAhag1dMagdKE1LdN1xOXCp_6LyzSSTPQLhxylk6Q6NPJUhpbzmMCGeq-S9NuWIJdLE2Of__8iJc0KEwANpppromRBfBhWM2INhC-Uon1TE3tgWhcr53Xe1ecM-hBzgkGDQTYZnAqY0gtKeJOe_vq5S-ycQpurPsntYyIwJmpSpGJYeRpSTRnmHXUuU7yJ6VdzPfDqmR09QvTN5lN5XMgfsCuIqtFknETIg'

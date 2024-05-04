@@ -37,6 +37,8 @@ services:
       context: ./backend
       dockerfile: ../.docker/php/Dockerfile
     container_name: ztpai_symfony
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8082:80"
     environment:
@@ -44,11 +46,9 @@ services:
       SHELL_VERBOSITY: 2
     volumes:
       - ./.docker/php/vhosts:/etc/apache2/sites-enabled
-      - ./backend:/var/www/backend:delegated
+      - ./backend:/var/www/backend
       - /var/www/backend/vendor
       - /var/www/backend/var
-    tty: true
-    stdin_open: true
     restart: always
     networks:
       - ztpai-project
