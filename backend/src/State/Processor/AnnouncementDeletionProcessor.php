@@ -10,6 +10,8 @@ use App\Entity\AnnouncementDeletionDetail;
 use App\Entity\AnnouncementLike;
 use App\Entity\AnnouncementReport;
 use App\Repository\AnnouncementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -18,9 +20,10 @@ class AnnouncementDeletionProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
-        private readonly ProcessorInterface $persistProcessor,
-        private readonly ClockInterface     $clock,
-        private readonly Security           $security,
+        private readonly ProcessorInterface     $persistProcessor,
+        private readonly ClockInterface         $clock,
+        private readonly Security               $security,
+        private readonly EntityManagerInterface $entityManager
     )
     {
     }
@@ -46,6 +49,11 @@ class AnnouncementDeletionProcessor implements ProcessorInterface
         }
 
         $data->setDeletionDetail($deletionDetail);
+
+        $mediaObjects = $data->getUploads();
+        foreach ($mediaObjects as $mediaObject) {
+            $this->entityManager->remove($mediaObject);
+        }
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }

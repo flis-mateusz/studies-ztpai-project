@@ -5,11 +5,9 @@
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/backend/src" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/backend/tests" isTestSource="true" packagePrefix="App\Tests\" />
-      <sourceFolder url="file://$MODULE_DIR$/backend/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/api/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/api/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/backend/spec" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/doctrine/cache" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/doctrine/collections" />

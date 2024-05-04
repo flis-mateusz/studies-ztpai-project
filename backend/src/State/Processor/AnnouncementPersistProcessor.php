@@ -11,8 +11,10 @@ use App\Entity\AnnouncementLike;
 use App\Entity\AnnouncementReport;
 use App\Repository\AnnouncementRepository;
 use Psr\Clock\ClockInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AnnouncementPersistProcessor implements ProcessorInterface
@@ -20,9 +22,9 @@ class AnnouncementPersistProcessor implements ProcessorInterface
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
         private ProcessorInterface     $persistProcessor,
-        private AnnouncementRepository $announcementRepository,
         private ClockInterface         $clock,
         private Security               $security,
+        private LoggerInterface        $logger
     )
     {
     }

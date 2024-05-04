@@ -41,10 +41,14 @@ services:
       - "8082:80"
     environment:
       TZ: Europe/Warsaw
+      SHELL_VERBOSITY: 2
     volumes:
       - ./.docker/php/vhosts:/etc/apache2/sites-enabled
       - ./backend:/var/www/backend:delegated
       - /var/www/backend/vendor
+      - /var/www/backend/var
+    tty: true
+    stdin_open: true
     restart: always
     networks:
       - ztpai-project

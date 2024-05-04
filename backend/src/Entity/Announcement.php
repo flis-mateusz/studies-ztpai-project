@@ -2,18 +2,15 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\AnnouncementRepository;
 use App\State\Processor\AnnouncementDeletionProcessor;
 use App\State\Processor\AnnouncementPersistProcessor;
-use App\State\Processor\AnnouncementReportPersistProcessor;
 use App\State\Provider\AnnouncementProvider;
 use App\State\Provider\AnnouncementsProvider;
 use App\State\Provider\AnnouncementsUnacceptedProvider;
@@ -58,6 +55,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ],
     routePrefix: '/admin',
+    normalizationContext: ['groups' => []],
     security: "is_granted('ROLE_ADMIN')",
 )]
 #[ApiResource(
@@ -67,8 +65,9 @@ use Symfony\Component\Validator\Constraints as Assert;
             provider: AnnouncementsProvider::class
         ),
         new Post(
+            inputFormats: ['multipart' => ['multipart/form-data']],
             security: "is_granted('ROLE_USER')",
-            processor: AnnouncementPersistProcessor::class
+            processor: AnnouncementPersistProcessor::class,
         ),
         new Get(
             normalizationContext: ['groups' => [
@@ -86,11 +85,11 @@ use Symfony\Component\Validator\Constraints as Assert;
             processor: AnnouncementDeletionProcessor::class
         ),
         new Patch(
+            normalizationContext: ['groups' => ['announcement:read', 'media_object:read']],
             security: "object.getUser() === user",
-            processor: AnnouncementPersistProcessor::class
         ),
     ],
-    normalizationContext: ['groups' => ['announcement:read', 'user:read']],
+    normalizationContext: ['groups' => ['announcement:read', 'user:read', 'media_object:read']],
     denormalizationContext: ['groups' => ['announcement:write', 'media_object:create']],
 )]
 #[ApiResource(
@@ -137,11 +136,6 @@ class Announcement
     #[ORM\JoinColumn(nullable: false)]
     private ?AnnouncementDetail $announcementDetail = null;
 
-    #[Groups(['announcement:write'])]
-    #[ORM\OneToOne(targetEntity: MediaObject::class, cascade: ['remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    public ?MediaObject $image = null;
-
     #[Groups(['announcement:read:user_context'])]
     private ?AnnouncementReport $userReport = null;
 
@@ -165,10 +159,15 @@ class Announcement
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?AnnouncementDeletionDetail $deletionDetail = null;
 
+    #[Groups(['announcement:read', 'announcement:write'])]
+    #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['remove', 'persist'])]
+    private Collection $uploads;
+
     public function __construct()
     {
         $this->announcementLikes = new ArrayCollection();
         $this->announcementReports = new ArrayCollection();
+        $this->uploads = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -333,6 +332,37 @@ class Announcement
     public function setDeletionDetail(?AnnouncementDeletionDetail $deletionDetail): static
     {
         $this->deletionDetail = $deletionDetail;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MediaObject>
+     */
+    public function getUploads(): Collection
+    {
+        return $this->uploads;
+    }
+
+    public function setUploads(?Collection $uploads): static
+    {
+        $this->uploads = $uploads;
+
+        return $this;
+    }
+
+    public function addUpload(MediaObject $upload): static
+    {
+        if (!$this->uploads->contains($upload)) {
+            $this->uploads->add($upload);
+        }
+
+        return $this;
+    }
+
+    public function removeUpload(MediaObject $upload): static
+    {
+        $this->uploads->removeElement($upload);
 
         return $this;
     }

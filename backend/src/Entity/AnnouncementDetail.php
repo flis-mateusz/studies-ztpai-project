@@ -57,7 +57,7 @@ class AnnouncementDetail
      * @var Collection<int, AnnouncementAnimalFeature>
      */
     #[Groups(['announcement:read', 'announcement:write'])]
-    #[ORM\OneToMany(targetEntity: AnnouncementAnimalFeature::class, mappedBy: 'announcement')]
+    #[ORM\OneToMany(targetEntity: AnnouncementAnimalFeature::class, mappedBy: 'announcement', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $announcementAnimalFeatures;
 
     public function __construct()
@@ -190,7 +190,9 @@ class AnnouncementDetail
     {
         if (!$this->announcementAnimalFeatures->contains($announcementAnimalFeature)) {
             $this->announcementAnimalFeatures->add($announcementAnimalFeature);
-            $announcementAnimalFeature->setAnnouncement($this);
+            if ($announcementAnimalFeature->getAnnouncement() !== $this) {
+                $announcementAnimalFeature->setAnnouncement($this);
+            }
         }
 
         return $this;

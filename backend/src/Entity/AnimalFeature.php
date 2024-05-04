@@ -21,6 +21,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Delete(),
     ],
     routePrefix: '/admin',
+    normalizationContext: ['groups' => []],
     denormalizationContext: ['groups' => ['admin:animal_feature:write']],
     security: "is_granted('ROLE_ADMIN')",
 )]
