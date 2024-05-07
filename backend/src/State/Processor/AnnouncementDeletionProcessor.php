@@ -42,14 +42,17 @@ readonly class AnnouncementDeletionProcessor implements ProcessorInterface
             $deletionDetail->setReason('BY_USER');
         } else {
             $deletionDetail->setReason('VIOLATION');
+            foreach ($data->getAnnouncementReports() as $announcementReport) {
+                $announcementReport->setAccepted(true);
+            }
         }
 
         $data->setDeletionDetail($deletionDetail);
 
-        $mediaObjects = $data->getUploads();
-        foreach ($mediaObjects as $mediaObject) {
-            $this->entityManager->remove($mediaObject);
+        foreach ($data->getUploads() as $upload) {
+            $this->entityManager->remove($upload);
         }
+        $this->entityManager->flush();
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }

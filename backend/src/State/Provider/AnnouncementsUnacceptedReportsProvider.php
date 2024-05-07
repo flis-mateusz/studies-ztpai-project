@@ -6,10 +6,10 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Repository\AnnouncementRepository;
 
-class AnnouncementsUnacceptedReportsProvider implements ProviderInterface
+readonly class AnnouncementsUnacceptedReportsProvider implements ProviderInterface
 {
 
-    public function __construct(private readonly AnnouncementRepository $repository)
+    public function __construct(private AnnouncementRepository $repository)
     {
     }
 

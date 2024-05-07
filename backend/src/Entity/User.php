@@ -84,6 +84,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                 )
             ),
             normalizationContext: ['groups' => ['user:read']],
+            deserialize: false,
             processor: UserAvatarProcessor::class,
         ),
         new Delete(
@@ -166,7 +167,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $announcementReports;
 
     #[Groups(['user:read'])]
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?MediaObject $avatar = null;
 
     public function __construct()
@@ -225,6 +226,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = $roles;
 
         return $this;
+    }
+
+    /**
+     * Checks if the user has a specific role.
+     *
+     * @param string $role The role to check for.
+     * @return bool Returns true if the user has the role, otherwise false.
+     */
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->getRoles(), true);
     }
 
     /**

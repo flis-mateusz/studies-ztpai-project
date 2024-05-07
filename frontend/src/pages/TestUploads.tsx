@@ -36,22 +36,23 @@ function AnnouncementForm() {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append('animalType', '/api/animal_types/2'); // Na sztywno
+        //formData.append('animalType', '/api/animal_types/2'); // Na sztywno
 
         // Dodajemy szczegóły ogłoszenia jako JSON string w jednym z pól formularza
-        formData.append('announcementDetail', JSON.stringify(announcementDetail));
+        // formData.append('announcementDetail', JSON.stringify(announcementDetail));
 
         // Dodajemy pliki
         for (let i=0; i<files.length; i++) {
-            formData.append('uploads[][file]', files[i]);
+            formData.append('files[]', files[i]);
+            // formData.append('uploads[][/api/media_objects/11]', files[i]);
         }
 
         try {
-            const response = await fetch('http://localhost:8082/api/announcements/12?_method=PATCH', {
+            const response = await fetch('http://localhost:8082/api/announcements/5/uploads', {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MTQ3NzY1MTgsImV4cCI6MTcxNTM4MTMxOCwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJlbWFpbCI6Im9Aby5vIn0.EUbOBfLW-SCmZt1t1gCSfzkGJrHUkuLVM1RQHZqoKm95FviJb2MAkkXUpoI5zoM6TY79Et3VRm3iMMe5K5GJJZARhrgPtNSOz_j8VlujaiXanIs41ABKAhag1dMagdKE1LdN1xOXCp_6LyzSSTPQLhxylk6Q6NPJUhpbzmMCGeq-S9NuWIJdLE2Of__8iJc0KEwANpppromRBfBhWM2INhC-Uon1TE3tgWhcr53Xe1ecM-hBzgkGDQTYZnAqY0gtKeJOe_vq5S-ycQpurPsntYyIwJmpSpGJYeRpSTRnmHXUuU7yJ6VdzPfDqmR09QvTN5lN5XMgfsCuIqtFknETIg'
+                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MTUwMzY5MjYsImV4cCI6MTcxNTY0MTcyNiwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJlbWFpbCI6Im9Aby5vIn0.fB11UIvdmq3-H0nlKEjrTCPtPzAK134wnENJOzOsMTIcNI36ZhlDbN6GCsp4m8gOg60Z8f-9Fy98nzs4jG9uu5dKaqraXExZ2jtYN9QIEzS5UiadjFt_FbVdee2CXxjAjS5DToqI9vqzY6o-pE79s6b7oPMld6a14mOtJF0ziO_di7PFCsIpCine8fgBkQLkkwwXOC6heJ9ffckzNIizEUSHs4mVI0B52CLE2o4oIVl-wkeB9VzLps8TZpGoLciDJN9HJTMMNAz5Kqy1NIv1BNPxEC6uW42jwt9E_mEOH8N2tgrbErxh4h6xXX4aNW8IbUK-mJOJgjEWPzwzx9G0sg'
                 }
             });
 

@@ -7,12 +7,12 @@ use ApiPlatform\State\ProviderInterface;
 use App\Repository\AnnouncementRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class UserAnnouncementsProvider implements ProviderInterface
+readonly class UserAnnouncementsProvider implements ProviderInterface
 {
 
     public function __construct(
-        private readonly AnnouncementRepository $repository,
-        private readonly Security               $security,)
+        private AnnouncementRepository $repository,
+        private Security               $security,)
     {
     }
 

@@ -8,9 +8,11 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model;
 use App\Repository\AnnouncementRepository;
 use App\State\Processor\AnnouncementDeletionProcessor;
 use App\State\Processor\AnnouncementPersistProcessor;
+use App\State\Processor\AnnouncementUploadsPersistProcessor;
 use App\State\Provider\AnnouncementProvider;
 use App\State\Provider\AnnouncementsProvider;
 use App\State\Provider\AnnouncementsUnacceptedProvider;
@@ -19,6 +21,7 @@ use App\State\Provider\UserAnnouncementsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -55,7 +58,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ],
     routePrefix: '/admin',
-    normalizationContext: ['groups' => []],
+    normalizationContext: ['groups' => ['announcement:read']],
     security: "is_granted('ROLE_ADMIN')",
 )]
 #[ApiResource(
@@ -87,6 +90,31 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: "object.getUser() === user",
             processor: AnnouncementPersistProcessor::class,
         ),
+        new Post(
+            uriTemplate: '/announcements/{id}/uploads{._format}',
+            inputFormats: ['multipart' => ['multipart/form-data']],
+            openapi: new Model\Operation(
+                requestBody: new Model\RequestBody(
+                    content: new \ArrayObject([
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'files[]' => [
+                                        'type' => 'array',
+                                        'format' => 'binary'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ])
+                )
+            ),
+            normalizationContext: ['groups' => ['announcement:uploads:read']],
+            security: "object.getUser() === user",
+            deserialize: false,
+            processor: AnnouncementUploadsPersistProcessor::class,
+        )
     ],
     normalizationContext: ['groups' => ['announcement:read', 'user:read', 'media_object:read']],
     denormalizationContext: ['groups' => ['announcement:write']],
@@ -157,8 +185,11 @@ class Announcement
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?AnnouncementDeletionDetail $deletionDetail = null;
 
-    #[Groups(['announcement:read', 'announcement:write'])]
-    #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['remove', 'persist'])]
+    /**
+     * @var Collection<int, AnnouncementUpload>
+     */
+    #[Groups(['announcement:read', 'announcement:write', 'announcement:uploads:read', 'announcement:uploads:write'])]
+    #[ORM\OneToMany(targetEntity: AnnouncementUpload::class, mappedBy: 'announcement', cascade: ['persist'], orphanRemoval: true)]
     private Collection $uploads;
 
     public function __construct()
@@ -335,7 +366,7 @@ class Announcement
     }
 
     /**
-     * @return Collection<int, MediaObject>
+     * @return Collection<int, AnnouncementUpload>
      */
     public function getUploads(): Collection
     {
@@ -349,18 +380,28 @@ class Announcement
         return $this;
     }
 
-    public function addUpload(MediaObject $upload): static
+    public function addUpload(AnnouncementUpload $upload): static
     {
+        if ($upload->getAnnouncement() !== null && $upload->getAnnouncement() !== $this) {
+            throw new ForbiddenOverwriteException("Forbidden overwrite exception");
+        }
+
         if (!$this->uploads->contains($upload)) {
             $this->uploads->add($upload);
+            $upload->setAnnouncement($this);
         }
 
         return $this;
     }
 
-    public function removeUpload(MediaObject $upload): static
+    public function removeUpload(AnnouncementUpload $upload): static
     {
-        $this->uploads->removeElement($upload);
+        if ($this->uploads->removeElement($upload)) {
+            // set the owning side to null (unless already changed)
+            if ($upload->getAnnouncement() === $this) {
+                $upload->setAnnouncement(null);
+            }
+        }
 
         return $this;
     }

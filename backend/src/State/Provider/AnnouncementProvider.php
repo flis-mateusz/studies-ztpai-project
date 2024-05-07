@@ -11,14 +11,14 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class AnnouncementProvider implements ProviderInterface
+readonly class AnnouncementProvider implements ProviderInterface
 {
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.item_provider')]
-        private readonly ProviderInterface            $defaultProvider,
-        private readonly AnnouncementReportRepository $announcementReportRepository,
-        private readonly AnnouncementLikeRepository   $announcementLikeRepository,
-        private readonly Security                     $security,
+        private ProviderInterface            $defaultProvider,
+        private AnnouncementReportRepository $announcementReportRepository,
+        private AnnouncementLikeRepository   $announcementLikeRepository,
+        private Security                     $security,
     ) {
     }
 
@@ -28,7 +28,7 @@ class AnnouncementProvider implements ProviderInterface
         $announcement = $this->defaultProvider->provide($operation, $uriVariables, $context);
         $currentUser = $this->security->getUser();
 
-        if ($announcement && !$announcement->isAccepted() && $announcement->getUser() !== $currentUser) {
+        if ($announcement && !$announcement->isAccepted() && $announcement->getUser() !== $currentUser && !$this->security->isGranted('ROLE_ADMIN')) {
             throw new NotFoundHttpException();
         }
 

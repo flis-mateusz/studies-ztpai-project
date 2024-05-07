@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use App\Repository\MediaObjectRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -15,28 +17,28 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 //#[ApiResource(
 //    operations: [
 //        new Get(),
-//        new Post(
-//            inputFormats: ['multipart' => ['multipart/form-data']],
-//            controller: CreateMediaObjectAction::class,
-//            openapi: new Model\Operation(
-//                requestBody: new Model\RequestBody(
-//                    content: new \ArrayObject([
-//                        'multipart/form-data' => [
-//                            'schema' => [
-//                                'type' => 'object',
-//                                'properties' => [
-//                                    'file' => [
-//                                        'type' => 'string',
-//                                        'format' => 'binary'
-//                                    ]
-//                                ]
-//                            ]
-//                        ]
-//                    ])
-//                )
-//            ),
-//            deserialize: false
-//        )
+////        new Post(
+////            inputFormats: ['multipart' => ['multipart/form-data']],
+////            controller: CreateMediaObjectAction::class,
+////            openapi: new Model\Operation(
+////                requestBody: new Model\RequestBody(
+////                    content: new \ArrayObject([
+////                        'multipart/form-data' => [
+////                            'schema' => [
+////                                'type' => 'object',
+////                                'properties' => [
+////                                    'file' => [
+////                                        'type' => 'string',
+////                                        'format' => 'binary'
+////                                    ]
+////                                ]
+////                            ]
+////                        ]
+////                    ])
+////                )
+////            ),
+////            deserialize: false
+////        )
 //    ],
 //    normalizationContext: ['groups' => ['media_object:read']],
 //    denormalizationContext: ['groups' => ['media_object:write']],
@@ -48,7 +50,7 @@ class MediaObject
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['media_object:write'])]
+    #[Groups(['media_object:write', 'announcement:uploads:write'])]
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
     #[Assert\NotNull]
     #[Assert\Image]

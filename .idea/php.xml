@@ -14,6 +14,7 @@
     <skipped_paths>
       <skipped_path path="$PROJECT_DIR$/backend/vendor" />
       <skipped_path path="$PROJECT_DIR$/backend/var" />
+      <skipped_path path="$PROJECT_DIR$/frontend" />
     </skipped_paths>
   </component>
   <component name="PhpIncludePathManager">
@@ -143,7 +144,7 @@
   </component>
   <component name="PhpUnit">
     <phpunit_settings>
-      <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/api/vendor/autoload.php" />
+      <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/api/vendor/autoload.php" phpunit_phar_path="" />
     </phpunit_settings>
   </component>
   <component name="PsalmOptionsConfiguration">

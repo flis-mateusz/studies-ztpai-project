@@ -57,7 +57,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             uriTemplate: '/announcements/{announcement_id}/reports{._format}',
             security: "is_granted('ROLE_USER')",
             processor: AnnouncementReportPersistProcessor::class,
-        )
+        ),
     ],
     uriVariables: [
         'announcement_id' => new Link(toProperty: 'announcement', fromClass: Announcement::class),
