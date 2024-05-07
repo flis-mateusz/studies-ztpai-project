@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
@@ -23,6 +23,8 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 
 RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
     install-php-extensions amqp
+
+RUN pecl install xdebug
 
 COPY ./config/php.ini $PHP_INI_DIR/php.ini
 

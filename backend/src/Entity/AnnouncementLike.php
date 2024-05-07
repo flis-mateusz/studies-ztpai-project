@@ -39,7 +39,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new GetCollection(
             uriTemplate: '/admin/announcements/{announcement_id}/likes{._format}',
-            security: "is_granted('ROLE_ADMIN')"
+            security: "is_granted('ROLE_ADMIN')",
         ),
         new Post(
             uriTemplate: '/announcements/{announcement_id}/likes{._format}',

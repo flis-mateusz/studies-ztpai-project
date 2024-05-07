@@ -4,24 +4,21 @@ namespace App\State\Processor;
 
 use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
+use ApiPlatform\Validator\ValidatorInterface;
 use App\Entity\Announcement;
-use App\Repository\AnnouncementUploadRepository;
-use Psr\Clock\ClockInterface;
-use Symfony\Bundle\SecurityBundle\Security;
+use App\Entity\AnnouncementUpload;
+use App\Entity\MediaObject;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-readonly class AnnouncementPersistProcessor implements ProcessorInterface
+readonly class AnnouncementUploadsPersistProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
-        private ProcessorInterface           $persistProcessor,
-        private ClockInterface               $clock,
-        private Security                     $security
+        private ProcessorInterface $persistProcessor,
+        private ValidatorInterface $validator,
     )
     {
     }
@@ -34,15 +31,30 @@ readonly class AnnouncementPersistProcessor implements ProcessorInterface
         if ($data->getDeletionDetail()) {
             throw new NotFoundHttpException();
         }
-        if ($data->getUploads()->count() > 5) {
+
+        $request = $context['request'] ?? null;
+        if (!$request) {
+            throw new NotFoundHttpException();
+        }
+
+        $uploadedFiles = $request->files->get('files');
+        if (!count($uploadedFiles)) {
+            throw new BadRequestHttpException('No files uploaded');
+        }
+
+        if (count($uploadedFiles) + $data->getUploads()->count() > 5) {
             throw new BadRequestHttpException('Too many uploaded files');
         }
 
-        $currentUser = $this->security->getUser();
+        foreach ($uploadedFiles as $uploadedFile) {
+            $announcementUpload = new AnnouncementUpload();
+            $mediaObject = new MediaObject();
+            $mediaObject->setFile($uploadedFile);
 
-        if ($operation instanceof Post) {
-            $data->setUser($currentUser);
-            $data->setCreatedAt($this->clock->now());
+            $this->validator->validate($mediaObject);
+
+            $announcementUpload->setMediaObject($mediaObject);
+            $data->addUpload($announcementUpload);
         }
 
         $data->setAccepted(false);

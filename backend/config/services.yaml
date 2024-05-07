@@ -23,6 +23,14 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    App\Serializer\UploadedFileDenormalizer:
+        tags:
+            - { name: 'serializer.normalizer' }
+
+    App\Encoder\MultipartDecoder:
+        tags:
+            - { name: 'serializer.encoder' }
+
     App\OpenApi\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'
         arguments: [ '@App\OpenApi\OpenApiFactory.inner' ]

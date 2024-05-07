@@ -59,4 +59,17 @@ class AnnouncementRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findUnacceptedAnnouncements()
+    {
+        // Announcements only with uploads
+        $qb = $this->createQueryBuilder('a');
+
+        $qb->leftJoin('a.uploads', 'u')
+            ->where('a.isAccepted = :isAccepted')
+            ->andWhere('u.id IS NOT NULL')
+            ->setParameter('isAccepted', false);
+
+        return $qb->getQuery()->getResult();
+    }
+
 }

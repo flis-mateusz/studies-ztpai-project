@@ -7,20 +7,19 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Announcement;
 use App\Entity\AnnouncementDeletionDetail;
-use App\Entity\AnnouncementLike;
-use App\Entity\AnnouncementReport;
-use App\Repository\AnnouncementRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-class AnnouncementDeletionProcessor implements ProcessorInterface
+readonly class AnnouncementDeletionProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
-        private readonly ProcessorInterface $persistProcessor,
-        private readonly ClockInterface     $clock,
-        private readonly Security           $security,
+        private ProcessorInterface     $persistProcessor,
+        private ClockInterface         $clock,
+        private Security               $security,
+        private EntityManagerInterface $entityManager
     )
     {
     }
@@ -43,9 +42,17 @@ class AnnouncementDeletionProcessor implements ProcessorInterface
             $deletionDetail->setReason('BY_USER');
         } else {
             $deletionDetail->setReason('VIOLATION');
+            foreach ($data->getAnnouncementReports() as $announcementReport) {
+                $announcementReport->setAccepted(true);
+            }
         }
 
         $data->setDeletionDetail($deletionDetail);
+
+        foreach ($data->getUploads() as $upload) {
+            $this->entityManager->remove($upload);
+        }
+        $this->entityManager->flush();
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }

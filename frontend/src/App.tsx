@@ -21,6 +21,7 @@ import {IndexPage} from "@pages/IndexPage.tsx";
 import {AnnouncementPage} from "@pages/AnnouncementPage.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import axios from "axios";
+import TestUploads from "@pages/TestUploads.tsx";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -46,6 +47,7 @@ const App = () => {
                 <Routes>
                     <Route path='/' element={<Layout/>}>
                         <Route path='' element={<IndexPage/>}/>
+                        <Route path='test' element={<TestUploads/>}/>
                         <Route path="login" element={<LoginPage/>}/>
                         <Route path='add' element={
                             <RequireAuth>

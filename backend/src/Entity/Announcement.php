@@ -2,18 +2,17 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model;
 use App\Repository\AnnouncementRepository;
 use App\State\Processor\AnnouncementDeletionProcessor;
 use App\State\Processor\AnnouncementPersistProcessor;
-use App\State\Processor\AnnouncementReportPersistProcessor;
+use App\State\Processor\AnnouncementUploadsPersistProcessor;
 use App\State\Provider\AnnouncementProvider;
 use App\State\Provider\AnnouncementsProvider;
 use App\State\Provider\AnnouncementsUnacceptedProvider;
@@ -22,6 +21,7 @@ use App\State\Provider\UserAnnouncementsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -58,6 +58,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ],
     routePrefix: '/admin',
+    normalizationContext: ['groups' => ['announcement:read']],
     security: "is_granted('ROLE_ADMIN')",
 )]
 #[ApiResource(
@@ -68,7 +69,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Post(
             security: "is_granted('ROLE_USER')",
-            processor: AnnouncementPersistProcessor::class
+            processor: AnnouncementPersistProcessor::class,
         ),
         new Get(
             normalizationContext: ['groups' => [
@@ -87,10 +88,35 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Patch(
             security: "object.getUser() === user",
-            processor: AnnouncementPersistProcessor::class
+            processor: AnnouncementPersistProcessor::class,
         ),
+        new Post(
+            uriTemplate: '/announcements/{id}/uploads{._format}',
+            inputFormats: ['multipart' => ['multipart/form-data']],
+            openapi: new Model\Operation(
+                requestBody: new Model\RequestBody(
+                    content: new \ArrayObject([
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'files[]' => [
+                                        'type' => 'array',
+                                        'format' => 'binary'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ])
+                )
+            ),
+            normalizationContext: ['groups' => ['announcement:uploads:read']],
+            security: "object.getUser() === user",
+            deserialize: false,
+            processor: AnnouncementUploadsPersistProcessor::class,
+        )
     ],
-    normalizationContext: ['groups' => ['announcement:read', 'user:read']],
+    normalizationContext: ['groups' => ['announcement:read', 'user:read', 'media_object:read']],
     denormalizationContext: ['groups' => ['announcement:write']],
 )]
 #[ApiResource(
@@ -98,7 +124,6 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(
             uriTemplate: '/my/announcements{._format}',
             paginationClientItemsPerPage: true,
-            description: "Get a collection of announcements for the currently logged-in user",
             normalizationContext: ['groups' => ['announcement:read']],
             security: "is_granted('ROLE_USER')",
             provider: UserAnnouncementsProvider::class
@@ -160,10 +185,18 @@ class Announcement
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?AnnouncementDeletionDetail $deletionDetail = null;
 
+    /**
+     * @var Collection<int, AnnouncementUpload>
+     */
+    #[Groups(['announcement:read', 'announcement:write', 'announcement:uploads:read', 'announcement:uploads:write'])]
+    #[ORM\OneToMany(targetEntity: AnnouncementUpload::class, mappedBy: 'announcement', cascade: ['persist'], orphanRemoval: true)]
+    private Collection $uploads;
+
     public function __construct()
     {
         $this->announcementLikes = new ArrayCollection();
         $this->announcementReports = new ArrayCollection();
+        $this->uploads = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -328,6 +361,47 @@ class Announcement
     public function setDeletionDetail(?AnnouncementDeletionDetail $deletionDetail): static
     {
         $this->deletionDetail = $deletionDetail;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AnnouncementUpload>
+     */
+    public function getUploads(): Collection
+    {
+        return $this->uploads;
+    }
+
+    public function setUploads(?Collection $uploads): static
+    {
+        $this->uploads = $uploads;
+
+        return $this;
+    }
+
+    public function addUpload(AnnouncementUpload $upload): static
+    {
+        if ($upload->getAnnouncement() !== null && $upload->getAnnouncement() !== $this) {
+            throw new ForbiddenOverwriteException("Forbidden overwrite exception");
+        }
+
+        if (!$this->uploads->contains($upload)) {
+            $this->uploads->add($upload);
+            $upload->setAnnouncement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUpload(AnnouncementUpload $upload): static
+    {
+        if ($this->uploads->removeElement($upload)) {
+            // set the owning side to null (unless already changed)
+            if ($upload->getAnnouncement() === $this) {
+                $upload->setAnnouncement(null);
+            }
+        }
 
         return $this;
     }
