@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Odm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -10,6 +12,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
 use App\Repository\AnnouncementRepository;
+use App\State\Processor\AnnouncementAcceptProcessor;
 use App\State\Processor\AnnouncementDeletionProcessor;
 use App\State\Processor\AnnouncementPersistProcessor;
 use App\State\Processor\AnnouncementUploadsPersistProcessor;
@@ -27,6 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AnnouncementRepository::class)]
 #[ApiResource(
+    formats: ['json'],
     operations: [
         new GetCollection(
             uriTemplate: '/announcements/reports/unaccepted{._format}',
@@ -55,6 +59,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Delete(
             processor: AnnouncementDeletionProcessor::class
+        ),
+        new Post(
+            uriTemplate: '/announcements/{id}/accept{._format}',
+            denormalizationContext: ['groups' => []],
+            processor: AnnouncementAcceptProcessor::class
         ),
     ],
     routePrefix: '/admin',
@@ -130,6 +139,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ],
 )]
+#[ApiFilter(OrderFilter::class, properties: ['createdAt' => 'DESC'])]
 class Announcement
 {
     #[Groups(['announcement:read'])]

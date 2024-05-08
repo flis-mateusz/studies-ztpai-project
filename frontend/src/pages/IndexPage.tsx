@@ -19,12 +19,20 @@ export const IndexPage = () => {
         navigate('/announcements?search=' + search)
     }
 
-    const query = useAxiosQuery<any>('api/test',
+    const query = useAxiosQuery<any>('/api/announcements',
         {
+            params: {
+                page: 1,
+                itemsPerPage: 5,
+                order: {
+                    createdAt: "DESC",
+                }
+            },
             queryOptions: {
                 queryKey: ['GET_LAST_ANNOUNCEMENTS']
             }
         })
+    console.log(query.data)
 
     return <>
         <section className="welcome">

@@ -5,6 +5,15 @@ import {useLocation, useNavigate} from "react-router-dom";
 interface AxiosQueryOptions<T> extends Omit<AxiosRequestConfig, 'url' | 'method'> {
     token?: string
     queryOptions: UseQueryOptions<T>
+    params?: {
+        page?: number,
+        itemsPerPage?:number,
+        order?: {
+            [key: string]: 'ASC' | 'DESC'
+        }
+    } & {
+        [key: string]: any
+    }
 }
 
 export const useAxiosQuery = <T, >(
