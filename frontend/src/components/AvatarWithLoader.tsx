@@ -1,9 +1,10 @@
 import {CustomContentLoader} from "@components/Loaders.tsx";
 import {ReactNode} from "react";
+import {IMediaObject} from "@/interfaces/IMediaObject.ts";
 
 interface Props {
     isLoading: boolean
-    url?: string | null
+    mediaObject?: IMediaObject
     responsive?: boolean
     width?: number
     height?: number
@@ -19,7 +20,7 @@ export const AvatarWithLoader = (props: Props) => {
         />
         :
         <div className={`avatar ${props.responsive ? 'resp' : ''}`}
-             style={props.url ? {backgroundImage: `url(${props.url})`} : {}}
+             style={props.mediaObject ? {backgroundImage: `url(http://localhost:8082${props.mediaObject.contentUrl})`} : {}}
              onMouseEnter={props.onMouseEnter}
              onMouseLeave={props.onMouseLeave}
         >

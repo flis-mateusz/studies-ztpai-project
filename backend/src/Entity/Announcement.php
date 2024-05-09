@@ -30,7 +30,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AnnouncementRepository::class)]
 #[ApiResource(
-    formats: ['json'],
     operations: [
         new GetCollection(
             uriTemplate: '/announcements/reports/unaccepted{._format}',

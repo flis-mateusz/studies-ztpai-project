@@ -11,7 +11,7 @@ export const LoginSection = ({handleFormChange, handleAction, isLoading}: ILogin
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         handleAction({
-            email: 'wp@wp.pl',
+            email: 'o@o.o',
             password: 'string',
         })
     }

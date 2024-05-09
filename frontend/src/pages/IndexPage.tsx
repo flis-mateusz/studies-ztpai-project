@@ -1,12 +1,13 @@
+import '@styles/index.css'
+import '@styles/panel-elements.css'
+import '@styles/announcements/announcement-element.css'
 import {ChangeEvent, FormEvent, useRef, useState} from "react"
 import {Link, useNavigate} from "react-router-dom"
 import useGridLoaders from "@hooks/useGridLoaders.tsx"
 import {useAxiosQuery} from "@hooks/useAxiosQuery.tsx"
-
-import '@styles/index.css'
-import '@styles/panel-elements.css'
-import '@styles/announcements/announcement-element.css'
-import {ExampleAnnouncementElement} from "@components/ExampleAnnouncementElement.tsx";
+import {HydraCollection} from "@/interfaces/Hydra.ts";
+import {IAnnouncement} from "@/interfaces/App.ts";
+import {AnnouncementGridElement} from "@components/Announcement/AnnouncementGridElement.tsx";
 
 export const IndexPage = () => {
     const navigate = useNavigate()
@@ -19,7 +20,7 @@ export const IndexPage = () => {
         navigate('/announcements?search=' + search)
     }
 
-    const query = useAxiosQuery<any>('/api/announcements',
+    const query = useAxiosQuery<HydraCollection<IAnnouncement>>('/api/announcements',
         {
             params: {
                 page: 1,
@@ -32,7 +33,6 @@ export const IndexPage = () => {
                 queryKey: ['GET_LAST_ANNOUNCEMENTS']
             }
         })
-    console.log(query.data)
 
     return <>
         <section className="welcome">
@@ -111,7 +111,9 @@ export const IndexPage = () => {
                         query.isPending ?
                             loader
                             :
-                            <ExampleAnnouncementElement />
+                            query.data!['hydra:member'].map((announcement, i) => (
+                                <AnnouncementGridElement key={i} announcement={announcement}/>
+                            ))
                     }
                 </section>
             </section>

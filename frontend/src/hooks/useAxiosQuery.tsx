@@ -1,18 +1,20 @@
 import axios, {AxiosRequestConfig} from 'axios'
 import {useQuery, UseQueryOptions} from "@tanstack/react-query"
 import {useLocation, useNavigate} from "react-router-dom";
+import {ContentTypeHeader} from "@/types/IUtil.ts";
+import {useAuth} from "@hooks/useAuth.tsx";
 
 interface AxiosQueryOptions<T> extends Omit<AxiosRequestConfig, 'url' | 'method'> {
-    token?: string
     queryOptions: UseQueryOptions<T>
+    accept?: ContentTypeHeader
     params?: {
         page?: number,
-        itemsPerPage?:number,
+        itemsPerPage?: number,
         order?: {
             [key: string]: 'ASC' | 'DESC'
         }
     } & {
-        [key: string]: any
+        [key: string]: unknown
     }
 }
 
@@ -22,14 +24,15 @@ export const useAxiosQuery = <T, >(
 ) => {
     const navigate = useNavigate()
     const location = useLocation()
+    const auth = useAuth()
 
     const queryFn = async (): Promise<T> => {
 
         const config: AxiosRequestConfig = {
             ...options,
             headers: {
+                Accept: options.accept ? options.accept : ContentTypeHeader.JSON_LD,
                 ...options.headers,
-                Authorization: options.token ? `Bearer ${options.token}` : undefined,
             },
         }
 

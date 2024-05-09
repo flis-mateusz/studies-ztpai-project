@@ -1,11 +1,13 @@
 import axios, {AxiosRequestConfig, Method} from 'axios'
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {useNavigate, useLocation} from 'react-router-dom'
+import {ContentTypeHeader} from "@/types/IUtil.ts";
 
 interface AxiosMutationOptions<T, TVariables> extends Omit<AxiosRequestConfig, 'url' | 'method'> {
-    token?: string
-    mutationOptions: UseMutationOptions<T, unknown, TVariables>
+    accept?: ContentTypeHeader
+    contentType?: ContentTypeHeader
     method: Exclude<Method, "GET" | "get">
+    mutationOptions: UseMutationOptions<T, unknown, TVariables>
 }
 
 export const useAxiosMutation = <TVariables, T = unknown>(
@@ -22,9 +24,9 @@ export const useAxiosMutation = <TVariables, T = unknown>(
             method: options.method,
             data: variables,
             headers: {
-                ...options.headers,
-                Authorization: options.token ? `Bearer ${options.token}` : undefined,
-                "Content-Type": 'application/ld+json'
+                Accept: options.accept ? options.accept : ContentTypeHeader.JSON_LD,
+                "Content-Type": options.contentType ? options.contentType : ContentTypeHeader.JSON_LD,
+                ...options.headers
             },
         }
 

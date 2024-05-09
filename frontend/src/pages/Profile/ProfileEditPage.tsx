@@ -3,6 +3,8 @@ import {InputWithLoader} from "@components/InputWithLoader.tsx";
 import {useAuth} from "@hooks/useAuth.tsx";
 import {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
 import {AvatarWithLoader} from "@components/AvatarWithLoader.tsx";
+import {useAxiosFormPost} from "@hooks/useAxiosFormPost.tsx";
+import {IUser} from "@/types/IUser.ts";
 
 interface FormValues {
     name: string
@@ -10,13 +12,11 @@ interface FormValues {
     phone: string
     password: string
     repassword: string
-    avatar: File | null
 }
 
 export const ProfileEditPage = () => {
     const auth = useAuth()
     const [sectionWidth, setSectionWidth] = useState<number>(0)
-    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const sectionRef = useRef<HTMLDivElement>(null)
 
     const [formValues, setFormValues] = useState<FormValues>({
@@ -24,8 +24,20 @@ export const ProfileEditPage = () => {
         email: '',
         phone: '',
         password: '',
-        repassword: '',
-        avatar: null
+        repassword: ''
+    })
+
+    const {isPending, mutate} = useAxiosFormPost<IUser>(`/api/users/${auth.user?.id}/avatar`, {
+        mutationOptions: {
+            mutationKey: ['USER_AVATAR_POST'],
+            onSuccess: (data) => {
+                auth.updateUser({
+                    avatar: {
+                        contentUrl: data.avatar.contentUrl
+                    }
+                })
+            }
+        },
     })
 
     useEffect(() => {
@@ -53,35 +65,24 @@ export const ProfileEditPage = () => {
     }, []);
 
     const handleChange = (field: keyof FormValues) => (e: ChangeEvent<HTMLInputElement>) => {
-        if (field === 'avatar' && e.target.files) {
-            const file = e.target.files[0]
-            if (file) {
-                const reader = new FileReader()
-                reader.onloadend = () => {
-                    setAvatarPreview(reader.result as string)
-                }
-                reader.readAsDataURL(file)
-            }
-            setFormValues(prevState => ({
-                ...prevState,
-                [field]: file ?? null
-            }))
-        } else {
-            setFormValues(prevState => ({
-                ...prevState,
-                [field]: e.target.value
-            }))
-        }
+        setFormValues(prevState => ({
+            ...prevState,
+            [field]: e.target.value
+        }))
+    }
+
+    const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null
+        if (!file) return;
+
+        const fd = new FormData();
+        fd.append("file", file);
+
+        mutate(fd)
     }
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-        auth.updateUser({
-            avatarUrl: avatarPreview as string
-        })
-        setAvatarPreview(null)
-        console.log(auth.user?.avatarUrl)
     }
 
     return <>
@@ -139,11 +140,11 @@ export const ProfileEditPage = () => {
                         <div className={`avatar-container ${auth.user ? 'loaded' : ''}`}>
                             <input className="mobile-avatar-checkbox" type="checkbox" id="mobile-avatar-checkbox"/>
                             <label className="mobile-avatar-checkbox-overlay" htmlFor="mobile-avatar-checkbox"> </label>
-                            <AvatarWithLoader isLoading={auth.isAuthPending}
-                                              url={avatarPreview || auth.user?.avatarUrl}
+                            <AvatarWithLoader isLoading={auth.isAuthPending || isPending}
+                                              mediaObject={auth.user?.avatar}
                                               responsive={true}>
                                 <input type="file" className="main-input" id="edit-avatar" name="edit-avatar"
-                                       onChange={handleChange('avatar')}
+                                       onChange={handleAvatarChange}
                                 />
                             </AvatarWithLoader>
                             {
@@ -152,7 +153,7 @@ export const ProfileEditPage = () => {
                                         <i className="material-icons">file_upload</i>
                                     </label>
                                     <label
-                                        className={`avatar-action remove ${!auth.user.avatarUrl ? 'hidden' : null}`}>
+                                        className={`avatar-action remove ${!auth.user.avatar ? 'hidden' : null}`}>
                                         <i className="material-icons">delete_forever</i>
                                     </label>
                                 </>

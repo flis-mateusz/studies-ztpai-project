@@ -4,6 +4,7 @@ import {IUser} from "@/types/IUser.ts"
 import {useAxiosQuery} from "@hooks/useAxiosQuery.tsx"
 import {useAxiosMutation} from "@hooks/useAxiosMutation.tsx"
 import {IMutationMethodCallbacks} from "@/types/IMutation.tsx"
+import axios from "axios";
 
 interface IAuthContextType {
     user: IUser | null
@@ -47,19 +48,22 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     const [user, setUser] = useState<IUser | null>(null)
     const [token, setToken] = useLocalStorage<string | null>("authToken", null)
 
+    useEffect(() => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    }, [token]);
+
     const checkIn = useAxiosQuery<IUser>('/api/check_in', {
         queryOptions: {
             queryKey: ['CHECKIN'],
             enabled: !!token && !user
         },
-        token: token!
     })
 
     const signInMutation = useAxiosMutation<ISignInData, ISignInResponse>('/api/login', {
         method: 'POST',
         mutationOptions: {
             mutationKey: ['SIGN_IN']
-        },
+        }
     })
 
     const signUpMutation = useAxiosMutation<ISignUpData, ISignUpResponse>('/api/users', {
