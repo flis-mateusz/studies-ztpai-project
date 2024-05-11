@@ -3,6 +3,7 @@ import {CustomContentLoader} from "@components/Loaders.tsx";
 
 interface Props {
     isLoading: boolean
+    disabled?: boolean
     value: string
     name: string
     type: string
@@ -24,7 +25,7 @@ export const InputWithLoader = (props: Props) => {
                 name={props.name}
                 value={props.value}
                 onChange={props.onChange}
-                disabled={props.isLoading}
+                disabled={props.isLoading || props.disabled}
             />
         }
     </div>

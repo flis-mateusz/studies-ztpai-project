@@ -20,7 +20,7 @@ export const IndexPage = () => {
         navigate('/announcements?search=' + search)
     }
 
-    const query = useAxiosQuery<HydraCollection<IAnnouncement>>('/api/announcements',
+    const query = useAxiosQuery<HydraCollection<IAnnouncement>>(`/api/announcements`,
         {
             params: {
                 page: 1,
@@ -111,9 +111,9 @@ export const IndexPage = () => {
                         query.isPending ?
                             loader
                             :
-                            query.data!['hydra:member'].map((announcement, i) => (
+                            query.data ? query.data['hydra:member'].map((announcement, i) => (
                                 <AnnouncementGridElement key={i} announcement={announcement}/>
-                            ))
+                            )) : null
                     }
                 </section>
             </section>

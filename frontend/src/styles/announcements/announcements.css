@@ -17,8 +17,12 @@
 }
 
 .announcements-page #search {
-    margin-bottom: 10px;
     position: relative;
+    width: 100%;
+}
+
+.announcements-container {
+    width: 100%;
 }
 
 .announcements-container .panel-elements {
@@ -54,6 +58,10 @@
     .announcements-page {
         width: 100%;
         display: block !important;
+    }
+
+    .announcements-page .announcements-container {
+        margin-top: 10px;
     }
 
     main:has(#sidenav-button:checked)>.panel {

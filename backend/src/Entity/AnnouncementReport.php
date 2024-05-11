@@ -91,7 +91,6 @@ class AnnouncementReport
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-
     #[Groups(['admin:report:read:detail'])]
     #[ORM\ManyToOne(inversedBy: 'announcementReports')]
     #[ORM\JoinColumn(nullable: false)]

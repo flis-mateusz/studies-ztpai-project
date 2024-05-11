@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Announcement;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 
 /**
  * @extends ServiceEntityRepository<Announcement>
@@ -46,30 +49,69 @@ class AnnouncementRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    public function findAnnouncementsWithUnacceptedReports()
+    public function findUserAnnouncements(int $page = 1, int $itemsPerPage = 30, User $user): DoctrinePaginator
     {
-        $qb = $this->createQueryBuilder('a');
-        $qb->select('a')
-            ->leftJoin('a.announcementReports', 'ar')
-            ->where('ar.isAccepted = :isAccepted OR ar.isAccepted IS NULL')
-            ->setParameter('isAccepted', false)
-            ->groupBy('a.id')
-            ->having('COUNT(ar.id) > 0');
-
-        return $qb->getQuery()->getResult();
+        return new DoctrinePaginator(
+            $this->createQueryBuilder('a')
+                ->where('a.deletionDetail IS NULL')
+                ->andWhere('a.user = :user')
+                ->setParameter('user', $user)
+                ->addCriteria(
+                    Criteria::create()
+                        ->setFirstResult(($page - 1) * $itemsPerPage)
+                        ->setMaxResults($itemsPerPage)
+                )
+        );
     }
 
-    public function findUnacceptedAnnouncements()
+    public function findValidAnnouncements(int $page = 1, int $itemsPerPage = 30): DoctrinePaginator
     {
-        // Announcements only with uploads
-        $qb = $this->createQueryBuilder('a');
+       return new DoctrinePaginator(
+            $this->createQueryBuilder('a')
+                ->where('a.isAccepted = :isAccepted AND a.deletionDetail IS NULL')
+                ->setParameter('isAccepted', true)
+                ->addCriteria(
+                    Criteria::create()
+                        ->setFirstResult(($page - 1) * $itemsPerPage)
+                        ->setMaxResults($itemsPerPage)
+                )
+        );
+    }
 
-        $qb->leftJoin('a.uploads', 'u')
-            ->where('a.isAccepted = :isAccepted')
-            ->andWhere('u.id IS NOT NULL')
-            ->setParameter('isAccepted', false);
+    public function findAnnouncementsWithUnacceptedReports(int $page = 1, int $itemsPerPage = 30): DoctrinePaginator
+    {
+        return new DoctrinePaginator(
+            $this->createQueryBuilder('a')
+                ->leftJoin('a.announcementReports', 'ar')
+                ->where('a.deletionDetail IS NULL AND (ar.isAccepted = :isAccepted OR ar.isAccepted IS NULL)')
+                ->orWhere()
+                ->setParameter('isAccepted', false)
+                ->groupBy('a.id')
+                ->having('COUNT(ar.id) > 0')
+                ->addCriteria(
+                    Criteria::create()
+                        ->setFirstResult(($page - 1) * $itemsPerPage)
+                        ->setMaxResults($itemsPerPage)
+                )
+        );
+    }
 
-        return $qb->getQuery()->getResult();
+    public function findUnacceptedAnnouncements(int $page = 1, int $itemsPerPage = 30): DoctrinePaginator
+    {
+        // Announcements only with upload
+        return new DoctrinePaginator(
+            $this->createQueryBuilder('a')
+                ->leftJoin('a.uploads', 'au')
+                ->where('a.deletionDetail IS NULL')
+                ->andWhere('a.isAccepted = :isAccepted')
+                ->andWhere('au.id IS NOT NULL')
+                ->setParameter('isAccepted', false)
+                ->addCriteria(
+                    Criteria::create()
+                        ->setFirstResult(($page - 1) * $itemsPerPage)
+                        ->setMaxResults($itemsPerPage)
+                )
+        );
     }
 
 }

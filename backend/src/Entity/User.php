@@ -28,7 +28,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(
-            paginationClientEnabled: true
+            paginationClientItemsPerPage: true
         ),
         new Get(),
         new Delete(),
@@ -42,8 +42,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new Patch(
+            denormalizationContext: ['groups' => ['user:update']],
             security: "object === user",
-            validationContext: ['groups' => ['user:update']],
             processor: UserPasswordHasher::class
         ),
         new Post(
@@ -130,21 +130,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
 //    #[Assert\NotBlank(groups: ['user:create'])]
-    #[Groups(['user:write'])]
+    #[Groups(['user:write', 'user:update'])]
     private ?string $plainPassword = null;
 
     #[Groups(['user:registration'])]
     private ?string $registrationToken = null;
 
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:update'])]
     #[ORM\Column(length: 15)]
     private ?string $phone = null;
 
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:update'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'user:update'])]
     #[ORM\Column(length: 255)]
     private ?string $surname = null;
 

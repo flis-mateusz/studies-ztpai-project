@@ -40,7 +40,7 @@ main section.welcome>div:first-child {
     display: flex;
     align-self: stretch;
     border-radius: 24px;
-    background: url('welcome.jpeg');
+    background: url('/welcome.jpeg');
     background-size: cover;
     background-position: center;
     width: 50%;

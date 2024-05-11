@@ -12,7 +12,7 @@ export const LoginSection = ({handleFormChange, handleAction, isLoading}: ILogin
         event.preventDefault()
         handleAction({
             email: 'o@o.o',
-            password: 'string',
+            password: '1233',
         })
     }
 

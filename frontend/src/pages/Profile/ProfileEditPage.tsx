@@ -5,13 +5,14 @@ import {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
 import {AvatarWithLoader} from "@components/AvatarWithLoader.tsx";
 import {useAxiosFormPost} from "@hooks/useAxiosFormPost.tsx";
 import {IUser} from "@/types/IUser.ts";
+import {useAxiosMutation} from "@hooks/useAxiosMutation.tsx";
+import {DefaultSuccessSwalToast} from "@/swal2/Popups.tsx";
 
 interface FormValues {
     name: string
-    email: string
     phone: string
-    password: string
-    repassword: string
+    plainPassword: string
+    rePlainPassword: string
 }
 
 export const ProfileEditPage = () => {
@@ -21,13 +22,14 @@ export const ProfileEditPage = () => {
 
     const [formValues, setFormValues] = useState<FormValues>({
         name: '',
-        email: '',
         phone: '',
-        password: '',
-        repassword: ''
+        plainPassword: '',
+        rePlainPassword: ''
     })
 
-    const {isPending, mutate} = useAxiosFormPost<IUser>(`/api/users/${auth.user?.id}/avatar`, {
+    const userAPIUrl = `/api/users/${auth.user?.id}`
+
+    const avatarMutation = useAxiosFormPost<IUser>(`${userAPIUrl}/avatar`, {
         mutationOptions: {
             mutationKey: ['USER_AVATAR_POST'],
             onSuccess: (data) => {
@@ -36,8 +38,33 @@ export const ProfileEditPage = () => {
                         contentUrl: data.avatar.contentUrl
                     }
                 })
+                DefaultSuccessSwalToast()
             }
         },
+    })
+
+    const profileMutation = useAxiosMutation<unknown, IUser>(userAPIUrl, {
+        method: 'PATCH',
+        mutationOptions: {
+            mutationKey: ['USER_PROFILE_EDIT'],
+            onSuccess: (data) => {
+                auth.updateUser(data)
+                DefaultSuccessSwalToast()
+            }
+        }
+    })
+
+    const avatarDeleteMutation = useAxiosMutation<null, IUser>(`${userAPIUrl}/avatar`, {
+        method: 'DELETE',
+        mutationOptions: {
+            mutationKey: ['USER_AVATAR_DELETE'],
+            onMutate: () => {
+                auth.updateUser({
+                    avatar: undefined
+                })
+                DefaultSuccessSwalToast()
+            }
+        }
     })
 
     useEffect(() => {
@@ -45,7 +72,6 @@ export const ProfileEditPage = () => {
             setFormValues(prevState => ({
                 ...prevState,
                 name: auth.user?.name || prevState.name,
-                email: auth.user?.email || prevState.email,
                 phone: auth.user?.phone || prevState.phone,
             }))
         }
@@ -78,12 +104,16 @@ export const ProfileEditPage = () => {
         const fd = new FormData();
         fd.append("file", file);
 
-        mutate(fd)
+        avatarMutation.mutate(fd)
     }
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        profileMutation.mutate(formValues)
     }
+
+    const isLoading = auth.isAuthPending || profileMutation.isPending
 
     return <>
         <form className="with-absolute-loader" autoComplete="off" onSubmit={handleSubmit}>
@@ -95,17 +125,18 @@ export const ProfileEditPage = () => {
                         value={formValues.name}
                         onChange={handleChange('name')}
                         name="edit-names"
-                        isLoading={auth.isAuthPending}
+                        isLoading={isLoading}
                         loaderWidth={sectionWidth}
                     />
                     <InputWithLoader
                         label="Twój adres e-mail"
                         type="email"
-                        value={formValues.email}
-                        onChange={handleChange('email')}
+                        value={auth.user?.email || ''}
+                        onChange={() => {}}
                         name="edit-email"
-                        isLoading={auth.isAuthPending}
+                        isLoading={isLoading}
                         loaderWidth={sectionWidth}
+                        disabled
                     />
                     <InputWithLoader
                         label="Twój numer telefonu"
@@ -113,25 +144,25 @@ export const ProfileEditPage = () => {
                         value={formValues.phone}
                         onChange={handleChange('phone')}
                         name="edit-phone"
-                        isLoading={auth.isAuthPending}
+                        isLoading={isLoading}
                         loaderWidth={sectionWidth}
                     />
                     <InputWithLoader
                         label="Ustaw nowe hasło"
                         type="password"
-                        value={formValues.password}
-                        onChange={handleChange('password')}
+                        value={formValues.plainPassword}
+                        onChange={handleChange('plainPassword')}
                         name="edit-password"
-                        isLoading={auth.isAuthPending}
+                        isLoading={isLoading}
                         loaderWidth={sectionWidth}
                     />
                     <InputWithLoader
                         label="Powtórz nowe hasło"
                         type="password"
-                        value={formValues.repassword}
-                        onChange={handleChange('repassword')}
+                        value={formValues.rePlainPassword}
+                        onChange={handleChange('rePlainPassword')}
                         name="edit-repassword"
-                        isLoading={auth.isAuthPending}
+                        isLoading={isLoading}
                         loaderWidth={sectionWidth}
                     />
                 </section>
@@ -140,7 +171,7 @@ export const ProfileEditPage = () => {
                         <div className={`avatar-container ${auth.user ? 'loaded' : ''}`}>
                             <input className="mobile-avatar-checkbox" type="checkbox" id="mobile-avatar-checkbox"/>
                             <label className="mobile-avatar-checkbox-overlay" htmlFor="mobile-avatar-checkbox"> </label>
-                            <AvatarWithLoader isLoading={auth.isAuthPending || isPending}
+                            <AvatarWithLoader isLoading={auth.isAuthPending || avatarMutation.isPending}
                                               mediaObject={auth.user?.avatar}
                                               responsive={true}>
                                 <input type="file" className="main-input" id="edit-avatar" name="edit-avatar"
@@ -153,7 +184,11 @@ export const ProfileEditPage = () => {
                                         <i className="material-icons">file_upload</i>
                                     </label>
                                     <label
-                                        className={`avatar-action remove ${!auth.user.avatar ? 'hidden' : null}`}>
+                                        className={`avatar-action remove ${!auth.user.avatar ? 'hidden' : null}`}
+                                        onClick={() => {
+                                            avatarDeleteMutation.mutate(null)
+                                        }}
+                                    >
                                         <i className="material-icons">delete_forever</i>
                                     </label>
                                 </>
@@ -166,9 +201,12 @@ export const ProfileEditPage = () => {
                 </section>
             </div>
             <span className="form-output"></span>
-            <div className="submit-container">
-                <input type="submit" value="Zapisz" className="main-button normal-text"/>
-            </div>
+            {
+                isLoading ? null :
+                    <div className="submit-container">
+                        <input type="submit" value="Zapisz" className="main-button normal-text"/>
+                    </div>
+            }
         </form>
     </>
 }

@@ -26,8 +26,8 @@ readonly class UserAvatarDeletionProcessor implements ProcessorInterface
         }
 
         $avatar = $data->getAvatar();
-        $this->entityManager->remove($avatar);
         $data->setAvatar(null);
+        $this->entityManager->remove($avatar);
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }

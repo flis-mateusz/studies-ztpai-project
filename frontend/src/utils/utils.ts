@@ -32,3 +32,7 @@ export const formatTimeUnits = (age: number, unit: string): string | null => {
 export const formatPrice = (price: number | null): string | null => {
     return price ? `${price} zł` : 'Oddam za darmo';
 }
+
+export const absoluteServerPath = (path: string) => {
+    return 'http://localhost:8082' + (path?.startsWith('/') ? path : '/' + path);
+}

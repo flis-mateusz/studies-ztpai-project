@@ -1,12 +1,8 @@
-import axios, {AxiosRequestConfig} from 'axios'
 import {useQuery, UseQueryOptions} from "@tanstack/react-query"
-import {useLocation, useNavigate} from "react-router-dom";
-import {ContentTypeHeader} from "@/types/IUtil.ts";
-import {useAuth} from "@hooks/useAuth.tsx";
+import {IBasicAxiosRequestParams, useBasicAxiosRequest} from "@hooks/useBasicAxiosRequest.tsx";
 
-interface AxiosQueryOptions<T> extends Omit<AxiosRequestConfig, 'url' | 'method'> {
+export interface IAxiosQueryOptions<T> extends Omit<IBasicAxiosRequestParams, 'contentType'> {
     queryOptions: UseQueryOptions<T>
-    accept?: ContentTypeHeader
     params?: {
         page?: number,
         itemsPerPage?: number,
@@ -20,31 +16,9 @@ interface AxiosQueryOptions<T> extends Omit<AxiosRequestConfig, 'url' | 'method'
 
 export const useAxiosQuery = <T, >(
     url: string,
-    options: AxiosQueryOptions<T>
+    options: IAxiosQueryOptions<T>
 ) => {
-    const navigate = useNavigate()
-    const location = useLocation()
-    const auth = useAuth()
+    const {query} = useBasicAxiosRequest<T>(url, {...options, method: 'GET'})
 
-    const queryFn = async (): Promise<T> => {
-
-        const config: AxiosRequestConfig = {
-            ...options,
-            headers: {
-                Accept: options.accept ? options.accept : ContentTypeHeader.JSON_LD,
-                ...options.headers,
-            },
-        }
-
-        return axios.get<T>(url, config)
-            .then((res) => res.data)
-            .catch((err) => {
-                if (err.response.status === 401) {
-                    navigate('/login', {state: {from: location}, replace: true})
-                }
-                throw err
-            })
-    };
-
-    return useQuery<T>({...options.queryOptions, queryFn: queryFn})
+    return useQuery<T>({...options.queryOptions, queryFn: query})
 }

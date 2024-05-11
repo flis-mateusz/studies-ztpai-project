@@ -38,7 +38,7 @@ export const Header = () => {
                         auth.token ?
                             <>
                                 <AvatarWithLoader isLoading={auth.isAuthPending} width={58} height={58}
-                                                  url={auth.user?.avatar}
+                                                  mediaObject={auth.user?.avatar}
                                                   onMouseEnter={() => setHover(true)}
                                                   onMouseLeave={() => setHover(false)}
                                 />

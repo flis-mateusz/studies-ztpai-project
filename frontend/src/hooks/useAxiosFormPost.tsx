@@ -1,43 +1,21 @@
-import axios, {AxiosRequestConfig} from 'axios';
-import {useMutation, UseMutationOptions} from '@tanstack/react-query';
-import {useNavigate, useLocation} from 'react-router-dom';
-import {ContentTypeHeader} from "@/types/IUtil.ts";
+import {useMutation} from '@tanstack/react-query';
+import {IAxiosMutationOptions} from "@hooks/useAxiosMutation.tsx";
+import {useBasicAxiosRequest} from "@hooks/useBasicAxiosRequest.tsx";
 
-interface AxiosFormPostOptions<T> extends Omit<AxiosRequestConfig, 'url' | 'method'> {
-    accept?: ContentTypeHeader
-    mutationOptions: UseMutationOptions<T, unknown, FormData>;
+interface AxiosFormPostOptions<T> extends Omit<IAxiosMutationOptions<T, FormData>, 'method'> {
 }
 
-export const useAxiosFormPost = <T = unknown>(
+export const useAxiosFormPost = <T, >(
     url: string,
     options: AxiosFormPostOptions<T>
 ) => {
-    const navigate = useNavigate();
-    const location = useLocation();
+    const {mutation} = useBasicAxiosRequest<T, FormData>(url, {
+        ...options,
+        method: 'POST',
+        headers: {
+            "Content-Type": 'multipart/form-data'
+        }
+    })
 
-    const mutationFn = async (formData: FormData): Promise<T> => {
-
-        const config: AxiosRequestConfig = {
-            ...options,
-            url: url,
-            method: 'POST',
-            data: formData,
-            headers: {
-                Accept: options.accept ? options.accept : ContentTypeHeader.JSON_LD,
-                ...options.headers,
-                "Content-Type": 'multipart/form-data',
-            },
-        };
-
-        return axios.request<T>(config)
-            .then((res) => res.data)
-            .catch((err) => {
-                if (err.response && err.response.status === 401) {
-                    navigate('/login', {state: {from: location}, replace: true});
-                }
-                throw err;
-            });
-    };
-
-    return useMutation<T, unknown, FormData>({...options.mutationOptions, mutationFn});
+    return useMutation<T, unknown, FormData>({...options.mutationOptions, mutationFn: mutation});
 }

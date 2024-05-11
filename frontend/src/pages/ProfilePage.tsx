@@ -29,13 +29,18 @@ export const ProfilePage = () => {
             <div>
                 <NavLinkIcon icon={'folder_open'} to={'announcements'} text={'Moje ogłoszenia'}/>
                 <NavLinkIcon icon={'mode_edit'} to={''} text={'Edycja profilu'}/>
-
-                <span>Panel administratora</span>
-                <NavLinkIcon icon={'streetview'} to={'admin/approval'} text={'Ogłoszenia do akceptacji'}/>
-                <NavLinkIcon icon={'verified_user'} to={'admin/reports'} text={'Zgłoszenia'}/>
-                <NavLinkIcon icon={'supervisor_account'} to={'admin/users'} text={'Użytkownicy'}/>
-                <NavLinkIcon icon={'toc'} to={'admin/petTypes'} text={'Typy zwierząt'}/>
-                <NavLinkIcon icon={'toc'} to={'admin/petFeatures'} text={'Cechy zwierząt'}/>
+                {
+                    auth.hasRole('ROLE_ADMIN') ?
+                        <>
+                            <span>Panel administratora</span>
+                            <NavLinkIcon icon={'streetview'} to={'admin/approval'} text={'Ogłoszenia do akceptacji'}/>
+                            <NavLinkIcon icon={'verified_user'} to={'admin/reports'} text={'Zgłoszenia'}/>
+                            <NavLinkIcon icon={'supervisor_account'} to={'admin/users'} text={'Użytkownicy'}/>
+                            <NavLinkIcon icon={'toc'} to={'admin/petTypes'} text={'Typy zwierząt'}/>
+                            <NavLinkIcon icon={'toc'} to={'admin/petFeatures'} text={'Cechy zwierząt'}/>
+                        </>
+                        : null
+                }
             </div>
             <div>
                 <a className="main-button" onClick={auth.signOut}>

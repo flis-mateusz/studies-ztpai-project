@@ -225,6 +225,10 @@ a.main-button {
     letter-spacing: 2px;
 }
 
+.main-input:disabled {
+    background-color: #f3f3f34d;
+}
+
 .main-input.loader {
     padding: 0px;
 }

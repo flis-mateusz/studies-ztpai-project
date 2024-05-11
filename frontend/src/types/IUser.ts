@@ -1,4 +1,4 @@
-import {IMediaObject} from "@/interfaces/App.ts";
+import {IMediaObject} from "@/interfaces/IMediaObject.ts";
 
 export const enum USER_ROLES {
     ROLE_ADMIN = "ROLE_ADMIN",

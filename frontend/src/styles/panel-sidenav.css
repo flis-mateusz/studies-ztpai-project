@@ -9,6 +9,10 @@ main:has(.sidenav) {
     width: 70%;
     padding: 30px;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
 }
 
 .panel > form {

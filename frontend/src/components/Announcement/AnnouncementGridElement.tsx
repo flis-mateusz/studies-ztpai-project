@@ -1,9 +1,9 @@
 import {Link} from "react-router-dom";
 import {IAnnouncement} from "@/interfaces/App.ts";
-import {formatPrice, formatTimeUnits} from "@/utils/utils.ts";
+import {absoluteServerPath, formatPrice, formatTimeUnits} from "@/utils/utils.ts";
 
 export const AnnouncementGridElement = ({announcement}: { announcement: IAnnouncement }) => {
-    const petAvatar = `url(${announcement.uploads[0]?.mediaObject.contentUrl})`
+    const petAvatar = `url(${absoluteServerPath(announcement.uploads[0]?.mediaObject.contentUrl)})`
 
     return <Link to={`/announcement/${announcement.id}`} className={'announcement'}>
         <div className="announcement-image" style={{backgroundImage: petAvatar}}></div>
