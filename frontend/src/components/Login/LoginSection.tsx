@@ -1,4 +1,4 @@
-import {FormEvent} from "react";
+import {FormEvent, useState} from "react";
 import {ISignInData} from "@hooks/useAuth.tsx";
 
 export interface ILoginFormProps<T> {
@@ -8,11 +8,14 @@ export interface ILoginFormProps<T> {
 }
 
 export const LoginSection = ({handleFormChange, handleAction, isLoading}: ILoginFormProps<ISignInData>) => {
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         handleAction({
-            email: 'o@o.o',
-            password: '1233',
+            email: email,
+            password: password,
         })
     }
 
@@ -25,12 +28,14 @@ export const LoginSection = ({handleFormChange, handleAction, isLoading}: ILogin
                 <div className="inputs">
                     <div>
                         <label htmlFor="login-email"><span>Wprowadź adres e-mail</span></label>
-                        <input type="email" className="main-input" id="login-email" name="login-email"/>
+                        <input type="email" className="main-input" id="login-email" name="login-email"
+                               onChange={(e) => setEmail(e.target.value)}/>
                     </div>
                     <div>
                         <label htmlFor="login-email"><span>Wprowadź hasło</span></label>
                         <input type="password" className="main-input" id="login-password"
-                               name="login-password"/>
+                               name="login-password"
+                               onChange={(e) => setPassword(e.target.value)}/>
                         <span className="switch-form forgot-password" onClick={() => {
                             handleFormChange('forgot-password')
                         }}>Zapomniałem/am hasła</span>

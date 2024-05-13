@@ -48,6 +48,11 @@ export const ProfileEditPage = () => {
         mutationOptions: {
             mutationKey: ['USER_PROFILE_EDIT'],
             onSuccess: (data) => {
+                setFormValues(prevState => ({
+                    ...prevState,
+                    plainPassword: '',
+                    rePlainPassword: ''
+                }))
                 auth.updateUser(data)
                 DefaultSuccessSwalToast()
             }
