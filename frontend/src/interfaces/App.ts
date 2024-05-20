@@ -1,9 +1,7 @@
-import {IUser} from "@/types/IUser.ts"
+import {IUser} from "@/interfaces/IUser.ts"
 import {IMediaObject} from "@/interfaces/IMediaObject.ts";
 
 export interface IAnnouncement {
-    '@id': string
-    '@type': string
     id: number
     isAccepted: boolean
     createdAt: string
@@ -11,17 +9,14 @@ export interface IAnnouncement {
     user: IUser
     announcementDetail: IAnnouncementDetail
     uploads: IAnnouncementUpload[]
+    announcementReports?: IAnnouncementReport[]
 }
 
 export interface IAnimalType {
-    '@id': string
-    '@type': string
     name: string
 }
 
 export interface IAnnouncementDetail {
-    '@id': string
-    '@type': string
     name: string
     locality: string
     price: number
@@ -35,21 +30,27 @@ export interface IAnnouncementDetail {
 }
 
 export interface IAnnouncementUpload {
-    '@id': string
-    '@type': string
     id: number
     mediaObject: IMediaObject
 }
 
 export interface IAnnouncementAnimalFeature {
-    '@type': string
-    '@id': string
     isPositive: boolean
     feature: IAnimalFeature
 }
 
 export interface IAnimalFeature {
-    '@type': string
-    '@id': string
     name: string
+}
+
+export interface IAnnouncementReport {
+    id: number
+    givenAt: string
+    isAccepted: boolean
+    details: string
+}
+
+export interface IAnnouncementLike {
+    "id": 0,
+    "givenAt": "2024-05-20T18:41:46.536Z"
 }

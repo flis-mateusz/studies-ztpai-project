@@ -26,7 +26,7 @@ export const useAxiosPaginatedQuery = <T, >(
     })
 
     useEffect(() => {
-        if (query.data && query.data['hydra:totalItems']) {
+        if (query.data && query.data['hydra:totalItems'] != null) {
             setTotalItems(query.data['hydra:totalItems'])
         }
     }, [query.data])

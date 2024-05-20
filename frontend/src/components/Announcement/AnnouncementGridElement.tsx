@@ -7,6 +7,14 @@ export const AnnouncementGridElement = ({announcement}: { announcement: IAnnounc
 
     return <Link to={`/announcement/${announcement.id}`} className={'announcement'}>
         <div className="announcement-image" style={{backgroundImage: petAvatar}}></div>
+        {
+            announcement.isAccepted ? null :
+                <div className='awaiting'><span>Oczekuje na akceptację</span></div>
+        }
+        {
+            !announcement.announcementReports || !announcement.announcementReports.length ? null :
+                <div className='awaiting'><span>Liczba zgłoszeń: {announcement.announcementReports.length}</span></div>
+        }
         <div className="announcement-data">
             <div className="announcement-detail">
                 <div className="flex-center gap-10">

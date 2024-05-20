@@ -83,9 +83,7 @@ class AnnouncementRepository extends ServiceEntityRepository
         return new DoctrinePaginator(
             $this->createQueryBuilder('a')
                 ->leftJoin('a.announcementReports', 'ar')
-                ->where('a.deletionDetail IS NULL AND (ar.isAccepted = :isAccepted OR ar.isAccepted IS NULL)')
-                ->orWhere()
-                ->setParameter('isAccepted', false)
+                ->where('a.deletionDetail IS NULL AND ar.isAccepted IS NULL')
                 ->groupBy('a.id')
                 ->having('COUNT(ar.id) > 0')
                 ->addCriteria(

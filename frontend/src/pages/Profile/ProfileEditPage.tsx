@@ -4,7 +4,7 @@ import {useAuth} from "@hooks/useAuth.tsx";
 import {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
 import {AvatarWithLoader} from "@components/AvatarWithLoader.tsx";
 import {useAxiosFormPost} from "@hooks/useAxiosFormPost.tsx";
-import {IUser} from "@/types/IUser.ts";
+import {IUser} from "@/interfaces/IUser.ts";
 import {useAxiosMutation} from "@hooks/useAxiosMutation.tsx";
 import {DefaultSuccessSwalToast} from "@/swal2/Popups.tsx";
 

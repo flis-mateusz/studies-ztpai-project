@@ -2,13 +2,13 @@
 
 namespace App\State\Processor;
 
-use App\Entity\AnnouncementReport;
+use App\Entity\AnnouncementLike;
 
 class AnnouncementLikePersistProcessor extends AbstractAnnouncementUserActionProcessor
 {
 
     protected function getDataType(): string
     {
-        return AnnouncementReport::class;
+        return AnnouncementLike::class;
     }
 }

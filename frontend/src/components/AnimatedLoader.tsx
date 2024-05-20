@@ -1,6 +1,6 @@
 import "@styles/components/custom-loader.css"
 
-export const CustomContentLoader = ({visible}: { visible: boolean }) => {
+export const AnimatedLoader = ({visible}: { visible: boolean }) => {
     return <div className={`custom-loader-container ${!visible && 'hidden'}`}>
         <div className="custom-loader">
             <div className="track">

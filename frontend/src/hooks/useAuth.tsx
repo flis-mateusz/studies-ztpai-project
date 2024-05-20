@@ -1,8 +1,8 @@
 import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from "react"
-import {IUser} from "@/types/IUser.ts"
+import {IUser} from "@/interfaces/IUser.ts"
 import {useAxiosQuery} from "@hooks/useAxiosQuery.tsx"
 import {useAxiosMutation} from "@hooks/useAxiosMutation.tsx"
-import {IMutationMethodCallbacks} from "@/types/IMutation.tsx"
+import {IMutationMethodCallbacks} from "@/interfaces/IMutation.tsx"
 import {useToken} from "@hooks/useToken.tsx";
 
 interface IAuthContextType {

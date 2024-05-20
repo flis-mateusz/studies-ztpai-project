@@ -33,6 +33,19 @@ export const formatPrice = (price: number | null): string | null => {
     return price ? `${price} zł` : 'Oddam za darmo';
 }
 
+export const formatDateTime = (datetime: string) => {
+    return new Date(datetime).toLocaleString()
+}
+
 export const absoluteServerPath = (path: string) => {
     return 'http://localhost:8082' + (path?.startsWith('/') ? path : '/' + path);
+}
+
+export const formatGenderType = (gender: string) => {
+    switch (gender) {
+        case 'male':
+            return 'On';
+        case 'female':
+            return 'Ona';
+    }
 }

@@ -1,7 +1,7 @@
 import {Method} from 'axios'
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
 import {IBasicAxiosRequestParams, useBasicAxiosRequest} from "@hooks/useBasicAxiosRequest.tsx";
-import {ContentTypeHeader} from "@/types/IUtil.ts";
+import {ContentTypeHeader} from "@/interfaces/IUtil.ts";
 
 export interface IAxiosMutationOptions<T, TVariables> extends IBasicAxiosRequestParams {
     method: Exclude<Method, "GET" | "get">

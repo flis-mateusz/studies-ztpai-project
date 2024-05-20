@@ -1,6 +1,6 @@
 import axios, {AxiosError, AxiosRequestConfig} from 'axios'
 import {useLocation, useNavigate} from "react-router-dom";
-import {ContentTypeHeader} from "@/types/IUtil.ts";
+import {ContentTypeHeader} from "@/interfaces/IUtil.ts";
 import {useMemo} from "react";
 import {useToken} from "@hooks/useToken.tsx";
 import {DefaultSwalToast} from "@/swal2/Popups.tsx";

@@ -23,7 +23,7 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import axios from "axios";
 import TestUploads from "@pages/TestUploads.tsx";
 import {RequireRole} from "@components/RequireRole.tsx";
-import {USER_ROLES} from "@/types/IUser.ts";
+import {USER_ROLES} from "@/interfaces/IUser.ts";
 
 const queryClient = new QueryClient({
     defaultOptions: {

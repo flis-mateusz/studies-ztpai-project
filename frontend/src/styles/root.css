@@ -357,6 +357,13 @@ hr {
     cursor: pointer;
     transition-duration: 250ms;
     user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-button i.loop {
+    animation: spin 1s linear infinite;
 }
 
 .icon-button.admin {
@@ -446,6 +453,40 @@ span.input-error.not-hidden {
 
 i.material-icons {
     user-select: none;
+}
+
+.min-loader {
+    border: 5px solid #f3f3f3;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+    border-top: 5px solid #555;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.image-gallery {
+    border-radius: 20px;
+    overflow: hidden;
+    min-height: 20vh;
+}
+
+.image-gallery-thumbnail {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.image-gallery.cover .image-gallery-slide .image-gallery-image {
+    object-fit: cover !important;
 }
 
 @media screen and (max-width: 1100px) {

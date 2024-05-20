@@ -9,7 +9,7 @@ import {useEffect, useRef, useState} from "react";
 import {LoginSection} from "@components/Login/LoginSection.tsx";
 import {RegisterSection} from "@components/Login/RegisterSection.tsx";
 import {ForgotPasswordSection} from "@components/Login/ForgotPasswordSection.tsx";
-import {CustomContentLoader} from "@components/CustomContentLoader.tsx";
+import {AnimatedLoader} from "@components/AnimatedLoader.tsx";
 
 
 export const LoginPage = () => {
@@ -76,7 +76,7 @@ export const LoginPage = () => {
                                      isLoading={auth.isAuthPending}/>
                     <ForgotPasswordSection handleFormChange={handleFormChange}/>
                 </section>
-                <CustomContentLoader visible={auth.isAuthPending}/>
+                <AnimatedLoader visible={auth.isAuthPending}/>
             </section>
         </>
     )
