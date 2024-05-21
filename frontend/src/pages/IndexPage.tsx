@@ -105,7 +105,7 @@ export const IndexPage = () => {
         </section>
         <section className="announcements">
             <section>
-                <span>Ostatnie dodane ogłoszenia</span>
+                <span>Ostatnio dodane ogłoszenia</span>
                 <section className="panel-elements cut" ref={announcementsContainer}>
                     {
                         query.isPending ?

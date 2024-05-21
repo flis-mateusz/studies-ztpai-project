@@ -3,7 +3,6 @@ import {IAnimalFeature} from "@/interfaces/App.ts";
 import {AnimalFeatureOption} from "@components/AnnouncementForm/AnimalFeatureOption.tsx";
 import {IHydraCollection, IHydraExtension} from "@/interfaces/Hydra.ts";
 import {ChangeEvent} from "react";
-import {AnimatedLoader} from "@components/AnimatedLoader.tsx";
 
 export interface IAnimalFeaturesSelectProps {
     animalFeatures?: IHydraCollection<IAnimalFeature>
@@ -21,7 +20,7 @@ export const AnimalFeaturesSelect = (props: IAnimalFeaturesSelectProps) => {
                                          value={props.animalFeaturesState[(feature as IAnimalFeature & IHydraExtension)['@id']]}/>
                 )
                 :
-                <AnimatedLoader visible={true}/>
+                null
         }
     </div>
 }

@@ -1,6 +1,6 @@
 import {IMediaObject} from "@/interfaces/IMediaObject.ts";
 
-export const enum USER_ROLES {
+export enum USER_ROLES {
     ROLE_ADMIN = "ROLE_ADMIN",
     ROLE_USER = "ROLE_USER",
 }
@@ -12,7 +12,7 @@ export interface IUser {
     surname: string
     avatar: IMediaObject
     phone: string
-    roles?: USER_ROLES
+    roles?: string[]
 }
 
 export type IUserRegistration = Omit<IUser, 'id'>

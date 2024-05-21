@@ -19,7 +19,7 @@ class AnnouncementDetail
     private ?int $id = null;
 
     #[Groups(['announcement:read', 'announcement:write'])]
-    #[Assert\NotBlank]
+    #[Assert\NotNull(), Assert\NotBlank()]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

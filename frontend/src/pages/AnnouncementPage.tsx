@@ -199,7 +199,7 @@ export const AnnouncementPage = () => {
                 isOwner || auth.hasRole(USER_ROLES.ROLE_ADMIN) ?
                     <div>
                         {
-                            !announcement.isAccepted ?
+                            !announcement.isAccepted && auth.hasRole(USER_ROLES.ROLE_ADMIN) ?
                                 <IconButton iconName='assignment_turned_in'
                                             onClick={handleAccept}
                                             className='admin action-approve'

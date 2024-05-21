@@ -230,7 +230,17 @@ a.main-button {
     border-radius: 15px !important;
 }
 
-.MuiInputBase-root {
+.MuiAutocomplete-root.min .MuiFormControl-root {
+    box-shadow: none !important;
+}
+
+.MuiAutocomplete-root.min .MuiInputBase-root {
+    padding-left: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.MuiAutocomplete-root:not(.min) .MuiInputBase-root {
     padding: 12px 20px !important;
     width: 100%;
 }
@@ -241,14 +251,14 @@ a.main-button {
 
 .MuiAutocomplete-option {
     min-height: unset !important;
-    color: #265BD7;
+    color: #486284;
     font-family: 'Poppins', sans-serif;
     font-size: 0.9em;
 }
 
 .MuiInputBase-root input {
     padding: 0px !important;
-    color: #265BD7;
+    color: #486284;
     font-size: 0.9em;
     font-family: 'Poppins', sans-serif;
     letter-spacing: 2px;
@@ -391,6 +401,16 @@ hr {
     align-items: center;
 }
 
+.icon-button.no-shadow {
+    box-shadow: none;
+}
+
+.icon-button.top-right {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
 .icon-button i.loop {
     animation: spin 1s linear infinite;
 }
@@ -459,6 +479,11 @@ span.input-error.not-hidden {
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-bottom: 10px;
+}
+
+.w100 {
+    width: 100%;
 }
 
 .icon-input.left input {

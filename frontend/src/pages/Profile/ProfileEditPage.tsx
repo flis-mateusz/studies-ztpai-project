@@ -1,12 +1,13 @@
 import '@styles/components/profile/profile-edit.css'
 import {InputWithLoader} from "@components/InputWithLoader.tsx";
 import {useAuth} from "@hooks/useAuth.tsx";
-import {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
+import {ChangeEvent, FormEvent, ReactNode, useEffect, useRef, useState} from "react";
 import {AvatarWithLoader} from "@components/AvatarWithLoader.tsx";
 import {useAxiosFormPost} from "@hooks/useAxiosFormPost.tsx";
-import {IUser} from "@/interfaces/IUser.ts";
+import {IUser, USER_ROLES} from "@/interfaces/IUser.ts";
 import {useAxiosMutation} from "@hooks/useAxiosMutation.tsx";
 import {DefaultSuccessSwalToast} from "@/swal2/Popups.tsx";
+import {Chip} from "@mui/material";
 
 interface FormValues {
     name: string
@@ -15,6 +16,11 @@ interface FormValues {
     phone: string
     plainPassword: string
     rePlainPassword: string
+}
+
+interface IRoleDefinition {
+    label: string
+    color: 'default' | 'secondary'
 }
 
 export const ProfileEditPage = () => {
@@ -138,6 +144,25 @@ export const ProfileEditPage = () => {
         profileMutation.mutate(formValues)
     }
 
+    const renderRoleBadges = () => {
+        if (!auth.user?.roles) return null
+
+        const roleDefinitions: Record<string, IRoleDefinition> = {
+            [USER_ROLES.ROLE_USER]: {label: 'Zwykły użytkownik', color: 'default'},
+            [USER_ROLES.ROLE_ADMIN]: {label: 'Administrator', color: 'secondary'}
+        }
+
+        const badges = auth.user.roles.reduce((acc: ReactNode[], role) => {
+            const roleDef = roleDefinitions[role]
+            if (roleDef) {
+                acc.push(<Chip key={role} label={roleDef.label} color={roleDef.color} variant='outlined'/>)
+            }
+            return acc
+        }, [])
+
+        return <div className="user-roles">{badges}</div>;
+    }
+
     const isLoading = auth.isAuthPending || profileMutation.isPending
 
     return <>
@@ -157,7 +182,8 @@ export const ProfileEditPage = () => {
                         label="Twój adres e-mail"
                         type="email"
                         value={auth.user?.email || ''}
-                        onChange={() => {}}
+                        onChange={() => {
+                        }}
                         name="edit-email"
                         isLoading={isLoading}
                         loaderWidth={sectionWidth}
@@ -223,6 +249,7 @@ export const ProfileEditPage = () => {
                             <span>Zmiany nie są jeszcze zapisane</span>
                         </div>
                     </div>
+                    {renderRoleBadges()}
                 </section>
             </div>
             <span className="form-output"></span>

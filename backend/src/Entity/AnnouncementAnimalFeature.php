@@ -14,7 +14,7 @@ class AnnouncementAnimalFeature
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['announcement:read', 'announcement:write'])]
+    #[Groups(['announcement:read', 'announcement:write', 'admin:animal_feature:read'])]
     #[ORM\Column(nullable: true)]
     private ?bool $isPositive = null;
 

@@ -13,7 +13,9 @@ export interface IAnnouncement {
 }
 
 export interface IAnimalType {
+    id: number
     name: string
+    announcements?: []
 }
 
 export interface IAnnouncementDetail {
@@ -41,6 +43,7 @@ export interface IAnnouncementAnimalFeature {
 export interface IAnimalFeature {
     id: number
     name: string
+    announcementAnimalFeatures?: []
 }
 
 export interface IAnnouncementReport {

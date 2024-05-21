@@ -24,7 +24,7 @@ import {AxiosError} from "axios";
 import {useAxiosFormPost} from "@hooks/useAxiosFormPost.tsx";
 
 interface IPostAnnouncementData {
-    animalType: string,
+    animalType: string | null,
     announcementDetail: Omit<IAnnouncementDetail, 'announcementAnimalFeatures'> | {
         announcementAnimalFeatures: {
             feature: string
@@ -161,9 +161,11 @@ export const AnnouncementEditPage = () => {
         const uploads = files.filter(file =>
             !(file instanceof File)) as (IAnnouncementUpload & IHydraExtension)[]
         const uploads_jsonld = uploads.map(file => file['@id'])
+        const animalType = animalTypesQuery.data!['hydra:member']
+            .find(option => option.name === form.animalType)
 
         return {
-            animalType: animalTypesQuery.data!['hydra:member'].find(option => option.name === form.animalType)!['@id'],
+            animalType: animalType ? animalType['@id'] : null,
             announcementDetail: {
                 ...form,
                 price: form.price ? parseInt(form.price as string) : undefined,

@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\State\ProcessorInterface;
+use ApiPlatform\Validator\ValidatorInterface;
 use App\Entity\Announcement;
 use App\Repository\AnnouncementUploadRepository;
 use Psr\Clock\ClockInterface;
@@ -19,9 +20,9 @@ readonly class AnnouncementPersistProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: PersistProcessor::class)]
-        private ProcessorInterface           $persistProcessor,
-        private ClockInterface               $clock,
-        private Security                     $security
+        private ProcessorInterface $persistProcessor,
+        private ClockInterface     $clock,
+        private Security           $security
     )
     {
     }

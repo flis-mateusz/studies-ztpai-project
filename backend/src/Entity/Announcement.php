@@ -167,6 +167,7 @@ class Announcement
     private ?User $user = null;
 
     #[Groups(['announcement:read', 'announcement:write'])]
+    #[Assert\Valid()]
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?AnnouncementDetail $announcementDetail = null;

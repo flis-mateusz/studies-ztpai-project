@@ -21,7 +21,6 @@ import {IndexPage} from "@pages/IndexPage.tsx";
 import {AnnouncementPage} from "@pages/AnnouncementPage.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import axios from "axios";
-import TestUploads from "@pages/TestUploads.tsx";
 import {RequireRole} from "@components/RequireRole.tsx";
 import {USER_ROLES} from "@/interfaces/IUser.ts";
 
@@ -47,7 +46,6 @@ const App = () => {
                 <Routes>
                     <Route path='/' element={<Layout/>}>
                         <Route path='' element={<IndexPage/>}/>
-                        <Route path='test' element={<TestUploads/>}/>
                         <Route path="login" element={<LoginPage/>}/>
                         <Route path='add' element={
                             <RequireAuth>
