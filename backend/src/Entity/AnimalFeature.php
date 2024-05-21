@@ -19,9 +19,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Post(),
         new Delete(),
+        new GetCollection()
     ],
     routePrefix: '/admin',
-    normalizationContext: ['groups' => []],
+    normalizationContext: ['groups' => ['animal_feature:read', 'admin:animal_feature:read']],
     denormalizationContext: ['groups' => ['admin:animal_feature:write']],
     security: "is_granted('ROLE_ADMIN')",
 )]
@@ -49,6 +50,7 @@ class AnimalFeature
     /**
      * @var Collection<int, AnnouncementAnimalFeature>
      */
+    #[Groups(['admin:animal_feature:read'])]
     #[ORM\OneToMany(targetEntity: AnnouncementAnimalFeature::class, mappedBy: 'feature', cascade: ['remove'])]
     private Collection $announcementAnimalFeatures;
 

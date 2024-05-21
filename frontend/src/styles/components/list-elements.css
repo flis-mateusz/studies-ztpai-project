@@ -1,0 +1,68 @@
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.list {
+    width: 100%;
+}
+
+.list div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.list > div {
+    gap: 15px;
+}
+
+.list>div:first-child span {
+    font-weight: bold;
+    text-align: right;
+}
+
+.list .icon-button, .icon-button.min {
+    padding: 2px;
+    box-shadow: none;
+    display: none;
+    gap: 5px;
+}
+
+.list-action {
+    display: flex;
+    gap: 5px;
+}
+
+.list .list-element:hover .icon-button, .list .list-action.visible .icon-button {
+    display: flex;
+}
+
+.list .action i {
+    display: none;
+    cursor: pointer;
+}
+
+.list .action span {
+    text-align: left;
+}
+
+.list div:hover i {
+    display: block;
+}
+
+.icon-input i:hover {
+    color: #5033A4;
+}
+
+.input-error {
+    max-height: unset !important;
+    text-align: left !important;
+}
+
+@media screen and (max-width: 850px) {
+    .list .action i {
+        display: block !important;
+    }
+}

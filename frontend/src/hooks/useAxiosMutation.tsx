@@ -1,42 +1,22 @@
-import axios, {AxiosRequestConfig, Method} from 'axios'
+import {Method} from 'axios'
 import {useMutation, UseMutationOptions} from '@tanstack/react-query'
-import {useNavigate, useLocation} from 'react-router-dom'
+import {IBasicAxiosRequestParams, useBasicAxiosRequest} from "@hooks/useBasicAxiosRequest.tsx";
+import {ContentTypeHeader} from "@/interfaces/IUtil.ts";
 
-interface AxiosMutationOptions<T, TVariables> extends Omit<AxiosRequestConfig, 'url' | 'method'> {
-    token?: string
-    mutationOptions: UseMutationOptions<T, unknown, TVariables>
+export interface IAxiosMutationOptions<T, TVariables> extends IBasicAxiosRequestParams {
     method: Exclude<Method, "GET" | "get">
+    mutationOptions: UseMutationOptions<T, unknown, TVariables>
 }
 
 export const useAxiosMutation = <TVariables, T = unknown>(
     url: string,
-    options: AxiosMutationOptions<T, TVariables>
+    options: IAxiosMutationOptions<T, TVariables>
 ) => {
-    const navigate = useNavigate()
-    const location = useLocation()
-
-    const mutationFn = async (variables: TVariables): Promise<T> => {
-        const config: AxiosRequestConfig = {
-            ...options,
-            url: url,
-            method: options.method,
-            data: variables,
-            headers: {
-                ...options.headers,
-                Authorization: options.token ? `Bearer ${options.token}` : undefined,
-                "Content-Type": 'application/ld+json'
-            },
-        }
-
-        return axios.request<T>(config)
-            .then((res) => res.data)
-            .catch((err) => {
-                if (err.response && err.response.status === 401) {
-                    navigate('/login', {state: {from: location}, replace: true})
-                }
-                throw err
-            })
+    if (options.method === 'PATCH') {
+        options.contentType = ContentTypeHeader.JSON_MERGE_PATH
     }
 
-    return useMutation<T, unknown, TVariables>({...options.mutationOptions, mutationFn})
+    const {mutation} = useBasicAxiosRequest<T, TVariables>(url, options)
+
+    return useMutation<T, unknown, TVariables>({...options.mutationOptions, mutationFn: mutation})
 }

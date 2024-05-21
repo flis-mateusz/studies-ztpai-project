@@ -1,40 +1,95 @@
 import '@styles/components/profile/profile-edit.css'
 import {InputWithLoader} from "@components/InputWithLoader.tsx";
 import {useAuth} from "@hooks/useAuth.tsx";
-import {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
+import {ChangeEvent, FormEvent, ReactNode, useEffect, useRef, useState} from "react";
 import {AvatarWithLoader} from "@components/AvatarWithLoader.tsx";
+import {useAxiosFormPost} from "@hooks/useAxiosFormPost.tsx";
+import {IUser, USER_ROLES} from "@/interfaces/IUser.ts";
+import {useAxiosMutation} from "@hooks/useAxiosMutation.tsx";
+import {DefaultSuccessSwalToast} from "@/swal2/Popups.tsx";
+import {Chip} from "@mui/material";
 
 interface FormValues {
     name: string
-    email: string
+    surname: string
+    names: string
     phone: string
-    password: string
-    repassword: string
-    avatar: File | null
+    plainPassword: string
+    rePlainPassword: string
+}
+
+interface IRoleDefinition {
+    label: string
+    color: 'default' | 'secondary'
 }
 
 export const ProfileEditPage = () => {
     const auth = useAuth()
     const [sectionWidth, setSectionWidth] = useState<number>(0)
-    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const sectionRef = useRef<HTMLDivElement>(null)
 
     const [formValues, setFormValues] = useState<FormValues>({
         name: '',
-        email: '',
+        surname: '',
+        names: '',
         phone: '',
-        password: '',
-        repassword: '',
-        avatar: null
+        plainPassword: '',
+        rePlainPassword: ''
+    })
+
+    const userAPIUrl = `/api/users/${auth.user?.id}`
+
+    const avatarMutation = useAxiosFormPost<IUser>(`${userAPIUrl}/avatar`, {
+        mutationOptions: {
+            mutationKey: ['USER_AVATAR_POST'],
+            onSuccess: (data) => {
+                auth.updateUser({
+                    avatar: {
+                        contentUrl: data.avatar.contentUrl
+                    }
+                })
+                DefaultSuccessSwalToast()
+            }
+        },
+    })
+
+    const profileMutation = useAxiosMutation<unknown, IUser>(userAPIUrl, {
+        method: 'PATCH',
+        mutationOptions: {
+            mutationKey: ['USER_PROFILE_EDIT'],
+            onSuccess: (data) => {
+                setFormValues(prevState => ({
+                    ...prevState,
+                    plainPassword: '',
+                    rePlainPassword: ''
+                }))
+                auth.updateUser(data)
+                DefaultSuccessSwalToast()
+            }
+        }
+    })
+
+    const avatarDeleteMutation = useAxiosMutation<null, IUser>(`${userAPIUrl}/avatar`, {
+        method: 'DELETE',
+        mutationOptions: {
+            mutationKey: ['USER_AVATAR_DELETE'],
+            onMutate: () => {
+                auth.updateUser({
+                    avatar: undefined
+                })
+                DefaultSuccessSwalToast()
+            }
+        }
     })
 
     useEffect(() => {
         if (auth.user) {
             setFormValues(prevState => ({
                 ...prevState,
-                name: auth.user?.name || prevState.name,
-                email: auth.user?.email || prevState.email,
-                phone: auth.user?.phone || prevState.phone,
+                name: auth.user!.name,
+                surname: auth.user!.surname,
+                names: `${auth.user!.name} ${auth.user!.surname}`,
+                phone: auth.user!.phone || prevState.phone,
             }))
         }
     }, [auth.user])
@@ -53,36 +108,62 @@ export const ProfileEditPage = () => {
     }, []);
 
     const handleChange = (field: keyof FormValues) => (e: ChangeEvent<HTMLInputElement>) => {
-        if (field === 'avatar' && e.target.files) {
-            const file = e.target.files[0]
-            if (file) {
-                const reader = new FileReader()
-                reader.onloadend = () => {
-                    setAvatarPreview(reader.result as string)
-                }
-                reader.readAsDataURL(file)
-            }
-            setFormValues(prevState => ({
-                ...prevState,
-                [field]: file ?? null
+        const value = e.target.value
+
+        if (field === "names") {
+            const parts = value.split(/\s+/).filter(part => part)
+            const newName = parts[0] || ''
+            const newSurname = parts.slice(1).join(' ') || ''
+            setFormValues(prev => ({
+                ...prev,
+                name: newName,
+                surname: newSurname,
+                names: value
             }))
         } else {
-            setFormValues(prevState => ({
-                ...prevState,
-                [field]: e.target.value
+            setFormValues(prev => ({
+                ...prev,
+                [field]: value
             }))
         }
+    }
+
+    const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null
+        if (!file) return;
+
+        const fd = new FormData();
+        fd.append("file", file);
+
+        avatarMutation.mutate(fd)
     }
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        auth.updateUser({
-            avatarUrl: avatarPreview as string
-        })
-        setAvatarPreview(null)
-        console.log(auth.user?.avatarUrl)
+        profileMutation.mutate(formValues)
     }
+
+    const renderRoleBadges = () => {
+        if (!auth.user?.roles) return null
+
+        const roleDefinitions: Record<string, IRoleDefinition> = {
+            [USER_ROLES.ROLE_USER]: {label: 'Zwykły użytkownik', color: 'default'},
+            [USER_ROLES.ROLE_ADMIN]: {label: 'Administrator', color: 'secondary'}
+        }
+
+        const badges = auth.user.roles.reduce((acc: ReactNode[], role) => {
+            const roleDef = roleDefinitions[role]
+            if (roleDef) {
+                acc.push(<Chip key={role} label={roleDef.label} color={roleDef.color} variant='outlined'/>)
+            }
+            return acc
+        }, [])
+
+        return <div className="user-roles">{badges}</div>;
+    }
+
+    const isLoading = auth.isAuthPending || profileMutation.isPending
 
     return <>
         <form className="with-absolute-loader" autoComplete="off" onSubmit={handleSubmit}>
@@ -91,20 +172,22 @@ export const ProfileEditPage = () => {
                     <InputWithLoader
                         label="Twoje imię i nazwisko"
                         type="text"
-                        value={formValues.name}
-                        onChange={handleChange('name')}
+                        value={formValues.names}
+                        onChange={handleChange('names')}
                         name="edit-names"
-                        isLoading={auth.isAuthPending}
+                        isLoading={isLoading}
                         loaderWidth={sectionWidth}
                     />
                     <InputWithLoader
                         label="Twój adres e-mail"
                         type="email"
-                        value={formValues.email}
-                        onChange={handleChange('email')}
+                        value={auth.user?.email || ''}
+                        onChange={() => {
+                        }}
                         name="edit-email"
-                        isLoading={auth.isAuthPending}
+                        isLoading={isLoading}
                         loaderWidth={sectionWidth}
+                        disabled
                     />
                     <InputWithLoader
                         label="Twój numer telefonu"
@@ -112,25 +195,25 @@ export const ProfileEditPage = () => {
                         value={formValues.phone}
                         onChange={handleChange('phone')}
                         name="edit-phone"
-                        isLoading={auth.isAuthPending}
+                        isLoading={isLoading}
                         loaderWidth={sectionWidth}
                     />
                     <InputWithLoader
                         label="Ustaw nowe hasło"
                         type="password"
-                        value={formValues.password}
-                        onChange={handleChange('password')}
+                        value={formValues.plainPassword}
+                        onChange={handleChange('plainPassword')}
                         name="edit-password"
-                        isLoading={auth.isAuthPending}
+                        isLoading={isLoading}
                         loaderWidth={sectionWidth}
                     />
                     <InputWithLoader
                         label="Powtórz nowe hasło"
                         type="password"
-                        value={formValues.repassword}
-                        onChange={handleChange('repassword')}
+                        value={formValues.rePlainPassword}
+                        onChange={handleChange('rePlainPassword')}
                         name="edit-repassword"
-                        isLoading={auth.isAuthPending}
+                        isLoading={isLoading}
                         loaderWidth={sectionWidth}
                     />
                 </section>
@@ -139,11 +222,11 @@ export const ProfileEditPage = () => {
                         <div className={`avatar-container ${auth.user ? 'loaded' : ''}`}>
                             <input className="mobile-avatar-checkbox" type="checkbox" id="mobile-avatar-checkbox"/>
                             <label className="mobile-avatar-checkbox-overlay" htmlFor="mobile-avatar-checkbox"> </label>
-                            <AvatarWithLoader isLoading={auth.isAuthPending}
-                                              url={avatarPreview || auth.user?.avatarUrl}
+                            <AvatarWithLoader isLoading={auth.isAuthPending || avatarMutation.isPending}
+                                              mediaObject={auth.user?.avatar}
                                               responsive={true}>
                                 <input type="file" className="main-input" id="edit-avatar" name="edit-avatar"
-                                       onChange={handleChange('avatar')}
+                                       onChange={handleAvatarChange}
                                 />
                             </AvatarWithLoader>
                             {
@@ -152,7 +235,11 @@ export const ProfileEditPage = () => {
                                         <i className="material-icons">file_upload</i>
                                     </label>
                                     <label
-                                        className={`avatar-action remove ${!auth.user.avatarUrl ? 'hidden' : null}`}>
+                                        className={`avatar-action remove ${!auth.user.avatar ? 'hidden' : null}`}
+                                        onClick={() => {
+                                            avatarDeleteMutation.mutate(null)
+                                        }}
+                                    >
                                         <i className="material-icons">delete_forever</i>
                                     </label>
                                 </>
@@ -162,12 +249,16 @@ export const ProfileEditPage = () => {
                             <span>Zmiany nie są jeszcze zapisane</span>
                         </div>
                     </div>
+                    {renderRoleBadges()}
                 </section>
             </div>
             <span className="form-output"></span>
-            <div className="submit-container">
-                <input type="submit" value="Zapisz" className="main-button normal-text"/>
-            </div>
+            {
+                isLoading ? null :
+                    <div className="submit-container">
+                        <input type="submit" value="Zapisz" className="main-button normal-text"/>
+                    </div>
+            }
         </form>
     </>
 }

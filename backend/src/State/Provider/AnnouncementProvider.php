@@ -33,11 +33,10 @@ readonly class AnnouncementProvider implements ProviderInterface
         }
 
         if ($announcement && $currentUser) {
-            $user = $this->security->getUser();
-            $report = $this->announcementReportRepository->findOneBy(['user' => $user, 'announcement' => $announcement]);
+            $report = $this->announcementReportRepository->findOneBy(['user' => $currentUser, 'announcement' => $announcement]);
             $announcement->setUserReport($report);
 
-            $like = $this->announcementLikeRepository->findOneBy(['user' => $user, 'announcement' => $announcement]);
+            $like = $this->announcementLikeRepository->findOneBy(['user' => $currentUser, 'announcement' => $announcement]);
             $announcement->setUserLike($like);
         }
 

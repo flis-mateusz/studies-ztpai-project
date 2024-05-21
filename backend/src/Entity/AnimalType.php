@@ -19,9 +19,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Post(),
         new Delete(),
+        new GetCollection()
     ],
     routePrefix: '/admin',
-    normalizationContext: ['groups' => []],
+    normalizationContext: ['groups' => ['animal_type:read', 'admin:animal_type:read']],
     denormalizationContext: ['groups' => ['admin:animal_type:write']],
     security: "is_granted('ROLE_ADMIN')",
 )]
@@ -49,6 +50,7 @@ class AnimalType
     /**
      * @var Collection<int, Announcement>
      */
+    #[Groups(['admin:animal_type:read'])]
     #[ORM\OneToMany(targetEntity: Announcement::class, mappedBy: 'animalType')]
     private Collection $announcements;
 

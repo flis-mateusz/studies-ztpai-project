@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Odm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -10,6 +12,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
 use App\Repository\AnnouncementRepository;
+use App\State\Processor\AnnouncementAcceptProcessor;
 use App\State\Processor\AnnouncementDeletionProcessor;
 use App\State\Processor\AnnouncementPersistProcessor;
 use App\State\Processor\AnnouncementUploadsPersistProcessor;
@@ -55,6 +58,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Delete(
             processor: AnnouncementDeletionProcessor::class
+        ),
+        new Post(
+            uriTemplate: '/announcements/{id}/accept{._format}',
+            denormalizationContext: ['groups' => []],
+            processor: AnnouncementAcceptProcessor::class
         ),
     ],
     routePrefix: '/admin',
@@ -130,6 +138,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
     ],
 )]
+#[ApiFilter(OrderFilter::class, properties: ['createdAt' => 'DESC'])]
 class Announcement
 {
     #[Groups(['announcement:read'])]
@@ -158,6 +167,7 @@ class Announcement
     private ?User $user = null;
 
     #[Groups(['announcement:read', 'announcement:write'])]
+    #[Assert\Valid()]
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?AnnouncementDetail $announcementDetail = null;

@@ -38,7 +38,7 @@ readonly class AnnouncementUploadsPersistProcessor implements ProcessorInterface
         }
 
         $uploadedFiles = $request->files->get('files');
-        if (!count($uploadedFiles)) {
+        if (!$uploadedFiles || !count($uploadedFiles)) {
             throw new BadRequestHttpException('No files uploaded');
         }
 

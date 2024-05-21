@@ -2,7 +2,10 @@ import {ISignUpData} from "@hooks/useAuth.tsx";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {ILoginFormProps} from "@components/Login/LoginSection.tsx";
 
-type ISignUpDataExtended = ISignUpData & { names: string, rePassword: string }
+interface ISignUpDataExtended extends ISignUpData {
+    names: string,
+    rePassword: string,
+}
 
 export const RegisterSection = ({handleFormChange, handleAction, isLoading}: ILoginFormProps<ISignUpData>) => {
     const [form, setForm] = useState<ISignUpDataExtended>(

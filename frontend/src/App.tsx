@@ -21,7 +21,8 @@ import {IndexPage} from "@pages/IndexPage.tsx";
 import {AnnouncementPage} from "@pages/AnnouncementPage.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import axios from "axios";
-import TestUploads from "@pages/TestUploads.tsx";
+import {RequireRole} from "@components/RequireRole.tsx";
+import {USER_ROLES} from "@/interfaces/IUser.ts";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -32,9 +33,7 @@ const queryClient = new QueryClient({
             staleTime: 0,
             retry: 0
         },
-        mutations: {
-
-        }
+        mutations: {}
     }
 })
 
@@ -47,9 +46,13 @@ const App = () => {
                 <Routes>
                     <Route path='/' element={<Layout/>}>
                         <Route path='' element={<IndexPage/>}/>
-                        <Route path='test' element={<TestUploads/>}/>
                         <Route path="login" element={<LoginPage/>}/>
                         <Route path='add' element={
+                            <RequireAuth>
+                                <AnnouncementEditPage/>
+                            </RequireAuth>
+                        }/>
+                        <Route path='edit/:announcementId' element={
                             <RequireAuth>
                                 <AnnouncementEditPage/>
                             </RequireAuth>
@@ -63,7 +66,12 @@ const App = () => {
                             <Route path={''} element={<ProfileEditPage/>}/>
                             <Route path={'announcements'} element={<ProfileAnnouncementsPage/>}/>
 
-                            <Route path={'admin'} element={<AdminPage/>}>
+
+                            <Route path={'admin'} element={
+                                <RequireRole role={USER_ROLES.ROLE_ADMIN}>
+                                    <AdminPage/>
+                                </RequireRole>
+                            }>
                                 <Route path={'approval'} element={<AdminApprovalPage/>}/>
                                 <Route path={'reports'} element={<AdminReportsPage/>}/>
                                 <Route path={'users'} element={<AdminUsersPage/>}/>

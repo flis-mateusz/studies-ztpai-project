@@ -1,12 +1,13 @@
+import '@styles/index.css'
+import '@styles/panel-elements.css'
+import '@styles/announcements/announcement-element.css'
 import {ChangeEvent, FormEvent, useRef, useState} from "react"
 import {Link, useNavigate} from "react-router-dom"
 import useGridLoaders from "@hooks/useGridLoaders.tsx"
 import {useAxiosQuery} from "@hooks/useAxiosQuery.tsx"
-
-import '@styles/index.css'
-import '@styles/panel-elements.css'
-import '@styles/announcements/announcement-element.css'
-import {ExampleAnnouncementElement} from "@components/ExampleAnnouncementElement.tsx";
+import {IHydraCollection} from "@/interfaces/Hydra.ts";
+import {IAnnouncement} from "@/interfaces/App.ts";
+import {AnnouncementGridElement} from "@components/Announcement/AnnouncementGridElement.tsx";
 
 export const IndexPage = () => {
     const navigate = useNavigate()
@@ -19,8 +20,15 @@ export const IndexPage = () => {
         navigate('/announcements?search=' + search)
     }
 
-    const query = useAxiosQuery<any>('api/test',
+    const query = useAxiosQuery<IHydraCollection<IAnnouncement>>(`/api/announcements`,
         {
+            params: {
+                page: 1,
+                itemsPerPage: 5,
+                order: {
+                    createdAt: "DESC",
+                }
+            },
             queryOptions: {
                 queryKey: ['GET_LAST_ANNOUNCEMENTS']
             }
@@ -97,13 +105,15 @@ export const IndexPage = () => {
         </section>
         <section className="announcements">
             <section>
-                <span>Ostatnie dodane ogłoszenia</span>
+                <span>Ostatnio dodane ogłoszenia</span>
                 <section className="panel-elements cut" ref={announcementsContainer}>
                     {
                         query.isPending ?
                             loader
                             :
-                            <ExampleAnnouncementElement />
+                            query.data ? query.data['hydra:member'].map((announcement, i) => (
+                                <AnnouncementGridElement key={i} announcement={announcement}/>
+                            )) : null
                     }
                 </section>
             </section>

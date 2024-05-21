@@ -1,9 +1,9 @@
 import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from "react"
-import {useLocalStorage} from "@/hooks/useLocalStorage.tsx"
-import {IUser} from "@/types/IUser.ts"
+import {IUser} from "@/interfaces/IUser.ts"
 import {useAxiosQuery} from "@hooks/useAxiosQuery.tsx"
 import {useAxiosMutation} from "@hooks/useAxiosMutation.tsx"
-import {IMutationMethodCallbacks} from "@/types/IMutation.tsx"
+import {IMutationMethodCallbacks} from "@/interfaces/IMutation.tsx"
+import {useToken} from "@hooks/useToken.tsx";
 
 interface IAuthContextType {
     user: IUser | null
@@ -13,6 +13,7 @@ interface IAuthContextType {
     signUp: (params: ISignUpMethodParams<ISignUpResponse>) => void
     signOut: () => void
     updateUser: (updatedUserData: Partial<IUser>) => void
+    hasRole: (role: string) => boolean
 }
 
 interface ISignInMethodParams<T> extends IMutationMethodCallbacks<T>, ISignInData {
@@ -33,7 +34,7 @@ export interface ISignInData {
 }
 
 // REGISTER
-export interface ISignUpData extends Omit<IUser, 'roles' | 'id'> {
+export interface ISignUpData extends Omit<IUser, 'roles' | 'id' | 'avatar'> {
     plainPassword: string
 }
 
@@ -41,25 +42,24 @@ interface ISignUpResponse extends IUser {
     registrationToken: string
 }
 
-const AuthContext = createContext<IAuthContextType>(null!);
+export const AuthContext = createContext<IAuthContextType>(null!);
 
 export const AuthProvider = ({children}: { children: ReactNode }) => {
     const [user, setUser] = useState<IUser | null>(null)
-    const [token, setToken] = useLocalStorage<string | null>("authToken", null)
+    const [token, setToken] = useToken()
 
     const checkIn = useAxiosQuery<IUser>('/api/check_in', {
         queryOptions: {
             queryKey: ['CHECKIN'],
             enabled: !!token && !user
-        },
-        token: token!
+        }
     })
 
     const signInMutation = useAxiosMutation<ISignInData, ISignInResponse>('/api/login', {
         method: 'POST',
         mutationOptions: {
             mutationKey: ['SIGN_IN']
-        },
+        }
     })
 
     const signUpMutation = useAxiosMutation<ISignUpData, ISignUpResponse>('/api/users', {
@@ -104,12 +104,16 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     }
 
     const signOut = () => {
-        setUser(null)
         setToken(null)
+        setUser(null)
     }
 
     const updateUser = (updatedUserData: Partial<IUser>) => {
         setUser(currentUserData => ({...currentUserData, ...updatedUserData} as IUser))
+    }
+
+    const hasRole = (role: string) => {
+        return !!user?.roles?.includes(role)
     }
 
     const isAuthPending = useMemo(() => (
@@ -123,7 +127,8 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         signIn,
         signUp,
         signOut,
-        updateUser
+        updateUser,
+        hasRole
     }
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
