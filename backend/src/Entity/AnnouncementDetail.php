@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AnnouncementDetailRepository::class)]
 class AnnouncementDetail
@@ -18,6 +19,7 @@ class AnnouncementDetail
     private ?int $id = null;
 
     #[Groups(['announcement:read', 'announcement:write'])]
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -38,18 +40,16 @@ class AnnouncementDetail
     private ?int $age = null;
 
     #[Groups(['announcement:read', 'announcement:write'])]
+    #[Assert\Choice(['male', 'female'])]
     #[ORM\Column(length: 255)]
     private ?string $gender = null;
-
-    #[Groups(['announcement:read', 'announcement:write'])]
-    #[ORM\Column(length: 255)]
-    private ?string $avatarUrl = null;
 
     #[Groups(['announcement:read', 'announcement:write'])]
     #[ORM\Column(length: 255, nullable: true, options: ['default' => null])]
     private ?string $kind = null;
 
     #[Groups(['announcement:read', 'announcement:write'])]
+    #[Assert\Choice(['day', 'month', 'year'])]
     #[ORM\Column(length: 255)]
     private ?string $ageType = null;
 
@@ -135,18 +135,6 @@ class AnnouncementDetail
     public function setGender(string $gender): static
     {
         $this->gender = $gender;
-
-        return $this;
-    }
-
-    public function getAvatarUrl(): ?string
-    {
-        return $this->avatarUrl;
-    }
-
-    public function setAvatarUrl(string $avatarUrl): static
-    {
-        $this->avatarUrl = $avatarUrl;
 
         return $this;
     }

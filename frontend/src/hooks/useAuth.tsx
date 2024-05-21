@@ -34,7 +34,7 @@ export interface ISignInData {
 }
 
 // REGISTER
-export interface ISignUpData extends Omit<IUser, 'roles' | 'id'> {
+export interface ISignUpData extends Omit<IUser, 'roles' | 'id' | 'avatar'> {
     plainPassword: string
 }
 

@@ -1,28 +1,36 @@
-export interface HydraCollection<T> {
+export interface IHydraCollection<T> {
     '@context': string;
     '@id': string;
     '@type': 'hydra:Collection';
     'hydra:totalItems': number;
     'hydra:member': T[];
-    'hydra:view'?: HydraView;
-    'hydra:search'?: HydraSearch;
+    'hydra:view'?: IHydraView;
+    'hydra:search'?: IHydraSearch;
 }
 
-interface HydraView {
+interface IHydraView {
     '@id': string;
     '@type': 'hydra:PartialCollectionView';
 }
 
-interface HydraSearch {
+interface IHydraSearch {
     '@type': 'hydra:IriTemplate';
     'hydra:template': string;
     'hydra:variableRepresentation': string;
-    'hydra:mapping': HydraMapping[];
+    'hydra:mapping': IHydraMapping[];
 }
 
-interface HydraMapping {
+interface IHydraMapping {
     '@type': 'IriTemplateMapping';
     variable: string;
     property: string;
     required: boolean;
 }
+
+export interface IHydraExtension {
+    "@context": "string"
+    "@id": "string"
+    "@type": "string"
+}
+
+export type IHydraIRI = string

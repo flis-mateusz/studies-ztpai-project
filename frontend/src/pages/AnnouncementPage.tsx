@@ -146,7 +146,7 @@ export const AnnouncementPage = () => {
     }
 
     const handleEdit = () => {
-        navigate(`/announcement/${announcementId}/edit`)
+        navigate(`/edit/${announcementId}`)
     }
 
     const renderOwnerActions = () => (
@@ -242,7 +242,9 @@ export const AnnouncementPage = () => {
                         </div>
                         <div>
                             <span>Gatunek</span>
-                            <span className="capitalize">{announcement.announcementDetail.kind}</span>
+                            <span className="capitalize">{
+                                announcement.announcementDetail.kind || <span className="italic">Nieznany</span>
+                            }</span>
                         </div>
                         <div>
                             <span>Płeć</span>
@@ -250,13 +252,26 @@ export const AnnouncementPage = () => {
                         </div>
                         <div>
                             <span>Wiek</span>
-                            <span>{formatTimeUnits(announcement.announcementDetail.age, announcement.announcementDetail.ageType)}</span>
+                            <span>{formatTimeUnits(announcement.announcementDetail.age as number, announcement.announcementDetail.ageType)}</span>
                         </div>
                     </div>
                     <hr/>
-                    <div className="badges">
-                        Cechy zwierzaka
-                    </div>
+                    {
+                        announcement.announcementDetail.announcementAnimalFeatures.length ?
+                            <div className="badges">
+                                {
+                                    announcement.announcementDetail.announcementAnimalFeatures.map((entry, i) =>
+                                        <div key={i} className={`${entry.isPositive ? null : 'not-ok'}`}>
+                                            <i className="material-icons">{entry.isPositive ? 'check_circle' : 'remove_circle'}</i>
+                                            <span>{entry.feature.name}</span>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                            :
+                            <div style={{justifyContent: 'center'}}>Brak zaznaczonych cech przez opiekuna nie świadczy o
+                                ich braku u zwierzaka — zachęcamy do osobistego poznania pupila!</div>
+                    }
                     <hr className="resp-only"/>
                 </div>
                 <div className="description">
@@ -276,7 +291,7 @@ export const AnnouncementPage = () => {
                 </div>
                 <div className="inline">
                     <span>Cena</span>
-                    <span>{formatPrice(announcement.announcementDetail.price)}</span>
+                    <span>{formatPrice(announcement.announcementDetail.price as number)}</span>
                 </div>
                 <div className="inline">
                     <span>Numer telefonu</span>

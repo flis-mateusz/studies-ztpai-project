@@ -34,11 +34,11 @@ export const AnnouncementGridElement = ({announcement}: { announcement: IAnnounc
             <div className="announcement-price">
                 <div className="flex-center gap-5">
                     <i className="material-icons">date_range</i>
-                    <span>{formatTimeUnits(announcement.announcementDetail.age, announcement.announcementDetail.ageType)}</span>
+                    <span>{formatTimeUnits(announcement.announcementDetail.age as number, announcement.announcementDetail.ageType)}</span>
                 </div>
                 <div className="flex-center gap-5">
                     <i className="material-icons">account_balance_wallet</i>
-                    <span>{formatPrice(announcement.announcementDetail.price)}</span>
+                    <span>{formatPrice(announcement.announcementDetail.price as number)}</span>
                 </div>
             </div>
         </div>

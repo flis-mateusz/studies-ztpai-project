@@ -54,6 +54,11 @@ const App = () => {
                                 <AnnouncementEditPage/>
                             </RequireAuth>
                         }/>
+                        <Route path='edit/:announcementId' element={
+                            <RequireAuth>
+                                <AnnouncementEditPage/>
+                            </RequireAuth>
+                        }/>
                         <Route path={'announcements'} element={<AnnouncementsPage/>}/>
                         <Route path={'profile'} element={
                             <RequireAuth>

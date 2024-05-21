@@ -5,7 +5,7 @@ import {ChangeEvent, FormEvent, useRef, useState} from "react"
 import {Link, useNavigate} from "react-router-dom"
 import useGridLoaders from "@hooks/useGridLoaders.tsx"
 import {useAxiosQuery} from "@hooks/useAxiosQuery.tsx"
-import {HydraCollection} from "@/interfaces/Hydra.ts";
+import {IHydraCollection} from "@/interfaces/Hydra.ts";
 import {IAnnouncement} from "@/interfaces/App.ts";
 import {AnnouncementGridElement} from "@components/Announcement/AnnouncementGridElement.tsx";
 
@@ -20,7 +20,7 @@ export const IndexPage = () => {
         navigate('/announcements?search=' + search)
     }
 
-    const query = useAxiosQuery<HydraCollection<IAnnouncement>>(`/api/announcements`,
+    const query = useAxiosQuery<IHydraCollection<IAnnouncement>>(`/api/announcements`,
         {
             params: {
                 page: 1,

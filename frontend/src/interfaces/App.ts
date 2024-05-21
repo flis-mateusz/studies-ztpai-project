@@ -19,11 +19,10 @@ export interface IAnimalType {
 export interface IAnnouncementDetail {
     name: string
     locality: string
-    price: number
+    price?: number | string
     description: string
-    age: number
+    age?: number | string
     gender: string
-    avatarUrl: string
     kind: string
     ageType: string
     announcementAnimalFeatures: IAnnouncementAnimalFeature[]
@@ -35,11 +34,12 @@ export interface IAnnouncementUpload {
 }
 
 export interface IAnnouncementAnimalFeature {
-    isPositive: boolean
+    isPositive: boolean | null
     feature: IAnimalFeature
 }
 
 export interface IAnimalFeature {
+    id: number
     name: string
 }
 
@@ -51,6 +51,6 @@ export interface IAnnouncementReport {
 }
 
 export interface IAnnouncementLike {
-    "id": 0,
-    "givenAt": "2024-05-20T18:41:46.536Z"
+    id: number,
+    givenAt: string
 }

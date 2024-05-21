@@ -10,6 +10,8 @@ import {DefaultSuccessSwalToast} from "@/swal2/Popups.tsx";
 
 interface FormValues {
     name: string
+    surname: string
+    names: string
     phone: string
     plainPassword: string
     rePlainPassword: string
@@ -22,6 +24,8 @@ export const ProfileEditPage = () => {
 
     const [formValues, setFormValues] = useState<FormValues>({
         name: '',
+        surname: '',
+        names: '',
         phone: '',
         plainPassword: '',
         rePlainPassword: ''
@@ -76,8 +80,10 @@ export const ProfileEditPage = () => {
         if (auth.user) {
             setFormValues(prevState => ({
                 ...prevState,
-                name: auth.user?.name || prevState.name,
-                phone: auth.user?.phone || prevState.phone,
+                name: auth.user!.name,
+                surname: auth.user!.surname,
+                names: `${auth.user!.name} ${auth.user!.surname}`,
+                phone: auth.user!.phone || prevState.phone,
             }))
         }
     }, [auth.user])
@@ -96,10 +102,24 @@ export const ProfileEditPage = () => {
     }, []);
 
     const handleChange = (field: keyof FormValues) => (e: ChangeEvent<HTMLInputElement>) => {
-        setFormValues(prevState => ({
-            ...prevState,
-            [field]: e.target.value
-        }))
+        const value = e.target.value
+
+        if (field === "names") {
+            const parts = value.split(/\s+/).filter(part => part)
+            const newName = parts[0] || ''
+            const newSurname = parts.slice(1).join(' ') || ''
+            setFormValues(prev => ({
+                ...prev,
+                name: newName,
+                surname: newSurname,
+                names: value
+            }))
+        } else {
+            setFormValues(prev => ({
+                ...prev,
+                [field]: value
+            }))
+        }
     }
 
     const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -127,8 +147,8 @@ export const ProfileEditPage = () => {
                     <InputWithLoader
                         label="Twoje imię i nazwisko"
                         type="text"
-                        value={formValues.name}
-                        onChange={handleChange('name')}
+                        value={formValues.names}
+                        onChange={handleChange('names')}
                         name="edit-names"
                         isLoading={isLoading}
                         loaderWidth={sectionWidth}

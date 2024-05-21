@@ -5,6 +5,10 @@ export async function delay(time: number) {
 export const formatTimeUnits = (age: number, unit: string): string | null => {
     let ageDescription: string | null = '';
 
+    if (!age) {
+        return 'Nieznany'
+    }
+
     switch (unit) {
         case 'year':
             if (age === 1) {
@@ -22,7 +26,6 @@ export const formatTimeUnits = (age: number, unit: string): string | null => {
             ageDescription = (age === 1) ? '1 dzień' : `${age} dni`;
             break;
         default:
-            ageDescription = null;
             break;
     }
 

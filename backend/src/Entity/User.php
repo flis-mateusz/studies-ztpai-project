@@ -141,10 +141,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     #[Groups(['user:read', 'user:write', 'user:update'])]
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[Groups(['user:read', 'user:write', 'user:update'])]
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255)]
     private ?string $surname = null;
 

@@ -1,18 +1,18 @@
 import {IAxiosQueryOptions, useAxiosQuery} from "@hooks/useAxiosQuery.tsx";
 import {ChangeEvent, useEffect, useMemo, useState} from "react";
-import {HydraCollection} from "@/interfaces/Hydra.ts";
+import {IHydraCollection} from "@/interfaces/Hydra.ts";
 import {Pagination} from "@mui/material";
 
 
 export const useAxiosPaginatedQuery = <T, >(
     url: string,
     itemsPerPage: number,
-    options: IAxiosQueryOptions<HydraCollection<T>>
+    options: IAxiosQueryOptions<IHydraCollection<T>>
 ) => {
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState<number>(0)
 
-    const query = useAxiosQuery<HydraCollection<T>>(url, {
+    const query = useAxiosQuery<IHydraCollection<T>>(url, {
         ...options,
         queryOptions: {
             ...options.queryOptions,
