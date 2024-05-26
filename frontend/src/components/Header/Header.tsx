@@ -28,7 +28,7 @@ export const Header = () => {
                     <div><Link to={'/'} className='logo'>ZwierzakSzukaDomu</Link></div>
                     <div>
                         <NavLink to={`announcements`}>Ogłoszenia</NavLink>
-                        <NavLink to={`contact`}>Kontakt</NavLink>
+                        {/*<NavLink to={`contact`}>Kontakt</NavLink>*/}
                     </div>
                 </div>
                 <div className={`menu-dropdown ${auth.token && 'logged-user'}`}>

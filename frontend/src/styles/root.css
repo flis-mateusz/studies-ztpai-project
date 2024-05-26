@@ -120,7 +120,7 @@ main {
 main > section {
     border-radius: 20px;
     background: #FFF;
-    box-shadow: 0px 3.5px 40px 0px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3.5px 40px 0 rgba(0, 0, 0, 0.08);
 }
 
 span,
@@ -186,11 +186,11 @@ a.main-button {
     justify-content: center;
     align-items: center;
     max-width: 250px;
-    box-shadow: 0px 3.5px 40px 0px rgb(0 0 0 / 30%);
+    box-shadow: 0 3.5px 40px 0 rgb(0 0 0 / 30%);
 }
 
 .avatar.resp.loader {
-    padding: 0px;
+    padding: 0;
     box-shadow: none;
 }
 
@@ -215,8 +215,8 @@ a.main-button {
     gap: 12px;
     border-radius: 100px;
     background: #FFF;
-    border: 0px;
-    box-shadow: 0px 3px 40px 0px rgba(0, 0, 0, 0.08);
+    border: 0;
+    box-shadow: 0 3px 40px 0 rgba(0, 0, 0, 0.08);
     color: #265BD7;
     font-family: 'Poppins', sans-serif;
     font-size: 0.9em;
@@ -226,7 +226,7 @@ a.main-button {
 }
 
 .MuiFormControl-root {
-    box-shadow: 0px 3px 40px 0px rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 3px 40px 0 rgba(0, 0, 0, 0.08) !important;
     border-radius: 15px !important;
 }
 
@@ -235,9 +235,9 @@ a.main-button {
 }
 
 .MuiAutocomplete-root.min .MuiInputBase-root {
-    padding-left: 0px !important;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .MuiAutocomplete-root:not(.min) .MuiInputBase-root {
@@ -257,7 +257,7 @@ a.main-button {
 }
 
 .MuiInputBase-root input {
-    padding: 0px !important;
+    padding: 0 !important;
     color: #486284;
     font-size: 0.9em;
     font-family: 'Poppins', sans-serif;
@@ -269,7 +269,7 @@ a.main-button {
 }
 
 .main-input.loader {
-    padding: 0px;
+    padding: 0;
 }
 
 .main-input:focus,
@@ -374,7 +374,7 @@ hr {
 .animated-hidden-span {
     text-align: center;
     font-size: 0.8em;
-    max-height: 0px;
+    max-height: 0;
     overflow: hidden;
     transition-duration: 450ms;
     transition-property: max-height;
@@ -391,7 +391,7 @@ hr {
 .icon-button {
     padding: 10px;
     background-color: white;
-    box-shadow: 0px 3.5px 10px 0px rgb(0 0 0 / 20%);
+    box-shadow: 0 3.5px 10px 0 rgb(0 0 0 / 20%);
     border-radius: 50%;
     cursor: pointer;
     transition-duration: 250ms;
@@ -435,7 +435,7 @@ span.input-error {
     text-align: center;
     font-size: 0.8em;
     color: #ff3333;
-    max-height: 0px;
+    max-height: 0;
     overflow: hidden;
     transition-duration: 350ms;
     transition-property: max-height;
@@ -521,6 +521,15 @@ i.material-icons {
     border-radius: 50%;
     width: 50px;
     height: 50px;
+}
+
+.no-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    grid-column: span 2;
+    text-align: center;
 }
 
 @keyframes spin {

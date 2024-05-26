@@ -4,6 +4,7 @@ import useGridLoaders from "@hooks/useGridLoaders.tsx";
 import {IAnnouncement} from "@/interfaces/App.ts";
 import {AnnouncementGridElement} from "@components/Announcement/AnnouncementGridElement.tsx";
 import {useAxiosPaginatedQuery} from "@hooks/useAxiosPaginatedQuery.tsx";
+import {NoData} from "@components/NoData.tsx";
 
 export const AdminReportsPage = () => {
     const announcementsContainer = useRef<HTMLElement | null>(null)
@@ -27,9 +28,9 @@ export const AdminReportsPage = () => {
                 query.isPending || query.isFetching ?
                     loader
                     :
-                    query.data ? query.data['hydra:member'].map((announcement, i) => (
+                    query.data && query.data['hydra:member'].length ? query.data['hydra:member'].map((announcement, i) => (
                         <AnnouncementGridElement key={i} announcement={announcement}/>
-                    )) : null
+                    )) : <NoData/>
             }
         </section>
         {pagination}
