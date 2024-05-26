@@ -4,7 +4,7 @@
     gap: 10px;
     width: 100%;
     background: #FFF;
-    box-shadow: 0px 3.5px 40px 0px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3.5px 40px 0 rgba(0, 0, 0, 0.08);
     padding: 20px;
     border-radius: 20px;
 }
@@ -22,7 +22,7 @@
     align-items: center;
     gap: 5px;
     font-size: 0.9em;
-    padding: 2px 0px;
+    padding: 2px 0;
     user-select: none;
     cursor: pointer;
 }
@@ -44,13 +44,19 @@
     content: "remove_circle";
 }
 
+.filter-container .loaders {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 @media screen and (max-width: 850px) {
     .filter-container .options {
         max-width: 450px;
     }
 
     .filter-container {
-        padding: 0px;
+        padding: 0;
         box-shadow: none;
     }
 }

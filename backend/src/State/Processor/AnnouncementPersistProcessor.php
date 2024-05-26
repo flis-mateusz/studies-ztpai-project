@@ -46,6 +46,8 @@ readonly class AnnouncementPersistProcessor implements ProcessorInterface
             $data->setCreatedAt($this->clock->now());
         }
 
+        $data->getAnnouncementDetail()->setPrice($data->getAnnouncementDetail()->getPrice() ?: null);
+
         $data->setAccepted(false);
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);

@@ -69,9 +69,7 @@ class AnnouncementRepository extends ServiceEntityRepository
                                            array $filters = [],
                                            ?bool $userLikes = false,
                                            ?int  $userId = null,
-                                           ?bool $free = null,
-                                           array $positiveFeatures = [],
-                                           array $negativeFeatures = []
+                                           ?bool $free = null
     ): DoctrinePaginator
     {
         $qb = $this->createQueryBuilder('a')
@@ -104,14 +102,20 @@ class AnnouncementRepository extends ServiceEntityRepository
 
         // FREE
         if ($free !== null) {
-            $qb->andWhere($free === false ? 'ad.price IS NOT NULL' : 'ad.price IS NULL');
+            $qb->andWhere($free === true ? 'ad.price IS NULL' : 'ad.price IS NOT NULL');
+        }
+
+        // ANIMAL TYPES
+        if (!empty($filters['types'])) {
+            $qb->andWhere('a.animalType IN (:types)')
+                ->setParameter('types', $filters['types']);
         }
 
         // ANIMAL FEATURES
         if (!empty($filters['features'])) {
             $qb->leftJoin('ad.announcementAnimalFeatures', 'aaf');
             $conditions = [];
-            foreach (explode(',', $filters['features']) as $filter) {
+            foreach ($filters['features'] as $filter) {
                 list($featureId, $isPositive) = explode('-', $filter);
                 $condition = $qb->expr()->andX(
                     $qb->expr()->eq('aaf.feature', ':feature' . $featureId),

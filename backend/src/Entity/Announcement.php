@@ -12,7 +12,6 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\OpenApi\Model;
-use App\CustomFilter\CustomSearchFilter;
 use App\Repository\AnnouncementRepository;
 use App\State\Processor\AnnouncementAcceptProcessor;
 use App\State\Processor\AnnouncementDeletionProcessor;
