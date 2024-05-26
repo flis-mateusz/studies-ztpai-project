@@ -28,6 +28,6 @@ readonly class UserAnnouncementsProvider implements ProviderInterface
         }
 
         [$page, , $limit] = $this->pagination->getPagination($operation, $context);
-        return new Paginator($this->repository->findUserAnnouncements($page, $limit, $currentUser));
+        return new Paginator($this->repository->findUserAnnouncements($currentUser, $page, $limit));
     }
 }

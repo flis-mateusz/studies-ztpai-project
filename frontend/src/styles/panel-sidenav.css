@@ -140,6 +140,9 @@ main:has(.sidenav) {
         box-shadow: none;
         padding: 5px;
         display: flex;
+    }
+
+    .panel:not(.announcements-page) {
         justify-content: center;
     }
 

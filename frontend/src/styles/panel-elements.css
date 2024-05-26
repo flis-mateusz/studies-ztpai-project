@@ -5,6 +5,10 @@
     width: 100%;
 }
 
+.panel-elements:has(.no-data) {
+    display: flex;
+}
+
 .panel-elements.fit {
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }

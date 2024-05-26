@@ -3,9 +3,12 @@ import {useRef} from "react"
 import {useSearchParams} from "react-router-dom"
 import useGridLoaders from "@hooks/useGridLoaders.tsx"
 import {FilterSelect} from "@components/FilterSelect.tsx"
-
 import '@styles/announcements/announcements.css'
 import '@styles/announcements/announcements-filters.css'
+import {IAnnouncement} from "@/interfaces/App.ts";
+import {AnnouncementGridElement} from "@components/Announcement/AnnouncementGridElement.tsx";
+import {useAxiosPaginatedQuery} from "@hooks/useAxiosPaginatedQuery.tsx";
+import {NoData} from "@components/NoData.tsx";
 
 
 export const AnnouncementsPage = () => {
@@ -14,8 +17,20 @@ export const AnnouncementsPage = () => {
     const announcementsContainer = useRef<HTMLElement | null>(null)
     const loader = useGridLoaders({ref: announcementsContainer, useColumnNumberAsCount: true})
 
-    const testQuery = async () => {
-        return await fetch('https://httpbin.org/get')
+    const {query, pagination} = useAxiosPaginatedQuery<IAnnouncement>(
+        '/api/announcements',
+        6,
+        {
+            queryOptions: {
+                queryKey: ['GET_ANNOUNCEMENTS', searchParams.get('search')],
+            },
+            params: {
+                'search': searchParams.get('search'),
+            }
+        })
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchParams({'search': e.target.value})
     }
 
     return <>
@@ -39,20 +54,24 @@ export const AnnouncementsPage = () => {
             <div id="search">
                 <label className="icon-input left right">
                     <i className="material-icons">search</i>
-                    <input type="text" className="main-input search-input" placeholder="Wyszukaj"/>
+                    <input type="text" className="main-input search-input" placeholder="Wyszukaj"
+                           onChange={handleSearchChange}/>
                     <i className="material-icons action-clear-search">clear</i>
                 </label>
             </div>
             <div className="announcements-container">
                 {/*<span className="api-output">Nie znaleziono ogłoszeń</span>*/}
                 <section className="panel-elements fit" ref={announcementsContainer}>
-                    {1 ?
+                    {query.isFetching ?
                         loader
                         :
-                        <>Ogłoszenia wczytane</>
+                        query.data && query.data['hydra:member'].length ? query.data['hydra:member'].map((announcement, i) => (
+                            <AnnouncementGridElement key={i} announcement={announcement}/>
+                        )) : <NoData/>
                     }
                 </section>
             </div>
+            {pagination}
         </section>
     </>
 }

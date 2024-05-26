@@ -57,11 +57,7 @@
 
     .announcements-page {
         width: 100%;
-        display: block !important;
-    }
-
-    .announcements-page .announcements-container {
-        margin-top: 10px;
+        display: flex !important;
     }
 
     main:has(#sidenav-button:checked)>.panel {

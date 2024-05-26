@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Odm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -10,7 +10,9 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\OpenApi\Model;
+use App\CustomFilter\CustomSearchFilter;
 use App\Repository\AnnouncementRepository;
 use App\State\Processor\AnnouncementAcceptProcessor;
 use App\State\Processor\AnnouncementDeletionProcessor;
@@ -73,7 +75,13 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(
             paginationClientItemsPerPage: true,
-            provider: AnnouncementsProvider::class
+            provider: AnnouncementsProvider::class,
+            parameters: [
+                'search' => new QueryParameter(),
+                'favourite' => new QueryParameter(schema: ['type' => 'boolean']),
+                'free' => new QueryParameter(schema: ['type' => 'boolean']),
+                'features' => new QueryParameter(schema: ['type' => 'array'])
+            ],
         ),
         new Post(
             security: "is_granted('ROLE_USER')",
