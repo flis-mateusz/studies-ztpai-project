@@ -21,14 +21,14 @@ export const AnnouncementsPage = () => {
 
     const animalTypesQuery = useAxiosQuery<IAnimalType[]>('/api/animal_types', {
         queryOptions: {
-            queryKey: ['ANIMAL_TYPES']
+            queryKey: ['ANIMAL_TYPES', 'JSON']
         },
         accept: ContentTypeHeader.JSON
     })
 
     const animalFeaturesQuery = useAxiosQuery<IAnimalFeature[]>('/api/animal_features', {
         queryOptions: {
-            queryKey: ['ANIMAL_FEATURES']
+            queryKey: ['ANIMAL_FEATURES', 'JSON']
         },
         accept: ContentTypeHeader.JSON
     })
@@ -108,9 +108,9 @@ export const AnnouncementsPage = () => {
                               animalTypes={animalTypesQuery.data}
                 />
             </div>
-            <div>
-                <span className="main-button action-search">Szukaj</span>
-            </div>
+            {/*<div>*/}
+            {/*    <span className="main-button action-search">Szukaj</span>*/}
+            {/*</div>*/}
         </section>
         <section className="panel announcements-page">
             <div id="search">

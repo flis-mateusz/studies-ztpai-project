@@ -2,14 +2,14 @@ import {useMutation} from '@tanstack/react-query';
 import {IAxiosMutationOptions} from "@hooks/useAxiosMutation.tsx";
 import {useBasicAxiosRequest} from "@hooks/useBasicAxiosRequest.tsx";
 
-interface AxiosFormPostOptions<T> extends Omit<IAxiosMutationOptions<T, FormData>, 'method'> {
+interface IAxiosFormPostOptions<T, TVariables> extends Omit<IAxiosMutationOptions<T, TVariables>, 'method'> {
 }
 
-export const useAxiosFormPost = <T, >(
+export const useAxiosFormPost = <TVariables = FormData, T = unknown>(
     url: string,
-    options: AxiosFormPostOptions<T>
+    options: IAxiosFormPostOptions<T, TVariables>
 ) => {
-    const {mutation} = useBasicAxiosRequest<T, FormData>(url, {
+    const {mutation} = useBasicAxiosRequest<T, TVariables>(url, {
         ...options,
         method: 'POST',
         headers: {
@@ -17,5 +17,5 @@ export const useAxiosFormPost = <T, >(
         }
     })
 
-    return useMutation<T, unknown, FormData>({...options.mutationOptions, mutationFn: mutation});
+    return useMutation<T, unknown, TVariables>({...options.mutationOptions, mutationFn: mutation});
 }

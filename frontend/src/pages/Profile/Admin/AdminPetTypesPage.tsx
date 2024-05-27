@@ -47,7 +47,7 @@ export const AdminPetTypesPage = () => {
     const refetch = async () => {
         await query.refetch()
     }
-    console.log(query.data['hydra:member'])
+
     return <>
         <Helmet><title>Typy zwierząt</title></Helmet>
 
@@ -101,10 +101,7 @@ const PetType = ({type, refetch}: {
 
     return <div className={'list-element'}>
         <div className={`list-action ${deleteMutation.isPending ? 'visible' : ''}`}>
-            {
-                type.announcements?.length ? null :
-                    <IconButton iconName={'delete_forever'} onClick={handleDelete} loading={deleteMutation.isPending}/>
-            }
+            <IconButton iconName={'delete_forever'} onClick={handleDelete} loading={deleteMutation.isPending}/>
             <span>{type.name}</span>
         </div>
         <div>

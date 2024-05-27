@@ -24,6 +24,7 @@ class AnnouncementDetail
     private ?string $name = null;
 
     #[Groups(['announcement:read', 'announcement:write'])]
+    #[Assert\NotNull(), Assert\NotBlank()]
     #[ORM\Column(length: 255)]
     private ?string $locality = null;
 
