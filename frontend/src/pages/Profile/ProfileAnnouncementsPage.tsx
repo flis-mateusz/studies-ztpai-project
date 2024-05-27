@@ -29,9 +29,11 @@ export const ProfileAnnouncementsPage = () => {
                 query.isPending || query.isFetching ?
                     loader
                     :
-                    query.data ? query.data['hydra:member'].map((announcement, i) => (
-                        <AnnouncementGridElement key={i} announcement={announcement}/>
-                    )) : <NoData/>
+                    query.data && query.data['hydra:member'].length ? query.data['hydra:member'].map(
+                        (announcement, i) => (
+                            <AnnouncementGridElement key={i} announcement={announcement}/>
+                        )
+                    ) : <NoData text={'Nie masz jeszcze żadnych ogłoszeń'}/>
             }
         </section>
         {pagination}

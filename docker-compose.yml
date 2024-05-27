@@ -5,7 +5,7 @@ services:
   db:
     image: mysql
     container_name: ztpai_db
-    restart: always
+    restart: unless-stopped
     ports:
       - "3306:3306"
     volumes:
@@ -20,7 +20,7 @@ services:
   phpmyadmin:
     image: phpmyadmin
     container_name: ztpai_phpmyadmin
-    restart: always
+    restart: unless-stopped
     depends_on:
       - db
     ports:
@@ -49,7 +49,17 @@ services:
       - ./backend:/var/www/backend
       - /var/www/backend/vendor
       - /var/www/backend/var
-    restart: always
+    restart: unless-stopped
+    networks:
+      - ztpai-project
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: ztpai_rabbitmq
+    ports:
+      - "8083:15672"
+      - "5672:5672"
+    restart: unless-stopped
     networks:
       - ztpai-project
 
@@ -59,7 +69,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: ztpai_react
-    restart: on-failure
+    restart: unless-stopped
     depends_on:
       - backend
     networks:
