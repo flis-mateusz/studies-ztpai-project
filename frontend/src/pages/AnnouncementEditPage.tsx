@@ -75,7 +75,7 @@ export const AnnouncementEditPage = () => {
         }
     })
 
-    const uploadsMutation = useAxiosFormPost<IURLOverride<FormData>>(`/api/announcements/${announcementId}/uploads`, {
+    const uploadsMutation = useAxiosFormPost<undefined, IURLOverride<FormData>>(`/api/announcements/${announcementId}/uploads`, {
         mutationOptions: {
             mutationKey: ['ANNOUNCEMENT_UPLOADS']
         }

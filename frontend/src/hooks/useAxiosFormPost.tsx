@@ -5,7 +5,7 @@ import {useBasicAxiosRequest} from "@hooks/useBasicAxiosRequest.tsx";
 interface IAxiosFormPostOptions<T, TVariables> extends Omit<IAxiosMutationOptions<T, TVariables>, 'method'> {
 }
 
-export const useAxiosFormPost = <TVariables = FormData, T = unknown>(
+export const useAxiosFormPost = <T = unknown, TVariables = FormData>(
     url: string,
     options: IAxiosFormPostOptions<T, TVariables>
 ) => {
