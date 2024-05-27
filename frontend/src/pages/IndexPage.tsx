@@ -24,7 +24,7 @@ export const IndexPage = () => {
 
     const animalTypesQuery = useAxiosQuery<IAnimalType[]>('/api/animal_types', {
         queryOptions: {
-            queryKey: ['ANIMAL_TYPES']
+            queryKey: ['ANIMAL_TYPES', 'JSON']
         },
         accept: ContentTypeHeader.JSON
     })

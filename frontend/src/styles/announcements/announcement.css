@@ -113,6 +113,7 @@ main:has(.announcement-view)>section {
     width: 70%;
     position: relative;
     flex: 1;
+    height: max-content;
 }
 
 .about-user,

@@ -163,9 +163,10 @@ class Announcement
     private ?\DateTimeImmutable $createdAt = null;
 
     #[Groups(['announcement:read', 'announcement:write'])]
-    #[Assert\Valid]
+    #[Assert\Valid()]
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'announcements')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?AnimalType $animalType = null;
 
     #[Groups(['user:read'])]

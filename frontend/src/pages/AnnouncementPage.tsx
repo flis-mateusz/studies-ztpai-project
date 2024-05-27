@@ -225,20 +225,29 @@ export const AnnouncementPage = () => {
                         : null
                 }
 
-                <ImageGallery items={images}
-                              showPlayButton={false}
-                              showBullets={images.length > 1}
-                              showThumbnails={images.length > 1}
-                              onScreenChange={(p) => {
-                                  setFullScreen(p)
-                              }}
-                              additionalClass={!fullScreen ? 'cover' : ''}
-                />
+                {
+                    images.length ?
+                        <ImageGallery items={images}
+                                      showPlayButton={false}
+                                      showBullets={images.length > 1}
+                                      showThumbnails={images.length > 1}
+                                      onScreenChange={(p) => {
+                                          setFullScreen(p)
+                                      }}
+                                      additionalClass={!fullScreen ? 'cover' : ''}
+                        />
+                        :
+                        <div className="tip">
+                            <span>Aby ogłoszenie mogło przejść weryfikację musisz dodać przynamniej jedno zdjęcie</span>
+                        </div>
+                }
                 <div className="info">
                     <div>
                         <div>
                             <span>Typ</span>
-                            <span className="capitalize">{announcement.animalType.name}</span>
+                            <span className="capitalize">
+                                {announcement.animalType?.name || <span className="italic">Typ usunięty</span>}
+                            </span>
                         </div>
                         <div>
                             <span>Gatunek</span>

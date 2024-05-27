@@ -3,13 +3,23 @@ import {IAnnouncement} from "@/interfaces/App.ts";
 import {absoluteServerPath, formatPrice, formatTimeUnits} from "@/utils/utils.ts";
 
 export const AnnouncementGridElement = ({announcement}: { announcement: IAnnouncement }) => {
-    const petAvatar = `url(${absoluteServerPath(announcement.uploads[0]?.mediaObject.contentUrl)})`
+    const petAvatar = announcement.uploads.length > 0 ? `url(${absoluteServerPath(announcement.uploads[0]?.mediaObject.contentUrl)})` : null
 
     return <Link to={`/announcement/${announcement.id}`} className={'announcement'}>
-        <div className="announcement-image" style={{backgroundImage: petAvatar}}></div>
+        <div className="announcement-image" style={{backgroundImage: petAvatar ? petAvatar : ''}}>
+            {
+                !petAvatar ? <div className="tip">
+                    <span>Dodaj zdjęcie</span>
+                </div> : null
+            }
+        </div>
         {
-            announcement.isAccepted ? null :
-                <div className='awaiting'><span>Oczekuje na akceptację</span></div>
+            !announcement.isAccepted ?
+                !announcement.uploads.length ?
+                    <div className='awaiting warning'><span>Dokończ tworzenie</span></div>
+                    :
+                    <div className='awaiting'><span>Oczekuje na akceptację</span></div>
+                : null
         }
         {
             !announcement.announcementReports || !announcement.announcementReports.length ? null :
@@ -19,10 +29,10 @@ export const AnnouncementGridElement = ({announcement}: { announcement: IAnnounc
             <div className="announcement-detail">
                 <div className="flex-center gap-10">
                     <div className="announcement-avatar"
-                         style={{backgroundImage: petAvatar}}></div>
+                         style={{backgroundImage: petAvatar ? petAvatar : ''}}></div>
                     <div className="announcement-name">
                         <div>{announcement.announcementDetail.name}</div>
-                        <div>{announcement.animalType.name}</div>
+                        <div>{announcement.animalType?.name || <span className="italic">Typ usunięty</span>}</div>
                     </div>
                 </div>
                 <div className="flex-center gap-5">

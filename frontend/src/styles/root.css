@@ -264,6 +264,11 @@ a.main-button {
     letter-spacing: 2px;
 }
 
+.MuiPaper-elevation {
+    border-radius: 15px !important;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08) !important;
+}
+
 .main-input:disabled {
     background-color: #f3f3f34d;
 }
@@ -541,7 +546,7 @@ i.material-icons {
     }
 }
 
-.image-gallery {
+.image-gallery-content {
     border-radius: 20px;
     overflow: hidden;
     min-height: 20vh;
@@ -564,7 +569,7 @@ i.material-icons {
 }
 
 @media screen and (max-width: 840px) {
-    main:not(.static-bgcolor) {
+    main:has(.welcome) {
         background: #FFF;
     }
 

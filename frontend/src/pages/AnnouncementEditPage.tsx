@@ -22,6 +22,7 @@ import {AnimatedLoader} from "@components/AnimatedLoader.tsx";
 import {useAuth} from "@hooks/useAuth.tsx";
 import {AxiosError} from "axios";
 import {useAxiosFormPost} from "@hooks/useAxiosFormPost.tsx";
+import {IURLOverride} from "@hooks/useBasicAxiosRequest.tsx";
 
 interface IPostAnnouncementData {
     animalType: string | null,
@@ -34,8 +35,7 @@ interface IPostAnnouncementData {
 }
 
 export const AnnouncementEditPage = () => {
-    const params = useParams()
-    const [announcementId, setAnnouncementId] = useState<number | null | string>(params.announcementId || null)
+    const {announcementId} = useParams()
     const auth = useAuth()
     const navigate = useNavigate()
 
@@ -75,7 +75,7 @@ export const AnnouncementEditPage = () => {
         }
     })
 
-    const uploadsMutation = useAxiosFormPost(`/api/announcements/${announcementId}/uploads`, {
+    const uploadsMutation = useAxiosFormPost<IURLOverride<FormData>>(`/api/announcements/${announcementId}/uploads`, {
         mutationOptions: {
             mutationKey: ['ANNOUNCEMENT_UPLOADS']
         }
@@ -100,7 +100,7 @@ export const AnnouncementEditPage = () => {
             setForm(prev => ({
                 ...prev,
                 ...query.data.announcementDetail,
-                animalType: query.data.animalType.name
+                animalType: query.data.animalType?.name || null
             }))
             setFiles([
                 ...query.data.uploads
@@ -146,8 +146,8 @@ export const AnnouncementEditPage = () => {
         }))
     }
 
-    const navigateToAnnouncement = () => {
-        navigate(`/announcement/${announcementId}`)
+    const navigateToAnnouncement = (id?: number) => {
+        navigate(`/announcement/${id ? id : announcementId}`)
     }
 
     const toDTO = () => {
@@ -176,7 +176,7 @@ export const AnnouncementEditPage = () => {
         }
     }
 
-    const uploadFiles = () => {
+    const uploadFiles = (newAnnouncementId?: number) => {
         const newFiles = files.filter((file) => file instanceof File) as IUploadedFile[]
 
         if (!newFiles.length) {
@@ -186,8 +186,11 @@ export const AnnouncementEditPage = () => {
 
         const formData = new FormData()
         newFiles.forEach((file) => formData.append('files[]', file))
-        uploadsMutation.mutate(formData, {
-            onSuccess: () => navigateToAnnouncement()
+        uploadsMutation.mutate({
+            data: formData,
+            ...(newAnnouncementId ? {url: `/api/announcements/${newAnnouncementId}/uploads`} : {})
+        }, {
+            onSuccess: () => navigateToAnnouncement(newAnnouncementId)
         })
     }
 
@@ -196,14 +199,13 @@ export const AnnouncementEditPage = () => {
 
         announcementId ?
             patchMutation.mutate(toDTO(), {
-                onSuccess: uploadFiles,
+                onSuccess: () => uploadFiles(),
                 onError: () => query.refetch()
             })
             :
             postMutation.mutate(toDTO(), {
                 onSuccess: (data) => {
-                    setAnnouncementId(data.id)
-                    uploadFiles()
+                    uploadFiles(data.id)
                 }
             })
     }
@@ -250,7 +252,7 @@ export const AnnouncementEditPage = () => {
         return <div>Ogłoszenie nie istnieje lub zostało usunięte</div>
     }
 
-    if (announcementId && query.isFetching) {
+    if (query.isFetching || postMutation.isPending || patchMutation.isPending || uploadsMutation.isPending) {
         return <AnimatedLoader visible={true}/>
     }
 

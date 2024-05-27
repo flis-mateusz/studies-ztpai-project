@@ -11,6 +11,11 @@ export interface IBasicAxiosRequestParams extends Omit<AxiosRequestConfig, 'url'
     contentType?: ContentTypeHeader
 }
 
+export interface IURLOverride<TVariables> {
+    url?: string
+    data?: TVariables
+}
+
 interface SymfonyError {
     title?: string
     detail?: string
@@ -21,7 +26,7 @@ export const useBasicAxiosRequest = <T, TVariables = unknown>(
     url: string,
     options: IBasicAxiosRequestParams
 ) => {
-    const [token] = useToken()
+    const [token, setToken] = useToken()
     const navigate = useNavigate()
     const location = useLocation()
     const auth = useAuth()
@@ -43,6 +48,7 @@ export const useBasicAxiosRequest = <T, TVariables = unknown>(
             switch (err.response.status) {
                 case 401:
                     auth?.token ? auth.signOut() : null
+                    setToken(null)
                     navigate('/login', {state: location.pathname != '/login' ? {from: location} : null, replace: true})
                     throw err
             }
@@ -50,10 +56,20 @@ export const useBasicAxiosRequest = <T, TVariables = unknown>(
         throw err
     }
 
-    const mutation = async (variables?: TVariables): Promise<T> =>
-        axios.request<T>({...config, data: variables})
+    const mutation = async (variables?: TVariables): Promise<T> => {
+        const url = (variables as IURLOverride<TVariables>)?.url || config.url;
+        const finalData = variables ? (variables as IURLOverride<TVariables>).data || variables : undefined
+
+        const finalConfig: AxiosRequestConfig = {
+            ...config,
+            url,
+            data: finalData
+        }
+
+        return axios.request<T>(finalConfig)
             .then(res => res.data)
-            .catch(catchError);
+            .catch(catchError)
+    }
 
     const query = async (): Promise<T> =>
         axios.request<T>(config)

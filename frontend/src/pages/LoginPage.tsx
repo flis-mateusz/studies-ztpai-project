@@ -35,6 +35,10 @@ export const LoginPage = () => {
         }
     }, [location.state?.error])
 
+    useEffect(() => {
+        if (auth.token) auth.signOut()
+    }, [auth])
+
     const handleFormChange = (newFormName: string) => {
         setCurrentFormClass(newFormName)
     }

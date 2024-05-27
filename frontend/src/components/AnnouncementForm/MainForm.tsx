@@ -89,7 +89,7 @@ export const MainForm = (props: Props) => {
                     value={props.state.animalType}
                     inputValue={props.state.animalTypeInputValue}
                     id="combo-box-demo"
-                    options={props.animalTypes ? props.animalTypes['hydra:member'].map((option) => option.name) : []}
+                    options={props.animalTypes && props.animalTypes['hydra:member'].length ? props.animalTypes['hydra:member'].map((option) => option.name) : []}
                     sx={{width: 300}}
                     renderInput={(params) => <TextField {...params} />}
                     onChange={(_event, newValue: string | null) => {
