@@ -1,0 +1,1 @@
+ docker exec -it ztpai_symfony php bin/console messenger:consume async -vv
