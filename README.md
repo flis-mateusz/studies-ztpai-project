@@ -1,93 +1,129 @@
-# ZTPAI Project
+# ZwierzakSzukaDomu
+
+Welcome to "ZwierzakSzukaDomu" - a dedicated platform for pet adoption. This service focuses on providing a comprehensive list of pet adoption announcements. Here, you'll find a variety of animals, each with its own unique story, eagerly waiting to find new, loving homes. We believe that every animal deserves a chance for a happy life, and we're confident that you'll find a lifelong friend here.
 
 
+# Table of Contents
 
-## Getting started
+1. [Features](#features)
+2. [Technology Stack](#technology-stack)
+3. [Database Design and Structure](#database-design-and-structure)
+4. [Installation](#installation)
+5. [Usage](#usage)
+6. [Contributing](#contributing)
+7. [License](#license)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Features
 
-## Add your files
+- **Browse Announcements:** Explore a wide range of pet adoption listings.
+- **Detailed Pet Profiles:** Each pet comes with a detailed profile including its background, personality traits, and needs.
+- **Advanced Search:** Filter searches based on animal type, features, and location to find your perfect match.
+- **User Accounts:** Create your account to post adoption announcements or to interact with existing listings.
+- **Responsive Design:** Platform is fully responsive, making it easy to navigate on various devices.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
 
-```
-cd existing_repo
-git remote add origin https://gitlab.emef.dev/studies/ztpai-project.git
-git branch -M master
-git push -uf origin master
-```
+## Technology Stack
 
-## Integrate with your tools
+Project is built using a variety of technologies and tools to ensure efficiency, performance, and scalability. Below is a list of the key components:
 
-- [ ] [Set up project integrations](https://gitlab.emef.dev/studies/ztpai-project/-/settings/integrations)
+1. **Front-End:**
+    - React.JS, CSS, JavaScript: For structuring, styling, and client-side logic.
 
-## Collaborate with your team
+2. **Back-End:**
+    - PHP 8.3 - Symfony 7: Primary server-side programming language.
+    - MySQL: Database management system.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+3. **Server:**
+    - Apache: High-performance web server.
 
-## Test and Deploy
+4. **Containerization:**
+    - Docker: For creating, deploying, and running applications in containers.
+    - Docker Compose: For defining and running multi-container Docker applications.
 
-Use the built-in continuous integration in GitLab.
+5. **Version Control:**
+    - Git: For source code management.
+    - GitHub: For hosting the repository and facilitating version control and collaboration.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
 
-***
+## Database Design and Structure
 
-# Editing this README
+The project includes a comprehensive design and structure for the database, ensuring efficient data storage and retrieval. Here are the key components:
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+1. **Entity-Relationship Diagram (ERD):**
+    - The `/backend/database_erd.png` file in the main directory provides a visual representation of the database schema. This diagram is useful for understanding the relationships between different entities in the database.
+    - [View ERD](./backend/database_erd.png)
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+
+Project is dockerized for easy setup and deployment. Follow these steps to get the project up and running:
+
+1. **Clone the Repository**
+2. **Navigate to the Project Directory**
+3. **Docker Setup:**
+   Ensure Docker and Docker Compose are installed on your system. In the project directory, you'll find Docker configuration files in the `docker/db`, `docker/nginx`, and `docker/php` directories, along with a `Dockerfile` in each.
+4. **Build Docker Images:**
+   `docker-compose build`
+5. **Start Docker Containers:**
+   `docker-compose up`
+6. **Access the Application:**
+   After the containers are up and running, you can access the application through your web browser.
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+### Home Page
+The home page showcases the latest announcements and provides links to key functionalities of the site such as browsing all announcements, logging in, registering.
+Desktop | Mobile
+:-------------------------:|:-------------------------:
+![Home page](demo_images/image-8.png)  |  ![Home mobile page](demo_images/image-8m.jpg)
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### All Announcements View
+This page allows users to browse all available pets for adoption, with filtering options to help find the perfect pet.
+Desktop | Mobile
+:-------------------------:|:-------------------------:
+![All Announcements View](demo_images/image-9.png) | ![All Announcements View](demo_images/image-9m.jpg)
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+### Announcement View
+This detailed view allows users to see full information about the pet, including photos, descriptions, location, and contact details of the person who posted the announcement.
+Desktop | Mobile
+:-------------------------:|:-------------------------:
+![Announcement View](demo_images/image.png) | ![Announcement View](demo_images/image-m.jpg)
+
+### Login and Registration View
+These pages allow users to create and manage their accounts, which is necessary for posting announcements and using features that require authorization.
+Desktop | Mobile
+:-------------------------:|:-------------------------:
+![Login and Registration View](demo_images/image-1.png) | ![Login and Registration View](demo_images/image-1m.jpg)
+
+### Profile View
+The profile view lets users manage their personal information, password and avatar.
+Desktop | Mobile
+:-------------------------:|:-------------------------:
+![Profile View](demo_images/image-2.png) | ![Profile View](demo_images/image-2m.jpg)
+
+### My Announcements View
+Here, users can view their own announcements.
+Desktop | Mobile
+:-------------------------:|:-------------------------:
+![My Announcements View](demo_images/image-3.png) | ![My Announcements View](demo_images/image-3m.jpg)
+
+### Announcements for Admin Approval View
+Available only to administrators, this view allows the review, approval, or rejection of new announcements before they are published.
+Desktop | Mobile
+:-------------------------:|:-------------------------:
+![Announcements for Admin Approval View](demo_images/image-4.png) | ![Announcements for Admin Approval View](demo_images/image-4m.jpg)
+
+### Reports View
+Also available only to administrators, this section allows for the review and management of user reports, such as violations of the rules.
+Desktop | Mobile
+:-------------------------:|:-------------------------:
+![Reports View](demo_images/image-5.png) | ![Reports View](demo_images/image-5m.jpg)
+
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+I am always looking to improve "ZwierzakSzukaDomu" and appreciate any feedback or contributions. If you would like to contribute, please feel free to fork the repository and submit a pull request.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+This project is licensed under the MIT License
+
