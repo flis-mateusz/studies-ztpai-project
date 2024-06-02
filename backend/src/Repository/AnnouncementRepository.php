@@ -130,6 +130,8 @@ class AnnouncementRepository extends ServiceEntityRepository
             }
         }
 
+        $qb->orderBy('a.createdAt', 'DESC');
+
         $qb->addCriteria(
             Criteria::create()
                 ->setFirstResult(($page - 1) * $itemsPerPage)

@@ -180,7 +180,7 @@ export const AnnouncementEditPage = () => {
         const newFiles = files.filter((file) => file instanceof File) as IUploadedFile[]
 
         if (!newFiles.length) {
-            navigateToAnnouncement()
+            navigateToAnnouncement(newAnnouncementId)
             return
         }
 
