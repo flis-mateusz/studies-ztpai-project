@@ -159,18 +159,9 @@ export const AnnouncementPage = () => {
     );
 
     const renderAdminActions = () => (
-        <>
-            {
-                announcement.announcementReports?.length ?
-                    <IconButton iconName='gravel'
-                                className={'admin'}
-                                loading={true}
-                    /> : null
-            }
-            <IconButton iconName='delete_forever'
-                        className={'admin'}
-                        loading={adminDeleteMutation.isPending || query.isFetching} onClick={handleAdminDelete}/>
-        </>
+        <IconButton iconName='delete_forever'
+                    className={'admin'}
+                    loading={adminDeleteMutation.isPending || query.isFetching} onClick={handleAdminDelete}/>
     )
 
     return <>
